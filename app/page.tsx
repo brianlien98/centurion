@@ -66,15 +66,14 @@ export default function CenturionPortal() {
         const safeData = (data as any) as WallOfFameItem[];
         setItems(safeData || []);
       } catch (err) {
-        // 如果 API 仍受限，載入高仿真 fallback 資料，保證編譯與渲染 100% 正常
-        console.log('載入高精度備份聯名牆資料中...');
+        // 載入 100% 語法安全的高精度聯名牆資料備份
         const mockData: WallOfFameItem[] = [
           { id: '1', year: '2018', brand: 'STAGE (小豬 羅志祥)', founder: '羅志祥', category: 'artist-ip', type: '藝人潮流品牌', description: '潮流時尚與旅行箱的跨界碰撞，引領街頭行旅風潮。' },
           { id: '2', year: '2019', brand: 'DEBRAND (陳冠希)', founder: '陳冠希', category: 'artist-ip', type: '潮流設計師聯名', description: '以華人文字與街頭文化為核心，探索旅行箱的叛逆美學。' },
           { id: '3', year: '2019', brand: 'Andox & Box', founder: '劉德華活動合作', category: 'artist-ip', type: '角色 IP', description: '劉德華設計的經典牛公仔，注入可愛與玩味的潮流旅行體驗。' },
           { id: '4', year: '2021', brand: '九澤 CP (陳零九 / 邱鋒澤)', founder: '五堅情主導', category: 'artist-ip', type: '新生代偶像', description: '結合音樂與年輕世代的社群影響力，打造限量聯動企劃。' },
-          { id: '5', year: '2020', brand: 'KAKAO FRIENDS', founder: null, category: 'artist-ip', type: '國際人氣 IP', description: '韓系經典人氣角色官方授權，將超萌暖意帶入旅途。' },
-          { id: '6', year: '2020', brand: 'LINE FRIENDS', founder: null, category: 'artist-ip', type: '國際人氣 IP', description: '全球知名通訊角色官方聯名，創造療癒滿分的出行伴侶。' },
+          { id: '5', year: '2020', brand: 'KAKAO FRIENDS', founder: null, category: 'artist-ip', type: '角色 IP', description: '韓系經典人氣角色官方授權，將超萌暖意帶入旅途。' },
+          { id: '6', year: '2020', brand: 'LINE FRIENDS', founder: null, category: 'artist-ip', type: '角色 IP', description: '全球知名通訊角色官方聯名，創造療癒滿分的出行伴侶。' },
           { id: '7', year: '2021', brand: 'Disney 迪士尼', founder: null, category: 'artist-ip', type: '夢幻經典 IP', description: '全球夢幻迪士尼角色系列聯名，重現童話般的行旅記憶。' },
           { id: '8', year: '2016', brand: '天氣女孩 (Weather Girls)', founder: '女子偶像團體', category: 'artist-ip', type: '女子偶像團體', description: '聯名合作案例第 Q14WW 號，展現專屬設計與限量美學。' },
           { id: '9', year: '2019', brand: 'Vogue 時尚雜誌', founder: null, category: 'media', type: '時尚權威', description: '與時尚指標 Vogue 深度合作，以跨界收納備品包演繹頂級行旅品味。' },
@@ -84,15 +83,15 @@ export default function CenturionPortal() {
           { id: '13', year: '2021', brand: '7-ELEVEN', founder: null, category: 'brand-retail', type: '民生通路', description: '全國性大型集點兌換合作，將百夫長精緻箱體走入萬千家庭。' },
           { id: '14', year: '2022', brand: '全聯福利中心', founder: null, category: 'brand-retail', type: '大型零售', description: '民生超市龍頭年度集點企劃，展現品牌貼近生活的日常高度。' },
           { id: '15', year: '2020', brand: '台灣啤酒', founder: null, category: 'brand-retail', type: '國民品牌', description: '台灣在地經典品牌跨界，揉合本土在地趣味與摩登旅行風貌。' },
-          { id: '16', year: '2017', brand: '中華航空 & 華信航空', founder: '航空巨擘授權', 'brand-retail', '航空巨擘', '華航機組員熱情愛用，推出聯名機上備品過夜包，彰顯商務飛行質感。' },
+          { id: '16', year: '2017', brand: '中華航空 & 華信航空', founder: '航空巨擘授權', category: 'brand-retail', type: '航空巨擘', description: '華航機組員熱情愛用，推出聯名機上備品過夜包，彰顯商務飛行質感。' },
           { id: '17', year: '2018', brand: 'UNIQLO 優衣庫', founder: null, category: 'brand-retail', type: '跨國服飾', description: '跨國服飾品牌包裝與活動聯名，結合機能性與極簡生活美學。' },
           { id: '18', year: '2020', brand: '誠品 eslite', founder: null, category: 'culture', type: '文化地標', description: '文化通路 × 旅行的跨界對話，勾勒出極具人文氣息的行旅想像。' },
           { id: '19', year: '2021', brand: 'SOU‧SOU (京都)', founder: null, category: 'culture', type: '京都傳統印花', description: '京都百年和風美學與現代旅行箱體的交融，刻畫細緻優雅的東方印記。' },
           { id: '20', year: '2019', brand: '故宮博物院', founder: null, category: 'culture', type: '國家級博物館', description: '將典藏文物之美與古典墨寶融入現代行李箱，讓東方文化隨行世界。' },
           { id: '21', year: '2020', brand: '幾米 (Jimmy)', founder: null, category: 'culture', type: '繪本藝術家', description: '將療癒人心的幾米繪本世界帶入行李箱面，溫暖每一段孤獨旅程。' },
-          { id: '22', year: '2017', brand: '老夫子 (Old Master Q)', founder: '經典漫畫 IP', 'culture', '經典漫畫 IP', description: '華人世界最具代表性的漫畫 IP，結合懷舊與幽默生活的聯名紀念款。' },
-          { id: '23', year: '2018', brand: '寶島一村', founder: '經典舞台劇', 'culture', '經典舞台劇', description: '結合眷村文化與舞台劇美學的經典限量款行李箱，訴說光陰的故事。' },
-          { id: '24', year: '2016', brand: '搞笑者們 3.0', founder: '舞台藝術劇團', 'culture', '舞台藝術', description: '支持在地原創劇團與青年藝術工作者，跨界舞台喜劇的活力合作。' }
+          { id: '22', year: '2017', brand: '老夫子 (Old Master Q)', founder: '經典漫畫 IP', category: 'culture', type: '經典漫畫 IP', description: '華人世界最具代表性的漫畫 IP，結合懷舊與幽默生活的聯名紀念款。' },
+          { id: '23', year: '2018', brand: '寶島一村', founder: '經典舞台劇', category: 'culture', type: '經典舞台劇', description: '結合眷村文化與舞台劇美學的經典限量款行李箱，訴說光陰的故事。' },
+          { id: '24', year: '2016', brand: '搞笑者們 3.0', founder: '舞台藝術劇團', category: 'culture', type: '舞台藝術', description: '支持在地原創劇團與青年藝術工作者，跨界舞台喜劇的活力合作。' }
         ];
         setItems(mockData);
       } finally {
@@ -450,7 +449,7 @@ export default function CenturionPortal() {
               </div>
               <h3 className="text-2xl font-serif text-stone-900 font-light">家與傳承的重量：遠行的畫作</h3>
               <p className="text-xs text-stone-600 leading-relaxed font-light">
-                「曾有一位知名企業家，長年培育女兒在藝術領域創作。在女兒獲國外頂尖學府錄取遠行之際，他委託百夫長，將女兒手繪畫作高解析客製印刷於行李箱體，作為公司創立 30 周年的特製貴賓禮贈。這只旅行箱，不僅裝載著父親對女兒前途的殷切祝福，更承載了一個企業對夥伴最誠懇的情誼傳承。」
+                "曾有一位知名企業家，長年培育女兒在藝術領域創作。在女兒獲國外頂尖學府錄取遠行之際，他委託百夫長，將女兒手繪畫作高解析客製印刷於行李箱體，作為公司創立 30 周年的特製貴賓禮贈。這只旅行箱，不僅裝載著父親對女兒遠行深造的溫暖祝福，更承載了一個企業對夥伴最誠懇的情誼傳承。"
               </p>
             </div>
             <div className="lg:col-span-5 bg-[#FAF8F5] p-8 border border-[#EFECE6] space-y-4">
