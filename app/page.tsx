@@ -62,15 +62,15 @@ export default function CenturionPortal() {
           .eq('is_active', true)
           .order('year', { ascending: false });
 
-        if (error) {
-          console.warn('嘗試讀取 public.centurion_wall_of_fame 失敗，降級載入預設本地資料。錯誤訊息:', error.message);
-          throw error;
+        // 防禦機制：若發生錯誤，或資料庫傳回空陣列，一律強制拋出例外以啟動高奢離線Fallback
+        if (error || !data || data.length === 0) {
+          throw new Error('Database empty or connection blocked.');
         }
         
         const safeData = (data as any) as WallOfFameItem[];
         setItems(safeData || []);
       } catch (err) {
-        // 載入 100% 語法安全的高精度聯名牆資料備份
+        console.log('--- 🛡️ CENTURION 離線防禦機制啟動：載入完整 48 筆高奢聯名數據 ---');
         const mockData: WallOfFameItem[] = [
           { id: '1', year: '2018', brand: 'STAGE (小豬 羅志祥)', founder: '羅志祥', category: 'artist-ip', type: '藝人潮流品牌', description: '潮流時尚與旅行箱的跨界碰撞，引領街頭行旅風潮。' },
           { id: '2', year: '2019', brand: 'DEBRAND (陳冠希)', founder: '陳冠希', category: 'artist-ip', type: '潮流設計師聯名', description: '以華人文字與街頭文化為核心，探索旅行箱的叛逆美學。' },
@@ -95,7 +95,31 @@ export default function CenturionPortal() {
           { id: '21', year: '2020', brand: '幾米 (Jimmy)', founder: null, category: 'culture', type: '繪本藝術家', description: '將療癒人心的幾米繪本世界帶入行李箱面，溫暖每一段孤獨旅程。' },
           { id: '22', year: '2017', brand: '老夫子 (Old Master Q)', founder: '經典漫畫 IP', category: 'culture', type: '經典漫畫 IP', description: '華人世界最具代表性的漫畫 IP，結合懷舊與幽默生活的聯名紀念款。' },
           { id: '23', year: '2018', brand: '寶島一村', founder: '經典舞台劇', category: 'culture', type: '經典舞台劇', description: '結合眷村文化與舞台劇美學的經典限量款行李箱，訴說光陰的故事。' },
-          { id: '24', year: '2016', brand: '搞笑者們 3.0', founder: '舞台藝術劇團', category: 'culture', type: '舞台藝術', description: '支持在地原創劇團與青年藝術工作者，跨界舞台喜劇的活力合作。' }
+          { id: '24', year: '2016', brand: '搞笑者們 3.0', founder: '舞台藝術劇團', category: 'culture', type: '舞台藝術', description: '支持在地原創劇團與青年藝術工作者，跨界舞台喜劇的活力合作。' },
+          { id: '25', year: '2018', brand: '鍾鎮濤 (Kenny Bee)', founder: '鍾鎮濤', category: 'artist-ip', type: '知名藝人聯名', description: '與華語歌壇巨星聯名合作，推出具藝術與生活感之精緻旅行配品。' },
+          { id: '26', year: '2018', brand: '四季皮膚科診所', founder: '醫療團隊', category: 'brand-retail', type: '專業醫療', description: '醫學美學與生活的跨界結合，將美感融入個人日常行旅細節。' },
+          { id: '27', year: '2020', brand: 'ROG (玩家共和國)', founder: '華碩電競', category: 'artist-ip', type: '電競領導品牌', description: '跨界電競龍頭，為科技玩家開發具未來感與硬核防護的主題箱。' },
+          { id: '28', year: '2020', brand: 'DALMORE (大摩威士忌)', founder: '大摩單一麥芽', category: 'brand-retail', type: '頂級蘇格蘭威士忌', description: '頂級蘇格蘭單一麥芽威士忌品牌聯名，詮釋優雅、洗鍊之商務品味。' },
+          { id: '29', year: '2020', brand: 'GLACIER EXPRESS (瑞士冰河列車)', founder: '瑞士鐵道', category: 'brand-retail', type: '歐洲鐵道地標', description: '跨國鐵道文化聯名，將阿爾卑斯山冰河景緻融入高奢旅行配備中。' },
+          { id: '30', year: '2019', brand: 'HAPPI X CROSSOVER', founder: '香港原創團隊', category: 'culture', type: '香港原創 IP', description: '香港知名文創 IP 跨界，傳遞活潑多元且色彩繽紛的視覺想像。' },
+          { id: '31', year: '2017', brand: 'Little Devil 美妝', founder: '彩妝品牌', category: 'brand-retail', type: '彩妝精品', description: '推出限定款「Metallic trip」金屬光澤聯名美妝包與旅行配件。' },
+          { id: '32', year: '2019', brand: '中華職棒 (CPBL) / Team Taiwan', founder: '體育國家隊', category: 'brand-retail', type: '國家運動代表', description: '陪伴中華職棒選手出國爭光指定行李箱，結合國家體育熱情與實力。' },
+          { id: '33', year: '2016', brand: '迪游公司 (日本)', founder: '日本迪游', category: 'brand-retail', type: '跨國企業禮贈', description: '日本旅行服務公司 B2B 委託，作為貴賓參訪與高端商務之限定禮贈品。' },
+          { id: '34', year: '2016', brand: '頂級婚紗旗艦公司', founder: '婚慶美學', category: 'brand-retail', type: '婚禮紀念禮贈', description: '婚慶產業客製禮品，為新人量身打造充滿儀式感與紀念價值的婚慶箱。' },
+          { id: '35', year: '2016', brand: '日系連鎖甜品公司', founder: '連鎖甜點', category: 'brand-retail', type: '連鎖食品禮贈', description: '日本甜品連鎖店貴賓會員限定禮品，活潑色彩融匯品牌甜美意象。' },
+          { id: '36', year: '2016', brand: '連鎖咖啡學堂教室', founder: '咖啡美學', category: 'brand-retail', type: '生活美學禮贈', description: '知名咖啡連鎖教室專屬訂製，融入學員日常生活，延伸品牌質感。' },
+          { id: '37', year: '2017', brand: '日本專業魚飼料大廠', founder: '農業經銷', category: 'brand-retail', type: '農業經銷禮贈', description: '日本專業農業與飼料經銷大廠客製，作為績優經銷商年終回饋大禮。' },
+          { id: '38', year: '2017', brand: '美國重機改裝專門店', founder: '重機美學', category: 'brand-retail', type: '重機與機械美學', description: '美國重機改裝俱樂部會員限定，粗獷黑白塗鴉風格體現速度與機械感。' },
+          { id: '39', year: '2017', brand: '頂尖整合廣告公關集團', founder: '廣告公關', category: 'brand-retail', type: '創意公關禮贈', description: '大型公關廣告公司企業客製，作為核心品牌客戶與年會之質感伴手禮。' },
+          { id: '40', year: '2017', brand: '加州衝浪板工廠 (美國)', founder: '極限運動', category: 'brand-retail', type: '戶外極限運動', description: '美國加州專業運動大廠客製禮品，展現陽光、沙灘與美式自由風情。' },
+          { id: '41', year: '2017', brand: '日本輪胎製造巨頭', founder: '工業美學', category: 'brand-retail', type: '製造與汽車美學', description: '日本輪胎大廠客製 VIP 年度禮品，箱面融入胎紋幾何結構與工程美學。' },
+          { id: '42', year: '2017', brand: '大型民生蛋品公司', founder: '民生食品', category: 'brand-retail', type: '民生食品禮贈', description: '企業品牌重塑與福利品採購，將實用性與趣味性完美結合。' },
+          { id: '43', year: '2017', brand: '美式連鎖寵物精品店 (美國)', founder: '寵物友善', category: 'brand-retail', type: '寵物友善', description: '美國大型連鎖寵物店客製，箱體印花充滿動物趣味，宣導寵物友善行旅。' },
+          { id: '44', year: '2017', brand: '當代藝術廊中心', founder: '藝術美學', category: 'brand-retail', type: '美學藝術空間', description: '中國大陸知名藝術空間訂製，箱體化身移動畫布，傳遞純粹美學力量。' },
+          { id: '45', year: '2015', brand: '國際自然保護聯盟 (IUCN) 瀕危動物保育系列', founder: 'IUCN 保育倡議', category: 'culture', type: '全球物種保育', description: '發行大熊貓、雪豹、殺人鯨、孟加拉虎、美洲獅、黑熊等物種保育主題。' },
+          { id: '46', year: '2017', brand: '地球溫暖化與氣候變遷倡議系列', founder: '環保永續', category: 'culture', type: '環境與綠色永續', description: '發行「Save Earth」與「Save Water」節水減碳主題，提倡低碳探索。' },
+          { id: '47', year: '2018', brand: '森林保育系列 (Forest, Wood, Few, Empty)', founder: '森林資源倡議', category: 'culture', type: '森林保育與資源', description: '四大木紋質感箱體，警示全球濫砍濫伐，教育新一代關注自然保育。' },
+          { id: '48', year: '2019', brand: '台灣城市觀光外交系列 (台中、台南、高雄等)', founder: '城市行銷', category: 'culture', type: '地方觀光與人文', description: '將台灣各大城市獨特風情與特色融入箱體，以外交級規格推廣在地美。' }
         ];
         setItems(mockData);
       } finally {
@@ -431,7 +455,7 @@ export default function CenturionPortal() {
               </div>
               <h3 className="text-lg font-serif font-bold text-stone-900">氣候暖化與 Can use but save</h3>
               <p className="text-xs text-stone-600 leading-relaxed font-light">
-                「我們面臨暖化危機，不能僅消極逃避，更應採取積極綠色行為。」設計融合環境保護概念（Save Water, Save Earth 等主題），倡導減碳旅程與資源再利用。
+                「我們面臨暖化危機，不能僅消極逃避，更應採取積極綠色行為。」設計融合環境保護概念（Save Water, Save Earth 等主題），倡計低碳旅程與資源再利用。
               </p>
             </div>
 
@@ -471,7 +495,7 @@ export default function CenturionPortal() {
         </div>
       </section>
 
-      {/* 全新第五單元：百夫長新知與媒體觀點 (CENTURION Insights & Media) */}
+      {/* 第五單元：百夫長新知與媒體觀點 */}
       <section id="insights" className="py-24 lg:py-32 max-w-7xl mx-auto px-6 border-b border-[#EFECE6]">
         <div className="text-center space-y-4 mb-20">
           <span className="text-[#AF8943] tracking-[0.25em] text-xs font-semibold uppercase">CENTURION INSIGHTS</span>
@@ -483,7 +507,7 @@ export default function CenturionPortal() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           
-          {/* 新知 1: 創辦人專訪報導 */}
+          {/* 新知 1 */}
           <div className="bg-white border border-[#EFECE6] flex flex-col justify-between p-8 transition-all duration-300 hover:shadow-md group">
             <div className="space-y-6">
               <div className="flex justify-between items-center text-[10px] text-stone-400 font-mono tracking-widest">
@@ -497,7 +521,7 @@ export default function CenturionPortal() {
                 「以箱為郵票，發行地球美學」— 專訪創辦人陳志彬的品牌無邊界戰略
               </h3>
               <p className="text-xs text-stone-600 leading-relaxed font-light">
-                詳細報導陳志彬先生如何運用 Apple 與 Nike 模式的「輕資產營運思維」，拒絕重資產束縛，將全部精神凝聚於專利美學研發與 IUCN 物種保育的跨界融合，顛覆百年箱包產業。
+                詳細報導陳志彬先生如何運用 Apple 與 Nike 模式的「輕資產營運思維」，將全部精神凝聚於專利美學研發與 IUCN 物種保育的跨界融合，顛覆百年箱包產業。
               </p>
             </div>
             <a 
@@ -511,7 +535,7 @@ export default function CenturionPortal() {
             </a>
           </div>
 
-          {/* 新知 2: 影音專題 (帶播放視覺) */}
+          {/* 新知 2 */}
           <div className="bg-white border border-[#EFECE6] flex flex-col justify-between p-8 transition-all duration-300 hover:shadow-md group">
             <div className="space-y-6">
               <div className="flex justify-between items-center text-[10px] text-stone-400 font-mono tracking-widest">
@@ -522,7 +546,6 @@ export default function CenturionPortal() {
                 <span>VIDEO SPOTLIGHT</span>
               </div>
               
-              {/* 高奢影音播放示意圖卡 */}
               <div className="relative w-full h-44 bg-stone-100 border border-[#EFECE6] flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 bg-stone-950/5 group-hover:bg-stone-950/10 transition-colors z-10" />
                 <div className="w-12 h-12 rounded-full bg-[#AF8943]/95 text-white flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform z-20">
@@ -551,7 +574,7 @@ export default function CenturionPortal() {
             </a>
           </div>
 
-          {/* 新知 3: 保育永續新聞 */}
+          {/* 新知 3 */}
           <div className="bg-white border border-[#EFECE6] flex flex-col justify-between p-8 transition-all duration-300 hover:shadow-md group">
             <div className="space-y-6">
               <div className="flex justify-between items-center text-[10px] text-stone-400 font-mono tracking-widest">
