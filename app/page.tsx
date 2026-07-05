@@ -52,7 +52,6 @@ export default function CenturionPortal() {
     async function fetchWallData() {
       try {
         setLoadingItems(true);
-        // 防禦性檢查：讀取 public 下的 prefix 表單
         const { data, error } = await supabaseCenturion
           .from('centurion_wall_of_fame')
           .select('*')
@@ -70,18 +69,30 @@ export default function CenturionPortal() {
         // 如果 API 仍受限，載入高仿真 fallback 資料，保證編譯與渲染 100% 正常
         console.log('載入高精度備份聯名牆資料中...');
         const mockData: WallOfFameItem[] = [
-          { id: '1', year: '2018', brand: 'STAGE (小豬羅志祥)', founder: '羅志祥', category: 'artist-ip', type: '藝人品牌', description: '潮流 × 旅行的經典跨界，改寫旅行箱之時尚定位。' },
-          { id: '2', year: '2019', brand: 'DEBRAND (陳冠希聯名)', founder: '陳冠希', category: 'artist-ip', type: '潮牌聯名', description: '街頭潮流美學延伸，將東方藝術融入法式箱包。' },
-          { id: '3', year: '2019', brand: 'Andox & Box (劉德華官方IP)', founder: '劉德華活動合作', category: 'artist-ip', type: 'IP 聯名', description: '經典人氣公仔跨界合作，打造限量收藏風潮。' },
-          { id: '4', year: '2021', brand: '九澤CP (陳零九/邱鋒澤)', founder: '五堅情主導', category: 'artist-ip', type: '網紅合作', description: '新世代社群影響力強烈聯動，吸引年輕菁英市場。' },
-          { id: '5', year: '2020', brand: 'KAKAO FRIENDS 官方授權', founder: null, category: 'artist-ip', type: '角色 IP', description: '韓系人氣角色官方合作，創造百萬級集點熱潮。' },
-          { id: '6', year: '2019', brand: 'Vogue 時尚雜誌', founder: null, category: 'media', type: '時尚雜誌', description: '時尚權威媒體背書，精緻品味的終極認證。' },
-          { id: '7', year: '2020', brand: 'GQ 雜誌聯名企劃', founder: null, category: 'media', type: '男性時尚', description: '極致紳士品味旅行箱企劃，專為菁英商務男士設計。' },
-          { id: '8', year: '2020', brand: 'ELLE 雜誌優雅行旅', founder: null, category: 'media', type: '女性時尚', description: '都會女性法式優雅美學，裝載自由的靈魂。' },
-          { id: '9', year: '2021', brand: '7-ELEVEN 跨界集點', founder: null, category: 'brand-retail', type: '零售通路', description: '全國超商通路集點合作，創下箱包史上兌換紀錄。' },
-          { id: '10', year: '2022', brand: '全聯福利中心集點戰略', founder: null, category: 'brand-retail', type: '零售通路', description: '民生通路旗艦級集點合作，將美學普及於日常。' },
-          { id: '11', year: '2021', brand: 'SOU‧SOU (日本京都)', founder: null, category: 'culture', type: '日本傳統紋樣', description: '京都和風美學 × 現代行旅，極簡幾何交織。' },
-          { id: '12', year: '2019', brand: '故宮博物院特展合作', founder: null, category: 'culture', type: '文化機構', description: '將東方國寶文物之美融入旅行，開創移動博物館美學。' }
+          { id: '1', year: '2018', brand: 'STAGE (小豬 羅志祥)', founder: '羅志祥', category: 'artist-ip', type: '藝人潮流品牌', description: '潮流時尚與旅行箱的跨界碰撞，引領街頭行旅風潮。' },
+          { id: '2', year: '2019', brand: 'DEBRAND (陳冠希)', founder: '陳冠希', category: 'artist-ip', type: '潮流設計師聯名', description: '以華人文字與街頭文化為核心，探索旅行箱的叛逆美學。' },
+          { id: '3', year: '2019', brand: 'Andox & Box', founder: '劉德華活動合作', category: 'artist-ip', type: '角色 IP', description: '劉德華設計的經典牛公仔，注入可愛與玩味的潮流旅行體驗。' },
+          { id: '4', year: '2021', brand: '九澤 CP (陳零九 / 邱鋒澤)', founder: '五堅情主導', category: 'artist-ip', type: '新生代偶像', description: '結合音樂與年輕世代的社群影響力，打造限量聯動企劃。' },
+          { id: '5', year: '2020', brand: 'KAKAO FRIENDS', founder: null, category: 'artist-ip', type: '國際人氣 IP', description: '韓系經典人氣角色官方授權，將超萌暖意帶入旅途。' },
+          { id: '6', year: '2020', brand: 'LINE FRIENDS', founder: null, category: 'artist-ip', type: '國際人氣 IP', description: '全球知名通訊角色官方聯名，創造療癒滿分的出行伴侶。' },
+          { id: '7', year: '2021', brand: 'Disney 迪士尼', founder: null, category: 'artist-ip', type: '夢幻經典 IP', description: '全球夢幻迪士尼角色系列聯名，重現童話般的行旅記憶。' },
+          { id: '8', year: '2016', brand: '天氣女孩 (Weather Girls)', founder: '女子偶像團體', category: 'artist-ip', type: '女子偶像團體', description: '聯名合作案例第 Q14WW 號，展現專屬設計與限量美學。' },
+          { id: '9', year: '2019', brand: 'Vogue 時尚雜誌', founder: null, category: 'media', type: '時尚權威', description: '與時尚指標 Vogue 深度合作，以跨界收納備品包演繹頂級行旅品味。' },
+          { id: '10', year: '2020', brand: 'GQ 雜誌', founder: null, category: 'media', type: '紳士風尚', description: '專為菁英男士打造的商務旅行箱企劃，體現沉穩洗鍊的極致紳士感。' },
+          { id: '11', year: '2020', brand: 'ELLE 雜誌', founder: null, category: 'media', type: '優雅法式', description: '優雅且具質感的法式旅行風格，完美演繹現代都會女性的自在風采。' },
+          { id: '12', year: '2021', brand: 'Bella 儂儂', founder: null, category: 'media', type: '都會美學', description: '專注都會女性的旅行美學與生活質感探索，傳遞時尚生活主張。' },
+          { id: '13', year: '2021', brand: '7-ELEVEN', founder: null, category: 'brand-retail', type: '民生通路', description: '全國性大型集點兌換合作，將百夫長精緻箱體走入萬千家庭。' },
+          { id: '14', year: '2022', brand: '全聯福利中心', founder: null, category: 'brand-retail', type: '大型零售', description: '民生超市龍頭年度集點企劃，展現品牌貼近生活的日常高度。' },
+          { id: '15', year: '2020', brand: '台灣啤酒', founder: null, category: 'brand-retail', type: '國民品牌', description: '台灣在地經典品牌跨界，揉合本土在地趣味與摩登旅行風貌。' },
+          { id: '16', year: '2017', brand: '中華航空 & 華信航空', founder: '航空巨擘授權', 'brand-retail', '航空巨擘', '華航機組員熱情愛用，推出聯名機上備品過夜包，彰顯商務飛行質感。' },
+          { id: '17', year: '2018', brand: 'UNIQLO 優衣庫', founder: null, category: 'brand-retail', type: '跨國服飾', description: '跨國服飾品牌包裝與活動聯名，結合機能性與極簡生活美學。' },
+          { id: '18', year: '2020', brand: '誠品 eslite', founder: null, category: 'culture', type: '文化地標', description: '文化通路 × 旅行的跨界對話，勾勒出極具人文氣息的行旅想像。' },
+          { id: '19', year: '2021', brand: 'SOU‧SOU (京都)', founder: null, category: 'culture', type: '京都傳統印花', description: '京都百年和風美學與現代旅行箱體的交融，刻畫細緻優雅的東方印記。' },
+          { id: '20', year: '2019', brand: '故宮博物院', founder: null, category: 'culture', type: '國家級博物館', description: '將典藏文物之美與古典墨寶融入現代行李箱，讓東方文化隨行世界。' },
+          { id: '21', year: '2020', brand: '幾米 (Jimmy)', founder: null, category: 'culture', type: '繪本藝術家', description: '將療癒人心的幾米繪本世界帶入行李箱面，溫暖每一段孤獨旅程。' },
+          { id: '22', year: '2017', brand: '老夫子 (Old Master Q)', founder: '經典漫畫 IP', 'culture', '經典漫畫 IP', description: '華人世界最具代表性的漫畫 IP，結合懷舊與幽默生活的聯名紀念款。' },
+          { id: '23', year: '2018', brand: '寶島一村', founder: '經典舞台劇', 'culture', '經典舞台劇', description: '結合眷村文化與舞台劇美學的經典限量款行李箱，訴說光陰的故事。' },
+          { id: '24', year: '2016', brand: '搞笑者們 3.0', founder: '舞台藝術劇團', 'culture', '舞台藝術', description: '支持在地原創劇團與青年藝術工作者，跨界舞台喜劇的活力合作。' }
         ];
         setItems(mockData);
       } finally {
@@ -135,10 +146,16 @@ export default function CenturionPortal() {
     <div className="min-h-screen bg-[#FDFBF7] text-stone-900 font-sans selection:bg-[#AF8943] selection:text-white">
       
       {/* 導覽列 */}
-      <nav className="sticky top-0 z-50 backdrop-blur-md bg-[#FDFBF7]/90 border-b border-[#EFECE6] px-6 py-5">
+      <nav className="sticky top-0 z-50 backdrop-blur-md bg-[#FDFBF7]/90 border-b border-[#EFECE6] px-6 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
+          
+          {/* Logo 置換為使用者指定之高奢圖片 */}
           <div className="flex items-center space-x-3">
-            <span className="text-2xl font-serif font-bold tracking-[0.2em] text-stone-900">CENTURION</span>
+            <img 
+              src="https://custom-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_300,w_300,f_auto,q_100/1886487/831598_863023.png" 
+              alt="CENTURION" 
+              className="h-10 w-auto object-contain"
+            />
             <span className="text-[9px] bg-[#AF8943]/10 text-[#AF8943] px-2.5 py-0.5 rounded-full font-mono font-semibold tracking-widest">PORTAL</span>
           </div>
           
@@ -220,7 +237,7 @@ export default function CenturionPortal() {
         </div>
       </section>
 
-      {/* 第二單元：五大事業版圖 (The Five Pillars - 移至此處) */}
+      {/* 第二單元：五大事業版圖 (The Five Pillars) */}
       <section id="pillars" className="bg-[#F7F4EE] py-24 lg:py-32 border-t border-b border-[#EFECE6]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center space-y-4 mb-20">
@@ -357,7 +374,7 @@ export default function CenturionPortal() {
           </div>
         </div>
 
-        {/* 技術品質與常識檢定 (高奢典雅對比) */}
+        {/* 技術品質與常識檢定 */}
         <div className="mt-16 grid md:grid-cols-2 gap-10">
           <div className="bg-[#FAF8F5] p-10 border border-[#EFECE6] flex flex-col justify-between">
             <div className="space-y-4">
@@ -375,7 +392,7 @@ export default function CenturionPortal() {
               <span className="text-[#AF8943] font-mono text-xs font-bold tracking-widest uppercase">QUALITY COMPLIANCE 02</span>
               <h4 className="text-xl font-serif text-stone-900">為什麼 CENTURION 絕不銷售「純鋁製」旅行箱？</h4>
               <p className="text-xs text-stone-600 leading-relaxed font-light">
-                純鋁箱體抗震性差，在強烈托運撞擊下極易發生不可逆的嚴重金屬變形，導致行李於旅途中無法順利閉合或損毀。我們堅持採用高抗衝擊、具高回彈韌性的複合材質。
+                純鋁箱體抗震性差，在強烈托運撞擊下極易發生不可逆的嚴重金屬變形，導致行李於旅途中無法順利閉合或損毀。我們堅持採用高衝擊強度、高回彈韌性的 PC/ABS 複合材質。
               </p>
             </div>
             <div className="pt-8 text-[#AF8943] text-[10px] font-mono tracking-widest">MATERIAL PERFORMANCE</div>
@@ -383,7 +400,7 @@ export default function CenturionPortal() {
         </div>
       </section>
 
-      {/* 第四單元：永續承諾與自然保育 (ESG & Humanity) */}
+      {/* 第四單元：永續承諾與自然保育 */}
       <section id="esg" className="bg-[#F7F4EE] py-24 lg:py-32 border-t border-b border-[#EFECE6]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center space-y-4 mb-20">
@@ -419,7 +436,7 @@ export default function CenturionPortal() {
               </div>
               <h3 className="text-lg font-serif font-bold text-stone-900">森林保育「森、林、少、空」</h3>
               <p className="text-xs text-stone-600 leading-relaxed font-light">
-                百夫長發表專屬木紋質感箱體，探討森林資源枯竭警訊。創辦人相信：「唯有在幼年期，就將環境保育理念深植於社會未來的領導階層，我們才能為後代留下更好的地球。」
+                百夫長發表專屬木紋質感箱體，探討森林資源過度消耗警訊。創辦人相信：「唯有在幼年期，就將環境保育理念深植於社會未來的領導階層，我們才能為後代留下更好的地球。」
               </p>
             </div>
           </div>
@@ -433,7 +450,7 @@ export default function CenturionPortal() {
               </div>
               <h3 className="text-2xl font-serif text-stone-900 font-light">家與傳承的重量：遠行的畫作</h3>
               <p className="text-xs text-stone-600 leading-relaxed font-light">
-                「曾有一位知名企業家，長年培育女兒在藝術領域創作。在女兒獲國外頂尖學府錄取遠行之際，他委託百夫長，將女兒珍貴的手繪畫作高解析客製印刷於旅行箱體，作為公司創立 30 周年的特製貴賓禮贈。這只旅行箱，不僅裝載著父親對女兒前途的殷切祝福，更承載了一個企業對夥伴最誠懇的情誼傳承。」
+                「曾有一位知名企業家，長年培育女兒在藝術領域創作。在女兒獲國外頂尖學府錄取遠行之際，他委託百夫長，將女兒手繪畫作高解析客製印刷於行李箱體，作為公司創立 30 周年的特製貴賓禮贈。這只旅行箱，不僅裝載著父親對女兒前途的殷切祝福，更承載了一個企業對夥伴最誠懇的情誼傳承。」
               </p>
             </div>
             <div className="lg:col-span-5 bg-[#FAF8F5] p-8 border border-[#EFECE6] space-y-4">
@@ -449,7 +466,7 @@ export default function CenturionPortal() {
         </div>
       </section>
 
-      {/* 第五單元：法式聯名榮譽牆 (Wall of Fame - 動態快篩) */}
+      {/* 第五單元：法式聯名榮譽牆 */}
       <section id="wall" className="py-24 lg:py-32 max-w-7xl mx-auto px-6">
         <div className="text-center space-y-4 mb-16">
           <span className="text-[#AF8943] tracking-[0.25em] text-xs font-semibold uppercase">WALL OF FAME</span>
@@ -459,7 +476,7 @@ export default function CenturionPortal() {
           </p>
         </div>
 
-        {/* 快篩按鈕組 (法式極簡設計) */}
+        {/* 快篩按鈕組 */}
         <div className="flex flex-wrap justify-center gap-3 mb-16">
           {[
             { label: '全部合作', value: 'all' },
@@ -482,7 +499,7 @@ export default function CenturionPortal() {
           ))}
         </div>
 
-        {/* 聯名牆 Grid (LV 卡片質感) */}
+        {/* 聯名牆 Grid */}
         {loadingItems ? (
           <div className="flex flex-col justify-center items-center py-20 space-y-4">
             <Loader2 className="animate-spin text-[#AF8943]" size={32} />
@@ -518,7 +535,7 @@ export default function CenturionPortal() {
         )}
       </section>
 
-      {/* 第六單元：B2B 合作意向資料收集門戶 (Lead Capture Portal) */}
+      {/* 第六單元：B2B 合作意向資料收集門戶 */}
       <section id="b2b-form" className="bg-[#FAF8F5] py-24 lg:py-32 border-t border-[#EFECE6]">
         <div className="max-w-4xl mx-auto px-6">
           <div className="text-center space-y-4 mb-16">
@@ -617,7 +634,7 @@ export default function CenturionPortal() {
                 value={formData.proposal_summary}
                 onChange={(e) => setFormData({ ...formData, proposal_summary: e.target.value })}
                 className="w-full bg-[#FAF8F5] border border-[#EFECE6] rounded-none px-4 py-4 text-stone-900 focus:outline-none focus:border-[#AF8943] text-xs tracking-wider transition-colors" 
-                placeholder="請簡述您的需求，例：企業周年客製禮贈數量、目標對象、期望交期或活動集點模式..."
+                placeholder="請填寫具體的合作計畫，包含採購估計量、期望款式，或對接活動的時程規劃..."
               />
             </div>
 
