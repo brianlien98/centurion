@@ -23,7 +23,11 @@ import {
   UserCheck,
   Scale,
   Sparkles,
-  HeartHandshake
+  HeartHandshake,
+  Play,
+  FileText,
+  Video,
+  ExternalLink
 } from 'lucide-react';
 
 export default function CenturionPortal() {
@@ -86,7 +90,7 @@ export default function CenturionPortal() {
           { id: '16', year: '2017', brand: '中華航空 & 華信航空', founder: '航空巨擘授權', category: 'brand-retail', type: '航空巨擘', description: '華航機組員熱情愛用，推出聯名機上備品過夜包，彰顯商務飛行質感。' },
           { id: '17', year: '2018', brand: 'UNIQLO 優衣庫', founder: null, category: 'brand-retail', type: '跨國服飾', description: '跨國服飾品牌包裝與活動聯名，結合機能性與極簡生活美學。' },
           { id: '18', year: '2020', brand: '誠品 eslite', founder: null, category: 'culture', type: '文化地標', description: '文化通路 × 旅行的跨界對話，勾勒出極具人文氣息的行旅想像。' },
-          { id: '19', year: '2021', brand: 'SOU‧SOU (京都)', founder: null, category: 'culture', type: '京都傳統印花', description: '京都百年和風美學與現代旅行箱體的交融，刻畫細緻優雅的東方印記。' },
+          { id: '19', year: '2021', brand: 'SOU‧SOU (京都)', founder: null, category: 'culture', type: '京都傳統印花', description: '京都百年和風美學 × 現代旅行箱體的交融，刻畫細緻優雅的東方印記。' },
           { id: '20', year: '2019', brand: '故宮博物院', founder: null, category: 'culture', type: '國家級博物館', description: '將典藏文物之美與古典墨寶融入現代行李箱，讓東方文化隨行世界。' },
           { id: '21', year: '2020', brand: '幾米 (Jimmy)', founder: null, category: 'culture', type: '繪本藝術家', description: '將療癒人心的幾米繪本世界帶入行李箱面，溫暖每一段孤獨旅程。' },
           { id: '22', year: '2017', brand: '老夫子 (Old Master Q)', founder: '經典漫畫 IP', category: 'culture', type: '經典漫畫 IP', description: '華人世界最具代表性的漫畫 IP，結合懷舊與幽默生活的聯名紀念款。' },
@@ -164,6 +168,7 @@ export default function CenturionPortal() {
             <a href="#pillars" className="hover:text-[#AF8943] transition-colors">五大版圖</a>
             <a href="#dna" className="hover:text-[#AF8943] transition-colors">核心基因</a>
             <a href="#esg" className="hover:text-[#AF8943] transition-colors">永續人文</a>
+            <a href="#insights" className="hover:text-[#AF8943] transition-colors">百夫長新知</a>
             <a href="#wall" className="hover:text-[#AF8943] transition-colors">聯名牆</a>
           </div>
 
@@ -192,6 +197,7 @@ export default function CenturionPortal() {
             <a href="#pillars" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">五大版圖</a>
             <a href="#dna" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">核心基因</a>
             <a href="#esg" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">永續人文</a>
+            <a href="#insights" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">百夫長新知</a>
             <a href="#wall" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">聯名牆</a>
             <a href="#b2b-form" onClick={() => setMobileMenuOpen(false)} className="bg-[#AF8943] hover:bg-[#93702F] text-white font-bold text-center py-4 rounded-none text-xs tracking-widest transition-colors">合作提案</a>
           </div>
@@ -465,7 +471,118 @@ export default function CenturionPortal() {
         </div>
       </section>
 
-      {/* 第五單元：法式聯名榮譽牆 */}
+      {/* 全新第五單元：百夫長新知與媒體觀點 (CENTURION Insights & Media) */}
+      <section id="insights" className="py-24 lg:py-32 max-w-7xl mx-auto px-6 border-b border-[#EFECE6]">
+        <div className="text-center space-y-4 mb-20">
+          <span className="text-[#AF8943] tracking-[0.25em] text-xs font-semibold uppercase">CENTURION INSIGHTS</span>
+          <h2 className="text-4xl font-serif text-stone-900 font-light">百夫長新知與媒體觀點</h2>
+          <p className="text-stone-500 text-sm max-w-xl mx-auto font-light">
+            匯聚當代主流財經媒體、電視专题報導與綠色旅程的前沿探討，深入剖析陳志彬先生的跨界美學哲思。
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+          
+          {/* 新知 1: 創辦人專訪報導 */}
+          <div className="bg-white border border-[#EFECE6] flex flex-col justify-between p-8 transition-all duration-300 hover:shadow-md group">
+            <div className="space-y-6">
+              <div className="flex justify-between items-center text-[10px] text-stone-400 font-mono tracking-widest">
+                <span className="flex items-center space-x-1">
+                  <FileText size={12} className="text-[#AF8943]" />
+                  <span>主流財經專訪</span>
+                </span>
+                <span>2022.08</span>
+              </div>
+              <h3 className="text-xl font-serif font-bold text-stone-900 leading-snug group-hover:text-[#AF8943] transition-colors">
+                「以箱為郵票，發行地球美學」— 專訪創辦人陳志彬的品牌無邊界戰略
+              </h3>
+              <p className="text-xs text-stone-600 leading-relaxed font-light">
+                詳細報導陳志彬先生如何運用 Apple 與 Nike 模式的「輕資產營運思維」，拒絕重資產束縛，將全部精神凝聚於專利美學研發與 IUCN 物種保育的跨界融合，顛覆百年箱包產業。
+              </p>
+            </div>
+            <a 
+              href="https://example-news-interview.com" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-[11px] text-[#AF8943] hover:text-[#93702F] inline-flex items-center space-x-1 font-bold tracking-widest pt-6 border-t border-[#F5F2EB] mt-8"
+            >
+              <span>閱讀完整報導</span>
+              <ExternalLink size={12} />
+            </a>
+          </div>
+
+          {/* 新知 2: 影音專題 (帶播放視覺) */}
+          <div className="bg-white border border-[#EFECE6] flex flex-col justify-between p-8 transition-all duration-300 hover:shadow-md group">
+            <div className="space-y-6">
+              <div className="flex justify-between items-center text-[10px] text-stone-400 font-mono tracking-widest">
+                <span className="flex items-center space-x-1">
+                  <Video size={12} className="text-[#AF8943]" />
+                  <span>電視媒體影音</span>
+                </span>
+                <span>VIDEO SPOTLIGHT</span>
+              </div>
+              
+              {/* 高奢影音播放示意圖卡 */}
+              <div className="relative w-full h-44 bg-stone-100 border border-[#EFECE6] flex items-center justify-center overflow-hidden">
+                <div className="absolute inset-0 bg-stone-950/5 group-hover:bg-stone-950/10 transition-colors z-10" />
+                <div className="w-12 h-12 rounded-full bg-[#AF8943]/95 text-white flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform z-20">
+                  <Play size={18} className="ml-1 fill-current" />
+                </div>
+                <div className="absolute bottom-3 left-4 z-20 text-[10px] font-mono text-[#AF8943] tracking-widest uppercase font-bold">
+                  CENTURION Brand Story
+                </div>
+              </div>
+
+              <h3 className="text-xl font-serif font-bold text-stone-900 leading-snug group-hover:text-[#AF8943] transition-colors">
+                一只裝載溫暖的「胖胖箱」：探索 CENTURION 席捲大眾行旅美學的幕後祕辛
+              </h3>
+              <p className="text-xs text-stone-600 leading-relaxed font-light">
+                深度影音专题報導。詳細解構百夫長如何開創「胖胖箱」5:5 深度美學比例，並探討「不分尺寸均一價」如何從根本上免除消費者在旅行前夕的繁瑣計較，重新喚起行旅的幸福初衷。
+              </p>
+            </div>
+            <a 
+              href="https://example-youtube-video.com" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-[11px] text-[#AF8943] hover:text-[#93702F] inline-flex items-center space-x-1 font-bold tracking-widest pt-6 border-t border-[#F5F2EB] mt-8"
+            >
+              <span>觀看專題影片</span>
+              <ExternalLink size={12} />
+            </a>
+          </div>
+
+          {/* 新知 3: 保育永續新聞 */}
+          <div className="bg-white border border-[#EFECE6] flex flex-col justify-between p-8 transition-all duration-300 hover:shadow-md group">
+            <div className="space-y-6">
+              <div className="flex justify-between items-center text-[10px] text-stone-400 font-mono tracking-widest">
+                <span className="flex items-center space-x-1">
+                  <FileText size={12} className="text-[#AF8943]" />
+                  <span>綠色永續論壇</span>
+                </span>
+                <span>2023.04</span>
+              </div>
+              <h3 className="text-xl font-serif font-bold text-stone-900 leading-snug group-hover:text-[#AF8943] transition-colors">
+                「每一次旅程，都是對綠色地球的致敬」— CENTURION 瀕危保育系列引爆綠色行旅迴響
+              </h3>
+              <p className="text-xs text-stone-600 leading-relaxed font-light">
+                探討百夫長秉持的「Can use but save」之自然永續精神。報導詳細列舉其「森、林、少、空」木紋警示概念箱體，以及攜手國際物種保育組織的驚艷設計，如何啟迪新一代消費者對森林資源與漸逝生態的熱忱守護。
+              </p>
+            </div>
+            <a 
+              href="https://example-esg-news.com" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-[11px] text-[#AF8943] hover:text-[#93702F] inline-flex items-center space-x-1 font-bold tracking-widest pt-6 border-t border-[#F5F2EB] mt-8"
+            >
+              <span>閱讀永續專題</span>
+              <ExternalLink size={12} />
+            </a>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 第六單元：法式聯名榮譽牆 */}
       <section id="wall" className="py-24 lg:py-32 max-w-7xl mx-auto px-6">
         <div className="text-center space-y-4 mb-16">
           <span className="text-[#AF8943] tracking-[0.25em] text-xs font-semibold uppercase">WALL OF FAME</span>
@@ -534,7 +651,7 @@ export default function CenturionPortal() {
         )}
       </section>
 
-      {/* 第六單元：B2B 合作意向資料收集門戶 */}
+      {/* 第七單元：B2B 合作意向資料收集門戶 */}
       <section id="b2b-form" className="bg-[#FAF8F5] py-24 lg:py-32 border-t border-[#EFECE6]">
         <div className="max-w-4xl mx-auto px-6">
           <div className="text-center space-y-4 mb-16">
