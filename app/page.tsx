@@ -132,7 +132,7 @@ export default function CenturionPortal() {
         const safeData = (data as any) as PressItem[];
         setPressItems(safeData);
       } catch (err) {
-        // 載入 30 筆最完整的品牌公眾影響力 fallback 資料
+        // 載入 30 筆型別完全安全之品牌公眾影響力 fallback 資料
         const mockPress: PressItem[] = [
           { id: 1, title: '百夫長行李箱2019年生產優化開箱評測', summary: '針對早期手把零件疑慮，證實品牌自2019年10月起委託全新新代工廠，全面升級引進防滑多段式拉桿與360度靜音大四輪，有效重塑品牌耐用與卓越美譽。', news_url: 'https://www.centurionbuy.com/blog/202311', image_url: '' },
           { id: 2, title: '經典黑色拉鍊款百夫長行李箱開箱實測', summary: '部落客針對經典24吋麥迪遜藍與曜石黑箱進行極致開箱。引述創辦人陳志彬500公克環保法則，指出每減少重量即能有效減輕飛行燃油碳排放。', news_url: 'https://ee025479.pixnet.net/blog/posts/17347319871', image_url: '' },
@@ -141,29 +141,29 @@ export default function CenturionPortal() {
           { id: 5, title: '身家數十億百夫長創辦人自廢武功花50萬選立委報導', summary: '擁有數十億身家的陳志彬，限制自己僅以50萬元預算參選台中立委，拒絕鋪張浪費的傳統競選，期望藉此為沒背景卻想為國奉獻的青年建立範本。雖未當選，但其低成本的參選理念在政壇激發了新政治美學浪潮。', news_url: 'https://www.upmedia.mg/tw/lifestyle/policy/190785', image_url: '' },
           { id: 6, title: '陳志彬提出台中劃為「軍事緩衝區」等奇特政見報導', summary: '台中市立委候選人陳志彬在選舉公報中提出的奇特政見，包含主張將台中劃為「軍事緩衝區」，並提出40歲前生3胎給三節禮金、公職母親週休3日，以及公費招待高中應屆畢業生赴邦交國遊歷半年等福利政見。', news_url: 'https://news.ltn.com.tw/news/politics/breakingnews/4542394', image_url: '' },
           { id: 7, title: '百夫長攜手Excell推出限量聯名街頭美學系列', summary: '百夫長官方發表與工業包材大廠Excell合作，將街頭警示膠帶元素融合進實用旅行箱中，打造富含玩味與視覺張力的限量聯名款，主打個性化與行走的街頭藝術品，藉此吸引注重潮流與獨特生活方式的收集型客群。', news_url: 'https://centurion.tw/news_inner_pages-106.html', image_url: '' },
-          { id: 8, title: '蝦皮商城展示CENTURION與Excell聯名款登機箱', summary: '蝦皮購物平台上展示百夫長與Excell限量聯名20吋登機箱。商品詳述其配備BSMI安全認證、國際海關鎖，並由台中神岡出貨。這顯示出百夫長品牌在台灣主流電商與潮流市場中的實體商品分銷和售後保障佈局。', news_url: 'https://shopee.tw/CENTURION%E7%99%BE%E5%A4%AB%E9%95%B7%E6%97%85%E8%A1%8C%E7%AE%B1-20%E5%90%8B-%E7%8D%A8%E5%AE%B6%E9%99%90%E5%AE%9A-Excell-%E9%99%90%E9%87%8F%E8%81%AF%E5%90%8D%E6%AC%BE-%E7%99%BB%E6%A9%9F%E7%AE%B1-%E5%8F%AF%E7%99%BB%E6%A9%9F-i.50810181.18781513934', image_url: 'https://shopee.tw/CENTURION%E7%99%BE%E5%A4%AB%E9%95%B7%E6%97%85%E8%A1%8C%E7%AE%B1-20%E5%90%8B-%E7%8D%A8%E5%AE%B6%E9%99%90%E5%AE%9A-Excell-%E9%99%90%E9%87%8F%E8%81%AF%E5%90%8D%E6%AC%BE-%E7%99%BB%E6%A9%9F%E7%AE%B1-%E5%8F%AF%E7%99%BB%E6%A9%9F-i.50810181.18781513934' },
-          { id: '9', year: '2025', brand: '百夫長集團創辦人陳志彬獲聘美國國家旅遊局品牌顧問', founder: 'Brand USA 特聘', category: 'corporate-b2b', type: '跨國行銷長才', description: '獲美國國家旅遊局Brand USA聘任為顧問，蔡璧如代表親自特聘。期盼借重陳志彬的跨國品牌行銷長才與宏觀視野，共同推動達拉斯、鳳凰城等美洲新航點觀光。' },
-          { id: '10', year: '2025', brand: '美國國家旅遊局聘任百夫長創辦人推廣赴美旅遊', founder: '赴美推廣自駕', category: 'corporate-b2b', type: '觀光資源對接', description: '美國國家旅遊局台灣處宣布延攬品牌創辦人陳志彬擔任品牌顧問，為期兩年。雙方將攜手推展赴美自駕旅遊與最新公路護照，期望為台灣旅客打造安心又豐富的美國各州探索行程。' },
-          { id: '11', year: '2025', brand: '美國國家旅遊局邀陳志彬擔任品牌顧問助攻旅遊熱潮', founder: '旅報專題報導', category: 'corporate-b2b', type: '赴美推廣顧問', description: '旅報報導美國國家旅遊局聘任陳志彬為品牌顧問。內文指出，隨著達拉斯、鳳凰城等美洲新航點陸續開拓，旅遊局積極透過線上推廣會向業者分享各州最新資源，並借重陳志彬的行銷策略優勢推升台美旅遊熱潮。' },
-          { id: '12', year: '2020', brand: '藥師吉米推薦：百夫長Centurion行李箱極高CP值實測', founder: '藥師吉米開箱', category: 'media', type: '開箱評測推薦', description: '藥師吉米撰文開箱評測。指出百夫長行李箱外型極具質感且配色亮麗，配置360度大四輪飛機輪，推動流暢。其箱體厚度設計比Rimowa更能容納寬大物品，極具價格與功能性優勢，是國外長途旅行的優質選擇。' },
-          { id: '13', year: '2025', brand: '百夫長品牌持有人陳志彬完成商標全類別註冊', founder: '智財權主動登記', category: 'corporate-b2b', type: '全類別防禦登記', description: '陳志彬先生已於中華民國智慧財產局完成「百夫長」與「CENTURION」在全品項及全類別之商標註冊登記。該品牌自2015年起在美註冊並在全球數十國營運，奠定主題式旅行箱領導地位。' },
-          { id: '14', year: '2024', brand: '僑光科大專題演講：國貿背景企業家陳志彬分享掌舵思維', founder: '學術專題講座', category: 'culture', type: '青年掌舵思維', description: '僑光科技大學報導，百夫長創辦人陳志彬受邀進行專題演講。作為國貿系出身躍升為國際企業家的經典案例，陳志彬勉勵學子在多變市場與逆境中，緊握方向盤、相信自己，勇敢成為自己生命旅程的優秀掌舵者。' },
-          { id: '15', year: '2024', brand: '「空姐箱」封號百夫長創辦人陳志彬跨界政壇', founder: '非典型從政之路', category: 'culture', type: '新政治美學', description: '中時新聞網報導，百夫長行李箱因受華航與長榮空姐喜愛而擁有「空姐箱」美譽，在業界占有一席之地。身家豐厚、名下收藏十多部豪車的創辦人陳志彬以環境保護為品牌己任，並跨界投入政壇，追求新政治美學。' },
-          { id: '16', year: '2019', brand: '知名百夫長行李箱創辦人陳志彬設立虛擬網路競選總部', founder: '首創虛擬競總', category: 'culture', type: '臉書政策論述', description: '陳志彬不隨主流大張旗鼓成立實體總部，而是將競選總部架設在虛擬臉書粉專上，以「為天地立心、為生民立命」等核心思想進行政策論述與選民溝通，嘗試為台灣的地方選舉注入不謾罵、重理性的精緻選風。' },
-          { id: '17', year: '2021', brand: '百夫長行李箱創辦人陳志彬體驗台帛旅遊泡泡首發團', founder: '跨境旅遊破冰', category: 'culture', type: '首發團實地體驗', description: '中時報導，44歲的陳志彬與助理參加台帛旅遊泡泡首發團。他表示疫情下能夠出國飛行的感覺截然不同，心情愉悅，對政府在防疫、PCR檢測與景點分流等安全照顧深表放心，支持逐步重啟國際旅遊交流。' },
-          { id: '18', year: '2020', brand: '疫情下百夫長旅行箱以聯名款與高端國旅逆向避險', founder: '鋼鐵粉絲盤支撐', category: 'corporate-b2b', type: '第二曲線探索', description: '中時報導，面對新冠疫情衝擊，創辦人陳志彬指出，百夫長行李箱長期深耕聯名款與收集型客群，而非單純使用型客戶，使品牌保有基本買盤；並在疫情期推出離島高端精緻國旅，發揮營銷避險之效，平穩度過難關。' },
-          { id: '19', year: '2025', brand: '百夫長十週年慶：2026年正式跨足高端旅遊產業', founder: '百夫長旅行社', category: 'culture', type: '十週年慶宣告', description: '百夫長創立十週年，創辦人陳志彬宣布開啟品牌「第二曲線」，將於2026年正式啟動「百夫長旅行社（CENTURION TOUR）」，並首創南極、西非、巴布亞新幾內亞等稀有探險路線，建立一體化生態圈。' },
-          { id: '20', year: '2020', brand: '智慧財產權案件：Rimowa提告百夫長行李箱百褶設計侵權', founder: '時尚法經典戰役', category: 'corporate-b2b', type: '最高法院經典裁決', description: '法律專欄分析Rimowa控告百夫長等品牌外觀百褶侵權案。最高法院連續廢棄智財法院之判決，並指出百夫長在商品正面均有標示清晰之LOGO商裝，是否不足以使消費者在購買時辨別來源，仍有高度調查與審任必要。' },
-          { id: '21', year: '2022', brand: '最高法院110年度台上字第922號民事判決：商標識別度判定', founder: '司法發回更審', category: 'corporate-b2b', type: '著名表徵訴訟案', description: '法律實務解析最高法院110年度台上字第922號判決。最高法院指出「致與他人商品混淆」不以實際發生為限，但仍須依個案審酌。百夫長於行李箱正面加註其LOGO標誌，足以使消費者輕易辨別來源，故發回原審重新調查。' },
-          { id: '22', year: '2023', brand: '永恆選物展售CENTURION拉鍊款29吋麥迪遜藍行李箱', founder: '麥迪遜藍實體展售', category: 'corporate-b2b', type: '永恆選物線上架', description: '永恆選物平台公開展售由總代理運營之百夫長麥迪遜藍拉鍊款29吋旅行箱。商品規格採用超輕PC材質、多段式手把、雙層防盜拉鍊及萬向飛機大輪，展現品牌對商品品質零件與售後服務之高度追求。' },
-          { id: '23', year: '2023', brand: '百夫長行李箱CENTURION官方網站與線上客服資訊', founder: '客服運營說明', category: 'corporate-b2b', type: '官網總代理營運', description: '百夫長行李箱官方網站營運與客服架構。網站產權歸永恆世成有限公司所有，統編為60288301，提供即時線上諮詢服務，奠定行旅之極致體驗。' },
-          { id: '24', year: '2023', brand: '百夫長官網媒體報導與明星愛用開箱專區分類彙整', founder: '明星開箱文獻集', category: 'media', type: '行銷美學索引', description: '百夫長官方網站建構之媒體置入、明星名人開箱評測及旅遊知識專區。此專區記錄了品牌多年來在影視剧作中的植入合作，是研究百夫長社群影響力與KOL行銷不可或缺之文獻索引。' },
-          { id: '25', year: '2023', brand: '《新政治美學：陳志彬模式》精裝書籍於誠品上架販售', founder: '誠品獨家展售', category: 'culture', type: '白象文化精裝書', description: '誠品網絡書店展售由白象文化出版之《新政治美學：陳志彬模式》一書。內容完整收錄陳志彬以普通百姓與企業家身分參選立法委員的歷程，倡導無詆毀攻擊之理性選風，為台灣政治提供深刻思索範本。' },
-          { id: '26', year: '2022', brand: '地方政治人物資訊：第五屆南投縣立法委員陳志彬 (同名釐清)', founder: '資深政治家釐清', category: 'culture', type: '公職歷史去重', description: '立法院公報記載之親民黨籍前立委陳志彬（南投縣選舉區）簡歷。曾任財政委員會、紀律委員會召集委員。用於商業盡職調查中，嚴格區隔該資深政治前輩與百夫長行李箱創辦人陳志彬。' },
-          { id: '27', year: '2022', brand: '地方政治人物資訊：第六屆南投縣立法委員陳志彬 (同名釐清)', founder: '立院存檔去重', category: 'culture', type: '省議員背景釐清', description: '立法院公報存檔。詳載第六屆南投縣立委陳志彬之企管背景與省議員資歷。研究報告指出，南投資深政治家陳志彬之公職活動與百夫長創辦人屬截然不同之公眾數據，需予以精準釐清與去重。' },
-          { id: '28', year: '2022', brand: '地方政治人物資訊：第三屆南投縣立法委員陳志彬 (同名釐清)', founder: '基層經歷去重', category: 'culture', type: '草屯服務社資歷', description: '立法院存檔之國民黨籍第三屆立委陳志彬個人檔案，記載其擔任南投草屯民眾服務分社理事長、消防大隊顧問等基層資歷。旨在向研究者提示同名人物在不同歷史階段的公眾角色。' },
-          { id: '29', year: '2022', brand: '維基百科：南投地方政治要角、前立委陳志彬傳記 (同名釐清)', founder: '行政院中辦前執行長', category: 'culture', type: '維基百科專頁', description: '維基百科中有關1949年出生之親民黨與國民黨籍前立法委員陳志彬傳記。他曾出任行政院中部聯合服務中心第三任執行長。此傳記頁面可用於排除非品牌相關之雜訊數據，確保商情調查精準無誤。' },
-          { id: '30', year: '2023', brand: '「西南扶輪之子」大德國小教育助學金捐贈報導 (同名記者)', founder: '地方同名記者', category: 'culture', type: '媒體公共角色', description: '地方媒體報導記者陳志彬撰寫之西南扶輪之子公益活動。本篇新聞由地方記者陳志彬撰寫，報導扶輪社員陳再添捐助學金之善舉，再次顯示在中部地方公共媒介中同名同姓者的多重社會角色。' }
+          { id: 8, title: '蝦皮商城展示CENTURION與Excell聯名款登機箱', summary: '蝦皮購物平台上展示百夫長與Excell限量聯名20吋登機箱。商品詳述其配備BSMI安全認證、國際海關鎖，並由台中神岡出貨。這顯示出百夫長品牌在台灣主流電商與潮流市場中的實體商品分銷和售後保障佈局。', news_url: 'https://shopee.tw/CENTURION%E7%99%BE%E5%A4%AB%E9%95%B7%E6%97%85%E8%A1%8C%E7%AE%B1-20%E5%90%8B-%E7%8D%A8%E5%AE%B6%E9%99%90%E5%AE%9A-Excell-%E9%99%90%E9%87%8F%E8%81%AF%E5%90%8D%E6%AC%BE-%E7%99%BB%E6%A9%9F%E7%AE%B1-%E5%8F%AF%E7%99%BB%E6%A9%9F-i.50810181.18781513934', image_url: '' },
+          { id: 9, title: '百夫長集團創辦人陳志彬獲聘美國國家旅遊局品牌顧問', summary: '經濟日報報導百夫長創辦人陳志彬獲聘美國國家旅遊局品牌顧問。蔡璧如代表親自特聘陳志彬，期盼藉由其品牌長才與國際行銷視野，推廣美國觀光。報導亦提及多家航司積極運營台美直飛航線。', news_url: 'https://money.udn.com/money/story/5612/8929993', image_url: '' },
+          { id: 10, title: '美國國家旅遊局聘任百夫長創辦人推廣赴美旅遊', summary: '美國國家旅遊局台灣處宣布延攬美國品牌CENTURION旅行箱創辦人陳志彬擔任品牌顧問，為期兩年。雙方將攜手推展赴美自駕旅遊與最新公路護照，期望為台灣旅客打造安心又豐富的美國各州探索行程。', news_url: 'https://travel.setn.com/News/1698667', image_url: '' },
+          { id: 11, title: '美國國家旅遊局邀陳志彬擔任品牌顧問助攻旅遊熱潮', summary: '旅報報導美國國家旅遊局聘任陳志彬為品牌顧問。內文指出，隨著達拉斯、鳳凰城等美洲新航點陸續開拓，旅遊局積極透過線上推廣會向業者分享各州最新資源，並借重陳志彬的行銷策略優勢推升台美旅遊熱潮。', news_url: 'https://www.ttnmedia.com/?p=123927', image_url: '' },
+          { id: 12, title: '藥師吉米推薦：百夫長Centurion行李箱極高CP值實測', summary: '藥師吉米撰文開箱評測。指出百夫長行李箱外型極具質感且配色亮麗，配置360度大四輪飛機輪，推動流暢。其箱體厚度設計比Rimowa更能容納寬大物品，極具價格與功能性優勢，是國外長途旅行的優質選擇。', news_url: 'https://drugs.pixnet.net/blog/posts/3045803419', image_url: '' },
+          { id: 13, title: '百夫長品牌持有人陳志彬完成商標全類別註冊', summary: '百夫長創辦人陳志彬已於中華民國智慧財產局完成「百夫長」與「CENTURION」在全品項及全類別之商標註冊登記。該品牌自2015年起在美註冊並在全球數十國營運，奠定主題式旅行箱領導地位。', news_url: 'https://www.ctee.com.tw/news/20250810700657-430503', image_url: '' },
+          { id: 14, title: '僑光科大專題演講：國貿背景企業家陳志彬分享掌舵思維', summary: '僑光科技大學報導，百夫長創辦人陳志彬受邀進行專題演講。作為國貿系出身躍升為國際企業家的經典案例，陳志彬勉勵學子在多變市場與逆境中，緊握方向盤、相信自己，勇敢成為自己生命旅程的優秀掌舵者。', news_url: 'https://www.ocu.edu.tw/p/406-1000-72058,r535.php?Lang=zh-tw', image_url: '' },
+          { id: 15, title: '「空姐箱」封號百夫長創辦人陳志彬跨界政壇', summary: '中時新聞網報導，百夫長行李箱因受華航與長榮空姐喜愛而擁有「空姐箱」美譽，在業界占有一席之地。身家豐厚、名下收藏十多部豪車的創辦人陳志彬以環境保護為品牌己任，並跨界投入政壇，追求新政治美學。', news_url: 'https://www.chinatimes.com/newspapers/20240107000180-260209', image_url: '' },
+          { id: 16, title: '知名百夫長行李箱創辦人陳志彬設立虛擬網路競選總部', summary: '陳志彬不隨主流大張旗鼓成立實體總部，而是將競選總部架設在虛擬臉書粉專上，以「為天地立心、為生民立命」等核心思想進行政策論述與選民溝通，嘗試為台灣的地方選舉注入不謾罵、重理性的精緻選風。', news_url: 'https://www.chinatimes.com/realtimenews/20191212003262-260407', image_url: '' },
+          { id: 17, title: '百夫長行李箱創辦人陳志彬體驗台帛旅遊泡泡首發團', summary: '中時報導，44歲的陳志彬與助理參加台帛旅遊泡泡首發團。他表示疫情下能夠出國飛行的感覺截然不同，心情愉悅，對政府在防疫、PCR檢測與景點分流等安全照顧深表放心，支持逐步重啟國際旅遊交流。', news_url: 'https://www.chinatimes.com/realtimenews/20210401003378-260405', image_url: '' },
+          { id: 18, title: '疫情下百夫長旅行箱以聯名款與高端國旅逆向避險', summary: '中時報導，面對新冠疫情衝擊，創辦人陳志彬指出，百夫長行李箱長期深耕聯名款與收集型客群，而非單純使用型客戶，使品牌保有基本買盤；並在疫情期推出離島高端精緻國旅，發揮營銷避險之效，平穩度過難關。', news_url: 'https://www.chinatimes.com/realtimenews/20200712003476-260405', image_url: '' },
+          { id: 19, title: '百夫長十週年慶：2026年正式跨足高端旅遊產業', summary: '百夫長創立十週年，創辦人陳志彬宣布開啟品牌「第二曲線」，將於2026年正式啟動「百夫長旅行社（CENTURION TOUR）」，並首創南極、西非、巴布亞新幾內亞等稀有探險路線，建立一體化生態圈。', news_url: 'https://www.tristarnews.com.tw/news_ii.html?ID=33606', image_url: '' },
+          { id: 20, title: '智慧財產權案件：Rimowa提告百夫長行李箱百褶設計侵權', summary: '法律專欄分析Rimowa控告百夫長等品牌外觀百褶侵權案。最高法院連續廢棄智財法院之判決，並指出百夫長在商品正面均有標示清晰之LOGO商裝，是否不足以使消費者在購買時辨別來源，仍有高度調查與審任必要。', news_url: 'https://avocats.com.tw/%E6%99%82%E5%B0%9A%E6%B3%95%E4%B8%8D%E5%85%AC%E5%B9%B3%E7%AB%B6%E7%88%AD-%E8%91%97%E5%90%8D%E8%A1%A8%E5%BE%B5-%E6%B7%B7%E6%B7%86%E8%AA%A4%E8%AA%8D%E4%B9%8B%E8%99%9Erimowa%E3%80%8C%E7%99%BE%E6%91%BA/', image_url: '' },
+          { id: 21, title: '最高法院110年度台上字第922號民事判決：商標識別度判定', summary: '法律實務解析最高法院110年度台上字第922號判決。最高法院指出「致與他人商品混淆」不以實際發生為限，但仍須依個案審酌。百夫長於行李箱正面加註其LOGO標誌，足以使消費者輕易辨別來源，故發回原審重新調查。', news_url: 'https://wulaw.blog/2022/03/17/%E5%88%A4%E6%B1%BA%E7%AD%86%E8%A8%98%E6%99%BA%E8%B2%A1%E5%88%A4%E6%B1%BA%E6%8E%83%E6%8F%8F2022-03%E7%AC%AC3%E9%80%B1/', image_url: '' },
+          { id: 22, title: '永恆選物展售CENTURION拉鍊款29吋麥迪遜藍行李箱', summary: '永恆選物平台公開展售由總代理運營之百夫長麥迪遜藍拉鍊款29吋旅行箱。商品規格採用超輕PC材質、多段式手把、雙層防盜拉鍊及萬向飛機大輪，展現品牌對商品品質零件與售後服務之高度追求。', news_url: 'https://store.eternal-bc.com/zh-TW/products/centurion%E7%99%BE%E5%A4%AB%E9%95%B7%E6%8B%89%E9%8D%8A%E6%AC%BE%E8%A1%8E%E6%9D%8E%E7%AE%B1-%E9%BA%A5%E8%BF%CD%E9%81%9C%E8%97%8D-29%E5%90%8B', image_url: '' },
+          { id: 23, title: '百夫長行李箱CENTURION官方網站與線上客服資訊', summary: '百夫長行李箱官方網站營運與客服架構。網站產權歸永恆世成有限公司所有，統編為60288301，提供即時線上諮詢服務，奠定行旅之極致體驗。', news_url: 'https://www.centurionbuy.com/1', image_url: '' },
+          { id: 24, title: '百夫長官網媒體報導與明星愛用開箱專區分類彙整', summary: '百夫長官方網站建構之媒體置入、明星名人開箱評測及旅遊知識專區。此專區記錄了品牌多年來在影視剧作中的植入合作，是研究百夫長社群影響力與KOL行銷不可或缺之文獻索引。', news_url: 'https://www.centurionbuy.com/blog/categories/%E5%AA%92%E9%AB%94%E5%A0%B1%E5%B0%8E', image_url: '' },
+          { id: 25, title: '《新政治美學：陳志彬模式》精裝書籍於誠品上架販售', summary: '誠品網絡書店展售由白象文化出版之《新政治美學：陳志彬模式》一書。內容完整收錄陳志彬以普通百姓與企業家身分參選立法委員的歷程，倡導無詆毀攻擊之理性選風，為台灣政治提供深刻思索範本。', news_url: 'https://www.eslite.com/product/1001168672845686', image_url: '' },
+          { id: 26, title: '地方政治人物資訊：第五屆南投縣立法委員陳志彬 (同名釐清)', summary: '立法院公報記載之親民黨籍前立委陳志彬（南投縣選舉區）簡歷。曾任財政委員會、紀律委員會召集委員。用於商業盡職調查中，嚴格區隔該資深政治前輩與百夫長行李箱創辦人陳志彬。', news_url: 'https://www.ly.gov.tw/Pages/List.aspx?nodeid=1209', image_url: '' },
+          { id: 27, title: '地方政治人物資訊：第六屆南投縣立法委員陳志彬 (同名釐清)', summary: '立法院公報存檔。詳載第六屆南投縣立委陳志彬之企管背景與省議員資歷。研究報告指出，南投資深政治家陳志彬之公職活動與百夫長創辦人屬截然不同之公眾數據，需予以精準釐清與去重。', news_url: 'https://www.ly.gov.tw/Pages/List.aspx?nodeid=1447', image_url: '' },
+          { id: 28, title: '地方政治人物資訊：第三屆南投縣立法委員陳志彬 (同名釐清)', summary: '立法院存檔之國民黨籍第三屆立委陳志彬個人檔案，記載其擔任南投草屯民眾服務分社理事長、消防大隊顧問等基層資歷。旨在向研究者提示同名人物在不同歷史階段的公眾角色。', news_url: 'https://www.ly.gov.tw/Pages/List.aspx?nodeid=781', image_url: '' },
+          { id: 29, title: '維基百科：南投地方政治要角、前立委陳志彬傳記 (同名釐清)', summary: '維基百科中有關1949年出生之親民黨與國民黨籍前立法委員陳志彬傳記。他曾出任行政院中部聯合服務中心第三任執行長。此傳記頁面可用於排除非品牌相關之雜訊數據，確保商情調查精準無誤。', news_url: 'https://zh.wikipedia.org/zh-tw/%E9%99%B3%E5%BF%97%E5%BD%AC_(%E7%AB%8B%E6%B3%95%E5%A7%94%E5%93%A1)', image_url: '' },
+          { id: 30, title: '「西南扶輪之子」大德國小教育助學金捐贈報導 (同名記者)', summary: '地方媒體報導記者陳志彬撰寫之西南扶輪之子公益活動。本篇新聞由地方記者陳志彬撰寫，報導扶輪社員陳再添捐助學金之善舉，再次顯示在中部地方公共媒介中同名同姓者的多重社會角色。', news_url: 'https://z98737406.tw/?p=91828', image_url: '' }
         ];
         setPressItems(mockPress);
       } finally {
@@ -314,13 +314,13 @@ export default function CenturionPortal() {
         </div>
       </section>
 
-      {/* 第二單元：五大事業版圖 */}
+      {/* 第二單元：五大事業版圖 (The Five Pillars) */}
       <section id="pillars" className="bg-[#F7F4EE] py-24 lg:py-32 border-t border-b border-[#EFECE6]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center space-y-4 mb-20">
             <span className="text-[#AF8943] tracking-[0.25em] text-xs font-semibold uppercase">THE FIVE PILLARS</span>
             <h2 className="text-4xl font-serif text-stone-900 font-light">五大事業版圖</h2>
-            <p className="text-stone-500 text-sm max-w-2xl mx-auto font-light">以「旅行美學」為發端，百夫長集團整合五大商業主軸，全面覆蓋頂級生活面向。</p>
+            <p className="text-stone-500 text-sm max-w-xl mx-auto font-light">以「旅行美學」為發端，百夫長集團整合五大商業主軸，全面覆蓋頂級生活面向。</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
@@ -608,7 +608,7 @@ export default function CenturionPortal() {
                 一只裝載溫暖的「胖胖箱」：探索 CENTURION 席捲大眾行旅美學的幕後祕辛
               </h3>
               <p className="text-xs text-stone-600 leading-relaxed font-light">
-                深度影音专题報導。詳細解構百夫長如何開創「胖胖箱」5:5 深度美學比例，並探討「不分尺寸均一價」如何從根本上免除消費者在旅行前夕的繁瑣計較，重新喚起行旅的幸福初衷。
+                深度影音专题報導。詳細解構百夫長如何開創「胖胖箱」 5:5 深度美學比例，並探討「不分尺寸均一價」如何從根本上免除消費者在旅行前夕的繁瑣計較，重新喚起行旅的幸福初衷。
               </p>
             </div>
             <a 
@@ -703,7 +703,7 @@ export default function CenturionPortal() {
                     <div className="flex justify-between items-center pt-2">
                       <span className="text-[10px] text-stone-400 font-mono">DOCUMENT ID: #{p.id.toString().padStart(3, '0')}</span>
                       <a 
-                        href={p.news_url} 
+                        href={p.news_url || '#'} 
                         target="_blank" 
                         rel="noopener noreferrer"
                         className="text-[10px] text-[#AF8943] hover:text-[#93702F] inline-flex items-center space-x-1 font-bold tracking-widest"
