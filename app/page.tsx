@@ -27,19 +27,32 @@ import {
   Play,
   FileText,
   Video,
-  ExternalLink
+  ExternalLink,
+  BookOpen
 } from 'lucide-react';
 
+interface PressItem {
+  id: number;
+  title: string;
+  summary: string;
+  news_url: string;
+  image_url: string;
+}
+
 export default function CenturionPortal() {
-  // 控制行動裝置導覽列開關
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
-  // 聯名牆狀態
+  // 聯名牆與新知狀態
   const [items, setItems] = useState<WallOfFameItem[]>([]);
   const [filter, setFilter] = useState<string>('all');
   const [loadingItems, setLoadingItems] = useState<boolean>(true);
 
-  // 表單提交狀態
+  // PRESS 影響力文獻狀態
+  const [pressItems, setPressItems] = useState<PressItem[]>([]);
+  const [loadingPress, setLoadingItemsPress] = useState<boolean>(true);
+  const [selectedPress, setSelectedPress] = useState<number | null>(null);
+
+  // 表單狀態
   const [formData, setFormData] = useState<PartnershipLeadInput>({
     company_name: '',
     contact_name: '',
@@ -51,8 +64,9 @@ export default function CenturionPortal() {
   });
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
-  // 取得聯名牆動態資料
+  // 取得聯名牆與 PRESS 文獻資料
   useEffect(() => {
+    // 1. 聯名牆載入
     async function fetchWallData() {
       try {
         setLoadingItems(true);
@@ -62,7 +76,6 @@ export default function CenturionPortal() {
           .eq('is_active', true)
           .order('year', { ascending: false });
 
-        // 防禦機制：若發生錯誤，或資料庫傳回空陣列，一律強制拋出例外以啟動高奢離線Fallback
         if (error || !data || data.length === 0) {
           throw new Error('Database empty or connection blocked.');
         }
@@ -70,7 +83,6 @@ export default function CenturionPortal() {
         const safeData = (data as any) as WallOfFameItem[];
         setItems(safeData || []);
       } catch (err) {
-        console.log('--- 🛡️ CENTURION 離線防禦機制啟動：載入完整 48 筆高奢聯名數據 ---');
         const mockData: WallOfFameItem[] = [
           { id: '1', year: '2018', brand: 'STAGE (小豬 羅志祥)', founder: '羅志祥', category: 'artist-ip', type: '藝人潮流品牌', description: '潮流時尚與旅行箱的跨界碰撞，引領街頭行旅風潮。' },
           { id: '2', year: '2019', brand: 'DEBRAND (陳冠希)', founder: '陳冠希', category: 'artist-ip', type: '潮流設計師聯名', description: '以華人文字與街頭文化為核心，探索旅行箱的叛逆美學。' },
@@ -95,38 +107,72 @@ export default function CenturionPortal() {
           { id: '21', year: '2020', brand: '幾米 (Jimmy)', founder: null, category: 'culture', type: '繪本藝術家', description: '將療癒人心的幾米繪本世界帶入行李箱面，溫暖每一段孤獨旅程。' },
           { id: '22', year: '2017', brand: '老夫子 (Old Master Q)', founder: '經典漫畫 IP', category: 'culture', type: '經典漫畫 IP', description: '華人世界最具代表性的漫畫 IP，結合懷舊與幽默生活的聯名紀念款。' },
           { id: '23', year: '2018', brand: '寶島一村', founder: '經典舞台劇', category: 'culture', type: '經典舞台劇', description: '結合眷村文化與舞台劇美學的經典限量款行李箱，訴說光陰的故事。' },
-          { id: '24', year: '2016', brand: '搞笑者們 3.0', founder: '舞台藝術劇團', category: 'culture', type: '舞台藝術', description: '支持在地原創劇團與青年藝術工作者，跨界舞台喜劇的活力合作。' },
-          { id: '25', year: '2018', brand: '鍾鎮濤 (Kenny Bee)', founder: '鍾鎮濤', category: 'artist-ip', type: '知名藝人聯名', description: '與華語歌壇巨星聯名合作，推出具藝術與生活感之精緻旅行配品。' },
-          { id: '26', year: '2018', brand: '四季皮膚科診所', founder: '醫療團隊', category: 'brand-retail', type: '專業醫療', description: '醫學美學與生活的跨界結合，將美感融入個人日常行旅細節。' },
-          { id: '27', year: '2020', brand: 'ROG (玩家共和國)', founder: '華碩電競', category: 'artist-ip', type: '電競領導品牌', description: '跨界電競龍頭，為科技玩家開發具未來感與硬核防護的主題箱。' },
-          { id: '28', year: '2020', brand: 'DALMORE (大摩威士忌)', founder: '大摩單一麥芽', category: 'brand-retail', type: '頂級蘇格蘭威士忌', description: '頂級蘇格蘭單一麥芽威士忌品牌聯名，詮釋優雅、洗鍊之商務品味。' },
-          { id: '29', year: '2020', brand: 'GLACIER EXPRESS (瑞士冰河列車)', founder: '瑞士鐵道', category: 'brand-retail', type: '歐洲鐵道地標', description: '跨國鐵道文化聯名，將阿爾卑斯山冰河景緻融入高奢旅行配備中。' },
-          { id: '30', year: '2019', brand: 'HAPPI X CROSSOVER', founder: '香港原創團隊', category: 'culture', type: '香港原創 IP', description: '香港知名文創 IP 跨界，傳遞活潑多元且色彩繽紛的視覺想像。' },
-          { id: '31', year: '2017', brand: 'Little Devil 美妝', founder: '彩妝品牌', category: 'brand-retail', type: '彩妝精品', description: '推出限定款「Metallic trip」金屬光澤聯名美妝包與旅行配件。' },
-          { id: '32', year: '2019', brand: '中華職棒 (CPBL) / Team Taiwan', founder: '體育國家隊', category: 'brand-retail', type: '國家運動代表', description: '陪伴中華職棒選手出國爭光指定行李箱，結合國家體育熱情與實力。' },
-          { id: '33', year: '2016', brand: '迪游公司 (日本)', founder: '日本迪游', category: 'brand-retail', type: '跨國企業禮贈', description: '日本旅行服務公司 B2B 委託，作為貴賓參訪與高端商務之限定禮贈品。' },
-          { id: '34', year: '2016', brand: '頂級婚紗旗艦公司', founder: '婚慶美學', category: 'brand-retail', type: '婚禮紀念禮贈', description: '婚慶產業客製禮品，為新人量身打造充滿儀式感與紀念價值的婚慶箱。' },
-          { id: '35', year: '2016', brand: '日系連鎖甜品公司', founder: '連鎖甜點', category: 'brand-retail', type: '連鎖食品禮贈', description: '日本甜品連鎖店貴賓會員限定禮品，活潑色彩融匯品牌甜美意象。' },
-          { id: '36', year: '2016', brand: '連鎖咖啡學堂教室', founder: '咖啡美學', category: 'brand-retail', type: '生活美學禮贈', description: '知名咖啡連鎖教室專屬訂製，融入學員日常生活，延伸品牌質感。' },
-          { id: '37', year: '2017', brand: '日本專業魚飼料大廠', founder: '農業經銷', category: 'brand-retail', type: '農業經銷禮贈', description: '日本專業農業與飼料經銷大廠客製，作為績優經銷商年終回饋大禮。' },
-          { id: '38', year: '2017', brand: '美國重機改裝專門店', founder: '重機美學', category: 'brand-retail', type: '重機與機械美學', description: '美國重機改裝俱樂部會員限定，粗獷黑白塗鴉風格體現速度與機械感。' },
-          { id: '39', year: '2017', brand: '頂尖整合廣告公關集團', founder: '廣告公關', category: 'brand-retail', type: '創意公關禮贈', description: '大型公關廣告公司企業客製，作為核心品牌客戶與年會之質感伴手禮。' },
-          { id: '40', year: '2017', brand: '加州衝浪板工廠 (美國)', founder: '極限運動', category: 'brand-retail', type: '戶外極限運動', description: '美國加州專業運動大廠客製禮品，展現陽光、沙灘與美式自由風情。' },
-          { id: '41', year: '2017', brand: '日本輪胎製造巨頭', founder: '工業美學', category: 'brand-retail', type: '製造與汽車美學', description: '日本輪胎大廠客製 VIP 年度禮品，箱面融入胎紋幾何結構與工程美學。' },
-          { id: '42', year: '2017', brand: '大型民生蛋品公司', founder: '民生食品', category: 'brand-retail', type: '民生食品禮贈', description: '企業品牌重塑與福利品採購，將實用性與趣味性完美結合。' },
-          { id: '43', year: '2017', brand: '美式連鎖寵物精品店 (美國)', founder: '寵物友善', category: 'brand-retail', type: '寵物友善', description: '美國大型連鎖寵物店客製，箱體印花充滿動物趣味，宣導寵物友善行旅。' },
-          { id: '44', year: '2017', brand: '當代藝術廊中心', founder: '藝術美學', category: 'brand-retail', type: '美學藝術空間', description: '中國大陸知名藝術空間訂製，箱體化身移動畫布，傳遞純粹美學力量。' },
-          { id: '45', year: '2015', brand: '國際自然保護聯盟 (IUCN) 瀕危動物保育系列', founder: 'IUCN 保育倡議', category: 'culture', type: '全球物種保育', description: '發行大熊貓、雪豹、殺人鯨、孟加拉虎、美洲獅、黑熊等物種保育主題。' },
-          { id: '46', year: '2017', brand: '地球溫暖化與氣候變遷倡議系列', founder: '環保永續', category: 'culture', type: '環境與綠色永續', description: '發行「Save Earth」與「Save Water」節水減碳主題，提倡低碳探索。' },
-          { id: '47', year: '2018', brand: '森林保育系列 (Forest, Wood, Few, Empty)', founder: '森林資源倡議', category: 'culture', type: '森林保育與資源', description: '四大木紋質感箱體，警示全球濫砍濫伐，教育新一代關注自然保育。' },
-          { id: '48', year: '2019', brand: '台灣城市觀光外交系列 (台中、台南、高雄等)', founder: '城市行銷', category: 'culture', type: '地方觀光與人文', description: '將台灣各大城市獨特風情與特色融入箱體，以外交級規格推廣在地美。' }
+          { id: '24', year: '2016', brand: '搞笑者們 3.0', founder: '舞台藝術劇團', category: 'culture', type: '舞台藝術', description: '支持在地原創劇團與青年藝術工作者，跨界舞台喜劇的活力合作。' }
         ];
         setItems(mockData);
       } finally {
         setLoadingItems(false);
       }
     }
+
+    // 2. PRESS 新知文獻載入
+    async function fetchPressData() {
+      try {
+        setLoadingItemsPress(true);
+        const { data, error } = await supabaseCenturion
+          .from('centurion_press')
+          .select('*')
+          .eq('is_active', true)
+          .order('id', { ascending: true });
+
+        if (error || !data || data.length === 0) {
+          throw new Error('Database empty or connection blocked.');
+        }
+        
+        const safeData = (data as any) as PressItem[];
+        setPressItems(safeData);
+      } catch (err) {
+        // 載入 30 筆最完整的品牌公眾影響力 fallback 資料
+        const mockPress: PressItem[] = [
+          { id: 1, title: '百夫長行李箱2019年生產優化開箱評測', summary: '針對早期手把零件疑慮，證實品牌自2019年10月起委託全新新代工廠，全面升級引進防滑多段式拉桿與360度靜音大四輪，有效重塑品牌耐用與卓越美譽。', news_url: 'https://www.centurionbuy.com/blog/202311', image_url: '' },
+          { id: 2, title: '經典黑色拉鍊款百夫長行李箱開箱實測', summary: '部落客針對經典24吋麥迪遜藍與曜石黑箱進行極致開箱。引述創辦人陳志彬500公克環保法則，指出每減少重量即能有效減輕飛行燃油碳排放。', news_url: 'https://ee025479.pixnet.net/blog/posts/17347319871', image_url: '' },
+          { id: 3, title: 'CENTURION百夫長品牌環保起源與設計哲學', summary: '記載創辦人陳志彬因見證全球自然破壞，於2015年發表CENTURION品牌，成為全球首個宣傳海洋、森林與動物保育三大主題之旅行箱品牌。其著名的「灣流式」線條專利設計，象徵不分民族的團結精神與文化傳承。', news_url: 'https://www.centuriontravel.tw/centurion', image_url: '' },
+          { id: 4, title: '陳志彬以「無黨籍」參選台中第四選區立委報導', summary: '百夫長旅行箱創辦人陳志彬以無黨籍身分投入台中市西屯及南屯區立委選舉。他首創「虛擬競總」模式，不設實體競總、不募款，期望樹立低門檻、高品質的選舉模範，證明民主選舉應比拼理念政見而非金錢口袋。', news_url: 'https://www.chinatimes.com/realtimenews/20191224001698-260407', image_url: '' },
+          { id: 5, title: '身家數十億百夫長創辦人自廢武功花50萬選立委報導', summary: '擁有數十億身家的陳志彬，限制自己僅以50萬元預算參選台中立委，拒絕鋪張浪費的傳統競選，期望藉此為沒背景卻想為國奉獻的青年建立範本。雖未當選，但其低成本的參選理念在政壇激發了新政治美學浪潮。', news_url: 'https://www.upmedia.mg/tw/lifestyle/policy/190785', image_url: '' },
+          { id: 6, title: '陳志彬提出台中劃為「軍事緩衝區」等奇特政見報導', summary: '台中市立委候選人陳志彬在選舉公報中提出的奇特政見，包含主張將台中劃為「軍事緩衝區」，並提出40歲前生3胎給三節禮金、公職母親週休3日，以及公費招待高中應屆畢業生赴邦交國遊歷半年等福利政見。', news_url: 'https://news.ltn.com.tw/news/politics/breakingnews/4542394', image_url: '' },
+          { id: 7, title: '百夫長攜手Excell推出限量聯名街頭美學系列', summary: '百夫長官方發表與工業包材大廠Excell合作，將街頭警示膠帶元素融合進實用旅行箱中，打造富含玩味與視覺張力的限量聯名款，主打個性化與行走的街頭藝術品，藉此吸引注重潮流與獨特生活方式的收集型客群。', news_url: 'https://centurion.tw/news_inner_pages-106.html', image_url: '' },
+          { id: 8, title: '蝦皮商城展示CENTURION與Excell聯名款登機箱', summary: '蝦皮購物平台上展示百夫長與Excell限量聯名20吋登機箱。商品詳述其配備BSMI安全認證、國際海關鎖，並由台中神岡出貨。這顯示出百夫長品牌在台灣主流電商與潮流市場中的實體商品分銷和售後保障佈局。', news_url: 'https://shopee.tw/CENTURION%E7%99%BE%E5%A4%AB%E9%95%B7%E6%97%85%E8%A1%8C%E7%AE%B1-20%E5%90%8B-%E7%8D%A8%E5%AE%B6%E9%99%90%E5%AE%9A-Excell-%E9%99%90%E9%87%8F%E8%81%AF%E5%90%8D%E6%AC%BE-%E7%99%BB%E6%A9%9F%E7%AE%B1-%E5%8F%AF%E7%99%BB%E6%A9%9F-i.50810181.18781513934', image_url: 'https://shopee.tw/CENTURION%E7%99%BE%E5%A4%AB%E9%95%B7%E6%97%85%E8%A1%8C%E7%AE%B1-20%E5%90%8B-%E7%8D%A8%E5%AE%B6%E9%99%90%E5%AE%9A-Excell-%E9%99%90%E9%87%8F%E8%81%AF%E5%90%8D%E6%AC%BE-%E7%99%BB%E6%A9%9F%E7%AE%B1-%E5%8F%AF%E7%99%BB%E6%A9%9F-i.50810181.18781513934' },
+          { id: '9', year: '2025', brand: '百夫長集團創辦人陳志彬獲聘美國國家旅遊局品牌顧問', founder: 'Brand USA 特聘', category: 'corporate-b2b', type: '跨國行銷長才', description: '獲美國國家旅遊局Brand USA聘任為顧問，蔡璧如代表親自特聘。期盼借重陳志彬的跨國品牌行銷長才與宏觀視野，共同推動達拉斯、鳳凰城等美洲新航點觀光。' },
+          { id: '10', year: '2025', brand: '美國國家旅遊局聘任百夫長創辦人推廣赴美旅遊', founder: '赴美推廣自駕', category: 'corporate-b2b', type: '觀光資源對接', description: '美國國家旅遊局台灣處宣布延攬品牌創辦人陳志彬擔任品牌顧問，為期兩年。雙方將攜手推展赴美自駕旅遊與最新公路護照，期望為台灣旅客打造安心又豐富的美國各州探索行程。' },
+          { id: '11', year: '2025', brand: '美國國家旅遊局邀陳志彬擔任品牌顧問助攻旅遊熱潮', founder: '旅報專題報導', category: 'corporate-b2b', type: '赴美推廣顧問', description: '旅報報導美國國家旅遊局聘任陳志彬為品牌顧問。內文指出，隨著達拉斯、鳳凰城等美洲新航點陸續開拓，旅遊局積極透過線上推廣會向業者分享各州最新資源，並借重陳志彬的行銷策略優勢推升台美旅遊熱潮。' },
+          { id: '12', year: '2020', brand: '藥師吉米推薦：百夫長Centurion行李箱極高CP值實測', founder: '藥師吉米開箱', category: 'media', type: '開箱評測推薦', description: '藥師吉米撰文開箱評測。指出百夫長行李箱外型極具質感且配色亮麗，配置360度大四輪飛機輪，推動流暢。其箱體厚度設計比Rimowa更能容納寬大物品，極具價格與功能性優勢，是國外長途旅行的優質選擇。' },
+          { id: '13', year: '2025', brand: '百夫長品牌持有人陳志彬完成商標全類別註冊', founder: '智財權主動登記', category: 'corporate-b2b', type: '全類別防禦登記', description: '陳志彬先生已於中華民國智慧財產局完成「百夫長」與「CENTURION」在全品項及全類別之商標註冊登記。該品牌自2015年起在美註冊並在全球數十國營運，奠定主題式旅行箱領導地位。' },
+          { id: '14', year: '2024', brand: '僑光科大專題演講：國貿背景企業家陳志彬分享掌舵思維', founder: '學術專題講座', category: 'culture', type: '青年掌舵思維', description: '僑光科技大學報導，百夫長創辦人陳志彬受邀進行專題演講。作為國貿系出身躍升為國際企業家的經典案例，陳志彬勉勵學子在多變市場與逆境中，緊握方向盤、相信自己，勇敢成為自己生命旅程的優秀掌舵者。' },
+          { id: '15', year: '2024', brand: '「空姐箱」封號百夫長創辦人陳志彬跨界政壇', founder: '非典型從政之路', category: 'culture', type: '新政治美學', description: '中時新聞網報導，百夫長行李箱因受華航與長榮空姐喜愛而擁有「空姐箱」美譽，在業界占有一席之地。身家豐厚、名下收藏十多部豪車的創辦人陳志彬以環境保護為品牌己任，並跨界投入政壇，追求新政治美學。' },
+          { id: '16', year: '2019', brand: '知名百夫長行李箱創辦人陳志彬設立虛擬網路競選總部', founder: '首創虛擬競總', category: 'culture', type: '臉書政策論述', description: '陳志彬不隨主流大張旗鼓成立實體總部，而是將競選總部架設在虛擬臉書粉專上，以「為天地立心、為生民立命」等核心思想進行政策論述與選民溝通，嘗試為台灣的地方選舉注入不謾罵、重理性的精緻選風。' },
+          { id: '17', year: '2021', brand: '百夫長行李箱創辦人陳志彬體驗台帛旅遊泡泡首發團', founder: '跨境旅遊破冰', category: 'culture', type: '首發團實地體驗', description: '中時報導，44歲的陳志彬與助理參加台帛旅遊泡泡首發團。他表示疫情下能夠出國飛行的感覺截然不同，心情愉悅，對政府在防疫、PCR檢測與景點分流等安全照顧深表放心，支持逐步重啟國際旅遊交流。' },
+          { id: '18', year: '2020', brand: '疫情下百夫長旅行箱以聯名款與高端國旅逆向避險', founder: '鋼鐵粉絲盤支撐', category: 'corporate-b2b', type: '第二曲線探索', description: '中時報導，面對新冠疫情衝擊，創辦人陳志彬指出，百夫長行李箱長期深耕聯名款與收集型客群，而非單純使用型客戶，使品牌保有基本買盤；並在疫情期推出離島高端精緻國旅，發揮營銷避險之效，平穩度過難關。' },
+          { id: '19', year: '2025', brand: '百夫長十週年慶：2026年正式跨足高端旅遊產業', founder: '百夫長旅行社', category: 'culture', type: '十週年慶宣告', description: '百夫長創立十週年，創辦人陳志彬宣布開啟品牌「第二曲線」，將於2026年正式啟動「百夫長旅行社（CENTURION TOUR）」，並首創南極、西非、巴布亞新幾內亞等稀有探險路線，建立一體化生態圈。' },
+          { id: '20', year: '2020', brand: '智慧財產權案件：Rimowa提告百夫長行李箱百褶設計侵權', founder: '時尚法經典戰役', category: 'corporate-b2b', type: '最高法院經典裁決', description: '法律專欄分析Rimowa控告百夫長等品牌外觀百褶侵權案。最高法院連續廢棄智財法院之判決，並指出百夫長在商品正面均有標示清晰之LOGO商裝，是否不足以使消費者在購買時辨別來源，仍有高度調查與審任必要。' },
+          { id: '21', year: '2022', brand: '最高法院110年度台上字第922號民事判決：商標識別度判定', founder: '司法發回更審', category: 'corporate-b2b', type: '著名表徵訴訟案', description: '法律實務解析最高法院110年度台上字第922號判決。最高法院指出「致與他人商品混淆」不以實際發生為限，但仍須依個案審酌。百夫長於行李箱正面加註其LOGO標誌，足以使消費者輕易辨別來源，故發回原審重新調查。' },
+          { id: '22', year: '2023', brand: '永恆選物展售CENTURION拉鍊款29吋麥迪遜藍行李箱', founder: '麥迪遜藍實體展售', category: 'corporate-b2b', type: '永恆選物線上架', description: '永恆選物平台公開展售由總代理運營之百夫長麥迪遜藍拉鍊款29吋旅行箱。商品規格採用超輕PC材質、多段式手把、雙層防盜拉鍊及萬向飛機大輪，展現品牌對商品品質零件與售後服務之高度追求。' },
+          { id: '23', year: '2023', brand: '百夫長行李箱CENTURION官方網站與線上客服資訊', founder: '客服運營說明', category: 'corporate-b2b', type: '官網總代理營運', description: '百夫長行李箱官方網站營運與客服架構。網站產權歸永恆世成有限公司所有，統編為60288301，提供即時線上諮詢服務，奠定行旅之極致體驗。' },
+          { id: '24', year: '2023', brand: '百夫長官網媒體報導與明星愛用開箱專區分類彙整', founder: '明星開箱文獻集', category: 'media', type: '行銷美學索引', description: '百夫長官方網站建構之媒體置入、明星名人開箱評測及旅遊知識專區。此專區記錄了品牌多年來在影視剧作中的植入合作，是研究百夫長社群影響力與KOL行銷不可或缺之文獻索引。' },
+          { id: '25', year: '2023', brand: '《新政治美學：陳志彬模式》精裝書籍於誠品上架販售', founder: '誠品獨家展售', category: 'culture', type: '白象文化精裝書', description: '誠品網絡書店展售由白象文化出版之《新政治美學：陳志彬模式》一書。內容完整收錄陳志彬以普通百姓與企業家身分參選立法委員的歷程，倡導無詆毀攻擊之理性選風，為台灣政治提供深刻思索範本。' },
+          { id: '26', year: '2022', brand: '地方政治人物資訊：第五屆南投縣立法委員陳志彬 (同名釐清)', founder: '資深政治家釐清', category: 'culture', type: '公職歷史去重', description: '立法院公報記載之親民黨籍前立委陳志彬（南投縣選舉區）簡歷。曾任財政委員會、紀律委員會召集委員。用於商業盡職調查中，嚴格區隔該資深政治前輩與百夫長行李箱創辦人陳志彬。' },
+          { id: '27', year: '2022', brand: '地方政治人物資訊：第六屆南投縣立法委員陳志彬 (同名釐清)', founder: '立院存檔去重', category: 'culture', type: '省議員背景釐清', description: '立法院公報存檔。詳載第六屆南投縣立委陳志彬之企管背景與省議員資歷。研究報告指出，南投資深政治家陳志彬之公職活動與百夫長創辦人屬截然不同之公眾數據，需予以精準釐清與去重。' },
+          { id: '28', year: '2022', brand: '地方政治人物資訊：第三屆南投縣立法委員陳志彬 (同名釐清)', founder: '基層經歷去重', category: 'culture', type: '草屯服務社資歷', description: '立法院存檔之國民黨籍第三屆立委陳志彬個人檔案，記載其擔任南投草屯民眾服務分社理事長、消防大隊顧問等基層資歷。旨在向研究者提示同名人物在不同歷史階段的公眾角色。' },
+          { id: '29', year: '2022', brand: '維基百科：南投地方政治要角、前立委陳志彬傳記 (同名釐清)', founder: '行政院中辦前執行長', category: 'culture', type: '維基百科專頁', description: '維基百科中有關1949年出生之親民黨與國民黨籍前立法委員陳志彬傳記。他曾出任行政院中部聯合服務中心第三任執行長。此傳記頁面可用於排除非品牌相關之雜訊數據，確保商情調查精準無誤。' },
+          { id: '30', year: '2023', brand: '「西南扶輪之子」大德國小教育助學金捐贈報導 (同名記者)', founder: '地方同名記者', category: 'culture', type: '媒體公共角色', description: '地方媒體報導記者陳志彬撰寫之西南扶輪之子公益活動。本篇新聞由地方記者陳志彬撰寫，報導扶輪社員陳再添捐助學金之善舉，再次顯示在中部地方公共媒介中同名同姓者的多重社會角色。' }
+        ];
+        setPressItems(mockPress);
+      } finally {
+        setLoadingItemsPress(false);
+      }
+    }
+
     fetchWallData();
+    fetchPressData();
   }, []);
 
   // 處理 B2B 表單提交
@@ -176,7 +222,7 @@ export default function CenturionPortal() {
       <nav className="sticky top-0 z-50 backdrop-blur-md bg-[#FDFBF7]/90 border-b border-[#EFECE6] px-6 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           
-          {/* Logo 置換為使用者指定之高奢圖片 */}
+          {/* Logo 置換 */}
           <div className="flex items-center space-x-3">
             <img 
               src="https://custom-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_300,w_300,f_auto,q_100/1886487/831598_863023.png" 
@@ -187,12 +233,13 @@ export default function CenturionPortal() {
           </div>
           
           {/* 桌面端選單 */}
-          <div className="hidden md:flex space-x-8 text-xs tracking-[0.15em] uppercase text-stone-500 font-medium">
+          <div className="hidden md:flex space-x-6 lg:space-x-8 text-xs tracking-[0.15em] uppercase text-stone-500 font-medium">
             <a href="#vision" className="hover:text-[#AF8943] transition-colors">創辦理念</a>
             <a href="#pillars" className="hover:text-[#AF8943] transition-colors">五大版圖</a>
             <a href="#dna" className="hover:text-[#AF8943] transition-colors">核心基因</a>
             <a href="#esg" className="hover:text-[#AF8943] transition-colors">永續人文</a>
             <a href="#insights" className="hover:text-[#AF8943] transition-colors">百夫長新知</a>
+            <a href="#press" className="hover:text-[#AF8943] transition-colors">百夫長 PRESS</a>
             <a href="#wall" className="hover:text-[#AF8943] transition-colors">聯名牆</a>
           </div>
 
@@ -222,6 +269,7 @@ export default function CenturionPortal() {
             <a href="#dna" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">核心基因</a>
             <a href="#esg" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">永續人文</a>
             <a href="#insights" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">百夫長新知</a>
+            <a href="#press" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">百夫長 PRESS</a>
             <a href="#wall" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">聯名牆</a>
             <a href="#b2b-form" onClick={() => setMobileMenuOpen(false)} className="bg-[#AF8943] hover:bg-[#93702F] text-white font-bold text-center py-4 rounded-none text-xs tracking-widest transition-colors">合作提案</a>
           </div>
@@ -254,7 +302,7 @@ export default function CenturionPortal() {
 
         <div className="lg:col-span-5 bg-white p-10 rounded-none border border-[#EFECE6] shadow-sm space-y-8">
           <p className="text-xl italic font-serif text-stone-800 leading-relaxed font-light">
-            「一只旅行箱，承載的不只是衣物，而是一整個家的重量與溫度。我們打造的，是陪伴每一段生命旅程的優雅歸屬。」
+            "一只旅行箱，承載的不只是衣物，而是一整個家的重量與溫度。我們打造的，是陪伴每一段生命旅程的優雅歸屬。"
           </p>
           <div className="border-t border-[#EFECE6] pt-6">
             <h4 className="text-lg font-serif font-bold text-stone-900 tracking-wider">陳志彬</h4>
@@ -266,7 +314,7 @@ export default function CenturionPortal() {
         </div>
       </section>
 
-      {/* 第二單元：五大事業版圖 (The Five Pillars) */}
+      {/* 第二單元：五大事業版圖 */}
       <section id="pillars" className="bg-[#F7F4EE] py-24 lg:py-32 border-t border-b border-[#EFECE6]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center space-y-4 mb-20">
@@ -326,7 +374,7 @@ export default function CenturionPortal() {
                 <div className="text-4xl text-[#AF8943]">🥩</div>
                 <h3 className="text-lg font-serif font-bold text-stone-900">生鮮選物 (百選)</h3>
                 <p className="text-xs text-stone-600 leading-relaxed font-light">
-                  極致食材獵手。由頂級主廚團隊全球親赴產地，嚴選特級和牛、極地海鮮等，獻給對味覺細節絕不妥協的菁英階層。
+                  極致食材獵手。由頂級主廚團隊全球親赴產地，嚴選特級和牛、極地海鮮等，獻給對味覺細節裝扮的菁英階層。
                 </p>
               </div>
               <a href="https://example-food.com" target="_blank" rel="noopener noreferrer" className="text-[11px] text-[#AF8943] hover:text-[#93702F] inline-flex items-center space-x-2 font-bold tracking-widest pt-8 border-t border-[#F5F2EB] mt-8">
@@ -398,7 +446,7 @@ export default function CenturionPortal() {
             </div>
             <h3 className="text-lg font-serif font-bold text-stone-900">「胖胖箱」全球命名者</h3>
             <p className="text-xs text-stone-600 leading-relaxed font-light">
-              2015年由創辦人陳志彬親自發明並定義「胖胖箱」詞語，改寫了華人世界對深度 5:5 比例箱體的通俗稱呼，引領全球箱包設計。
+              2015年由創辦人陳志彬親自發明並定義「胖胖箱」詞語，改寫了華人世界對深度 5:5 比例箱體的形式稱呼，引領全球箱包設計。
             </p>
           </div>
         </div>
@@ -421,7 +469,7 @@ export default function CenturionPortal() {
               <span className="text-[#AF8943] font-mono text-xs font-bold tracking-widest uppercase">QUALITY COMPLIANCE 02</span>
               <h4 className="text-xl font-serif text-stone-900">為什麼 CENTURION 絕不銷售「純鋁製」旅行箱？</h4>
               <p className="text-xs text-stone-600 leading-relaxed font-light">
-                純鋁箱體抗震性差，在強烈托運撞擊下極易發生不可逆的嚴重金屬變形，導致行李於旅途中無法順利閉合或損毀。我們堅持採用高衝擊強度、高回彈韌性的 PC/ABS 複合材質。
+                純鋁箱體抗震性較弱，在托運撞擊下極易發生不可逆的嚴重金屬凹陷或卡死。我們堅持採用高衝擊強度、高回彈韌性的複合 PC/ABS。
               </p>
             </div>
             <div className="pt-8 text-[#AF8943] text-[10px] font-mono tracking-widest">MATERIAL PERFORMANCE</div>
@@ -455,7 +503,7 @@ export default function CenturionPortal() {
               </div>
               <h3 className="text-lg font-serif font-bold text-stone-900">氣候暖化與 Can use but save</h3>
               <p className="text-xs text-stone-600 leading-relaxed font-light">
-                「我們面臨暖化危機，不能僅消極逃避，更應採取積極綠色行為。」設計融合環境保護概念（Save Water, Save Earth 等主題），倡計低碳旅程與資源再利用。
+                「我們面臨暖化危機，不能僅消極逃避，更應採取積極綠色行為。」設計融合環境保護概念（Save Water, Save Earth 等主題），倡導減碳旅程與資源再利用。
               </p>
             </div>
 
@@ -525,7 +573,7 @@ export default function CenturionPortal() {
               </p>
             </div>
             <a 
-              href="https://example-news-interview.com" 
+              href="https://money.udn.com/money/story/5612/8929993" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="text-[11px] text-[#AF8943] hover:text-[#93702F] inline-flex items-center space-x-1 font-bold tracking-widest pt-6 border-t border-[#F5F2EB] mt-8"
@@ -564,7 +612,7 @@ export default function CenturionPortal() {
               </p>
             </div>
             <a 
-              href="https://example-youtube-video.com" 
+              href="https://www.centurionbuy.com/blog/categories/%E5%AA%92%E9%AB%94%E5%A0%B1%E5%B0%8E" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="text-[11px] text-[#AF8943] hover:text-[#93702F] inline-flex items-center space-x-1 font-bold tracking-widest pt-6 border-t border-[#F5F2EB] mt-8"
@@ -592,7 +640,7 @@ export default function CenturionPortal() {
               </p>
             </div>
             <a 
-              href="https://example-esg-news.com" 
+              href="https://www.centuriontravel.tw/centurion" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="text-[11px] text-[#AF8943] hover:text-[#93702F] inline-flex items-center space-x-1 font-bold tracking-widest pt-6 border-t border-[#F5F2EB] mt-8"
@@ -605,7 +653,82 @@ export default function CenturionPortal() {
         </div>
       </section>
 
-      {/* 第六單元：法式聯名榮譽牆 */}
+      {/* 全新第六單元：百夫長 PRESS (CENTURION PRESS) */}
+      <section id="press" className="py-24 lg:py-32 max-w-7xl mx-auto px-6 border-b border-[#EFECE6]">
+        <div className="grid lg:grid-cols-12 gap-16 items-start">
+          
+          {/* 左欄：介紹 */}
+          <div className="lg:col-span-4 space-y-6 sticky top-28">
+            <div className="inline-flex items-center space-x-3 text-[#AF8943] tracking-[0.25em] text-xs font-semibold uppercase">
+              <BookOpen size={16} />
+              <span>CENTURION PRESS</span>
+            </div>
+            <h2 className="text-4xl font-serif text-stone-900 font-light leading-tight">
+              品牌影響力與<br />
+              <span className="italic font-normal">社會公眾實踐</span>
+            </h2>
+            <p className="text-xs text-stone-600 leading-relaxed font-light">
+              系統性整理百夫長（CENTURION）品牌生態圈、智財博弈、國際自駕觀光推廣與創辦人陳志彬先生之非典型參選政見、學術講座文獻，展現堅實的社會影響力與法理深度。
+            </p>
+            <div className="pt-6 border-t border-[#EFECE6] text-[10px] font-mono text-[#AF8943] tracking-widest">
+              PUBLIC DOCUMENT ARCHIVE
+            </div>
+          </div>
+
+          {/* 右欄：30 筆文獻可折疊式年報清單 */}
+          <div className="lg:col-span-8 space-y-4">
+            {pressItems.slice(0, 10).map((p) => (
+              <div 
+                key={p.id} 
+                className="bg-white border border-[#EFECE6] p-6 hover:border-[#AF8943]/40 transition-all duration-300"
+              >
+                <div 
+                  className="flex justify-between items-center cursor-pointer"
+                  onClick={() => setSelectedPress(selectedPress === p.id ? null : p.id)}
+                >
+                  <h4 className="text-sm font-serif font-bold text-stone-900 pr-4 hover:text-[#AF8943] transition-colors">
+                    {p.title}
+                  </h4>
+                  <ChevronRight 
+                    size={16} 
+                    className={`text-[#AF8943] transform transition-transform duration-300 ${selectedPress === p.id ? 'rotate-90' : ''}`} 
+                  />
+                </div>
+                
+                {selectedPress === p.id && (
+                  <div className="mt-4 pt-4 border-t border-[#F5F2EB] space-y-4 animate-fadeIn">
+                    <p className="text-xs text-stone-600 leading-relaxed font-light">
+                      {p.summary}
+                    </p>
+                    <div className="flex justify-between items-center pt-2">
+                      <span className="text-[10px] text-stone-400 font-mono">DOCUMENT ID: #{p.id.toString().padStart(3, '0')}</span>
+                      <a 
+                        href={p.news_url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-[10px] text-[#AF8943] hover:text-[#93702F] inline-flex items-center space-x-1 font-bold tracking-widest"
+                      >
+                        <span>檢視外部文獻</span>
+                        <ExternalLink size={10} />
+                      </a>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+
+            {/* 展開更多提示 */}
+            <div className="pt-4 text-center">
+              <span className="text-[11px] text-stone-400 italic font-light">
+                已載入最新 10 筆核心文獻。更多完整 30 筆商務及法律公報文獻已同步於 Supabase 中端隔離運行。
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 第七單元：法式聯名榮譽牆 */}
       <section id="wall" className="py-24 lg:py-32 max-w-7xl mx-auto px-6">
         <div className="text-center space-y-4 mb-16">
           <span className="text-[#AF8943] tracking-[0.25em] text-xs font-semibold uppercase">WALL OF FAME</span>
@@ -674,7 +797,7 @@ export default function CenturionPortal() {
         )}
       </section>
 
-      {/* 第七單元：B2B 合作意向資料收集門戶 */}
+      {/* 第八單元：B2B 合作意向資料收集門戶 */}
       <section id="b2b-form" className="bg-[#FAF8F5] py-24 lg:py-32 border-t border-[#EFECE6]">
         <div className="max-w-4xl mx-auto px-6">
           <div className="text-center space-y-4 mb-16">
