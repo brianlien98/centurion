@@ -46,6 +46,15 @@ interface PressItem {
   image_url: string;
 }
 
+interface LuxuryProduct {
+  id: number;
+  name: string;
+  price: string;
+  tagline: string;
+  description: string;
+  image_url: string;
+}
+
 export default function CenturionPortal() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
@@ -79,11 +88,39 @@ export default function CenturionPortal() {
     contact_name: '',
     phone: '',
     email: '',
-    business_area: '百夫長旅行箱 (大宗採購/IP聯名)',
+    business_area: '【孵化你的百夫長】品牌授權計畫 (OEM/IP聯名)',
     timeframe: '立即開始 (1個月內)',
     proposal_summary: ''
   });
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+
+  // 尊榮產品抬價數據
+  const luxuryProducts: LuxuryProduct[] = [
+    {
+      id: 1,
+      name: 'CENTURION 麥迪遜藍 29吋旗艦款旅行箱',
+      price: 'NT$ 12,800',
+      tagline: '裝載最重要一切的移動城堡',
+      description: '經典雙輪避震設計搭配專利灣流抗衝擊箱體，以高密度法式噴塗麥迪遜藍，體現商務長途飛行的優雅品味。',
+      image_url: 'https://store.eternal-bc.com/zh-TW/products/centurion%E7%99%BE%E5%A4%AB%E9%95%B7%E6%8B%89%E9%8D%8A%E6%AC%BE%E8%A1%8E%E6%9D%8E%E7%AE%B1-%E9%BA%A5%E8%BF%CD%E9%81%9C%E8%97%8D-29%E5%90%8B'
+    },
+    {
+      id: 2,
+      name: 'CENTURION × Excell 限量聯名登機箱',
+      price: 'NT$ 8,800',
+      tagline: '街頭藝術與工業美學的極致跨界',
+      description: '與工業包材大廠 Excell 共同開發，將大膽的街頭警示膠帶元素，完美融匯進 20 吋精鋼防禦登機箱面。',
+      image_url: 'https://centurion.tw/news_inner_pages-106.html'
+    },
+    {
+      id: 3,
+      name: 'CENTURION Save Earth 自然保育系列旅行箱',
+      price: 'NT$ 10,800',
+      tagline: '行走的地球永續環保宣言',
+      description: '採用高彈性多格布袋、羽量級可回收 PC 複合材質，配置 TSA 國際海關鎖，每一次出行都是對生命的致敬。',
+      image_url: 'https://www.centuriontravel.tw/centurion'
+    }
+  ];
 
   // 重新封裝載入 PRESS 資料的函式
   const fetchPressData = async () => {
@@ -110,7 +147,7 @@ export default function CenturionPortal() {
         { id: 5, title: '身家數十億百夫長創辦人自廢武功花50萬選立委報導', summary: '擁有數十億身家的陳志彬，限制自己僅以50萬元預算參選台中立委，拒絕鋪張浪費的傳統競選，期望藉此為沒背景卻想為國奉獻的青年建立範本。雖未當選，但其低成本的參選理念在政壇激發了新政治美學浪潮。', news_url: 'https://www.upmedia.mg/tw/lifestyle/policy/190785', image_url: '' },
         { id: 6, title: '陳志彬提出台中劃為「軍事緩衝區」等奇特政見報導', summary: '台中市立委候選人陳志彬在選舉公報中提出的奇特政見，包含主張將台中劃為「軍事緩衝區」，並提出40歲前生3胎給三節禮金、公職母親週休3日，以及公費招待高中應屆畢業生赴邦交國遊歷半年等福利政見。', news_url: 'https://news.ltn.com.tw/news/politics/breakingnews/4542394', image_url: '' },
         { id: 7, title: '百夫長攜手Excell推出限量聯名街頭美學系列', summary: '百夫長官方發表與工業包材大廠Excell合作，將街頭警示膠帶元素融合進實用旅行箱中，打造富含玩味與視覺張力的限量聯名款，主打個性化與行走的街頭藝術品，藉此吸引注重潮流與獨特生活方式的收集型客群。', news_url: 'https://centurion.tw/news_inner_pages-106.html', image_url: '' },
-        { id: 8, title: '蝦皮商城展示CENTURION與Excell聯名款登機箱', summary: '蝦皮購物平台上展示百夫長與Excell限量聯名20吋登機箱。商品詳述其配備BSMI安全認證、國際海關鎖，並由台中神岡出貨。這顯示出百夫長品牌在台灣主流電商與潮流市場中的實體商品分銷 and 售後保障佈局。', news_url: 'https://shopee.tw/CENTURION%E7%99%BE%E5%A4%AB%E9%95%B7%E6%97%85%E8%A1%8C%E7%AE%B1-20%E5%90%8B-%E7%8D%A8%E5%AE%B6%E9%99%90%E5%AE%9A-Excell-%E9%99%90%E9%87%8F%E8%81%AF%E5%90%8D%E6%AC%BE-%E7%99%BB%E6%A9%9F%E7%AE%B1-%E5%8F%AF%E7%99%BB%E6%A9%9F-i.50810181.18781513934', image_url: '' },
+        { id: 8, title: '蝦皮商城展示CENTURION與Excell聯名款登機箱', summary: '蝦皮購物平台上展示百夫長與Excell限量聯名20吋登機箱。商品詳述其配備BSMI安全認證、國際海關鎖，並由台中神岡出貨。這顯示出百夫長品牌在台灣主流電商與潮流市場中的實體商品分銷和售後保障佈局。', news_url: 'https://shopee.tw/CENTURION%E7%99%BE%E5%A4%AB%E9%95%B7%E6%97%85%E8%A1%8C%E7%AE%B1-20%E5%90%8B-%E7%8D%A8%E5%AE%B6%E9%99%90%E5%AE%9A-Excell-%E9%99%90%E9%87%8F%E8%81%AF%E5%90%8D%E6%AC%BE-%E7%99%BB%E6%A9%9F%E7%AE%B1-%E5%8F%AF%E7%99%BB%E6%A9%9F-i.50810181.18781513934', image_url: '' },
         { id: 9, title: '百夫長集團創辦人陳志彬獲聘美國國家旅遊局品牌顧問', summary: '經濟日報報導百夫長創辦人陳志彬獲聘美國國家旅遊局品牌顧問。蔡璧如代表親自特聘陳志彬，期盼藉由其品牌長才與國際行銷視野，推廣美國觀光。報導亦提及多家航司積極運營台美直飛航線。', news_url: 'https://money.udn.com/money/story/5612/8929993', image_url: '' },
         { id: 10, title: '美國國家旅遊局聘任百夫長創辦人推廣赴美旅遊', summary: '美國國家旅遊局台灣處宣布延攬美國品牌CENTURION旅行箱創辦人陳志彬擔任品牌顧問，為期兩年。雙方將攜手推展赴美自駕旅遊與最新公路護照，期望為台灣旅客打造安心又豐富的美國各州探索行程。', news_url: 'https://travel.setn.com/News/1698667', image_url: '' },
         { id: 11, title: '美國國家旅遊局邀陳志彬擔任品牌顧問助攻旅遊熱潮', summary: '旅報報導美國國家旅遊局聘任陳志彬為品牌顧問。內文指出，隨著達拉斯、鳳凰城等美洲新航點陸續開拓，旅遊局積極透過線上推廣會向業者分享各州最新資源，並借重陳志彬的行銷策略優勢推升台美旅遊熱潮。', news_url: 'https://www.ttnmedia.com/?p=123927', image_url: '' },
@@ -241,7 +278,7 @@ export default function CenturionPortal() {
         contact_name: '',
         phone: '',
         email: '',
-        business_area: '百夫長旅行箱 (大宗採購/IP聯名)',
+        business_area: '【孵化你的百夫長】品牌授權計畫 (OEM/IP聯名)',
         timeframe: '立即開始 (1個月內)',
         proposal_summary: ''
       });
@@ -306,7 +343,7 @@ export default function CenturionPortal() {
         {mobileMenuOpen && (
           <div className="md:hidden absolute top-full left-0 w-full bg-[#FDFBF7] border-b border-[#EFECE6] px-6 py-8 flex flex-col space-y-4 text-sm">
             <a href="#vision" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">創辦理念</a>
-            <a href="#pillars" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">控股子公司</a>
+            <a href="#pillars" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">五大版體</a>
             <a href="#dna" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">核心基因</a>
             <a href="#esg" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">永續人文</a>
             <a href="#insights" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">百夫長新知</a>
@@ -317,55 +354,76 @@ export default function CenturionPortal() {
         )}
       </nav>
 
-      {/* 第一單元：高奢首頁視覺 (Hero Section) */}
-      <section id="vision" className="max-w-7xl mx-auto px-6 py-20 lg:py-32 grid lg:grid-cols-12 gap-16 items-center">
+      {/* 第一畫面 (Hero Section + B2B OEM 招募提案入口) */}
+      <section id="vision" className="max-w-7xl mx-auto px-6 py-20 lg:py-28 grid lg:grid-cols-12 gap-16 items-center">
         <div className="lg:col-span-7 space-y-10">
-          <div className="inline-flex items-center space-x-3 text-[#AF8943] tracking-[0.25em] text-xs font-semibold uppercase">
+          <div className="inline-flex items-center space-x-3 text-[#AF8943] tracking-[0.25em] text-xs font-semibold uppercase font-mono">
             <span className="w-12 h-[1px] bg-[#AF8943]"></span>
-            <span>GLOBAL AESTHETIC HOLDING GROUP</span>
+            <span>CENTURION GROUP GLOBAL flag PORTAL</span>
           </div>
           <h1 className="text-5xl lg:text-7xl font-serif text-stone-900 leading-[1.15] font-light">
-            美學無邊界<br />
-            <span className="font-normal italic">重塑品牌溢價</span>
+            你有好服務、好產品？<br />
+            <span className="font-normal italic text-[#AF8943]">立即申請【孵化你的百夫長】</span>
           </h1>
           <p className="text-stone-600 text-base lg:text-lg leading-relaxed max-w-2xl font-light">
-            CENTURION 百夫長集團，作為跨國品牌美學控股巨頭，致力於將「家味」與「文化」注入日常。我們打破傳統製造疆界，透過與全球最卓越的製造商進行 IP 戰略聯名與貼牌孵化，將極致的品牌價值與高溢價能力賦予每一件產品。
+            你負責追求品質極致，百夫長負責賦予產品世紀靈魂。百夫長與你一起立足台灣，走向世界。加入百夫長全球品牌美學控股體系，獲得高奢溢價賦能，徹底顛覆傳統價格戰。
           </p>
           <div className="flex flex-wrap gap-5 pt-4">
             <a href="#b2b-form" className="bg-[#AF8943] hover:bg-[#93702F] text-white font-bold px-8 py-4 rounded-none text-xs tracking-[0.2em] transition-all duration-300">
-              戰略品牌孵化提案
+              立即申請品牌授權孵化 ➔
             </a>
-            <a href="#pillars" className="border border-stone-300 hover:bg-stone-50 text-stone-700 font-semibold px-8 py-4 rounded-none text-xs tracking-[0.15em] transition-all duration-300">
-              旗下控股子公司矩陣
+            <a href="#luxury-exhibition" className="border border-stone-300 hover:bg-stone-50 text-stone-700 font-semibold px-8 py-4 rounded-none text-xs tracking-[0.15em] transition-all duration-300">
+              探索高奢產品抬價展示
             </a>
           </div>
         </div>
 
-        {/* 創辦人神格化 (造神單元) */}
+        {/* 創辦人與集團總裁神格化 diptych [造神單元] */}
         <div className="lg:col-span-5 bg-white p-10 rounded-none border border-[#EFECE6] shadow-sm space-y-8">
-          <div className="inline-flex items-center space-x-2 text-[#AF8943] text-[10px] tracking-widest uppercase font-bold">
+          <div className="inline-flex items-center space-x-2 text-[#AF8943] text-[10px] tracking-widest uppercase font-bold font-mono">
             <UserCheck size={14} />
             <span>世紀品牌掌舵人 Visionary</span>
           </div>
+          
+          {/* 總裁雙重高規格照片並排 */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="aspect-[3/4] overflow-hidden border border-[#EFECE6] relative group">
+              <img 
+                src="https://www.tristarnews.com.tw/upload/imgDB/202507101258184RWB.jpg" 
+                alt="陳志彬 總裁 - 美國國家旅遊局特聘顧問" 
+                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+              />
+              <div className="absolute bottom-2 left-2 bg-stone-900/80 text-white text-[8px] px-2 py-0.5 font-mono">Brand USA Advisor</div>
+            </div>
+            <div className="aspect-[3/4] overflow-hidden border border-[#EFECE6] relative group">
+              <img 
+                src="https://s.yimg.com/ny/api/res/1.2/WPPeW6pzB.D6A7aDnRp8tg--/YXBwaWQ9aGlnaGxhbmRlcjt3PTY0MDtoPTQ4MA--/https://media.zenfs.com/ko/hoomedia_675/5602e44d27d26fdb2035132c90eb9579" 
+                alt="陳志彬 總裁 - 新政治美學實踐家" 
+                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+              />
+              <div className="absolute bottom-2 left-2 bg-stone-900/80 text-white text-[8px] px-2 py-0.5 font-mono">New Political Aesthetic</div>
+            </div>
+          </div>
+
           <p className="text-xl italic font-serif text-stone-800 leading-relaxed font-light">
-            「美學不該是少數人的奢侈，而是日常的尊榮。百夫長是一枚點石成金的印章，賦予優質產品非凡的靈魂與高貴身價。」
+            「你負責追求品質極致，百夫長負責賦予產品世紀靈魂。百夫長與你一起立足台灣，走向世界。」
           </p>
           <div className="border-t border-[#EFECE6] pt-6">
             <h4 className="text-lg font-serif font-bold text-stone-900 tracking-wider">陳志彬 Chih-Pin Chen</h4>
-            <p className="text-[10px] text-[#AF8943] uppercase tracking-widest mt-1">百夫長集團創辦人 / 美國國家旅遊局特聘顧問</p>
+            <p className="text-[10px] text-[#AF8943] uppercase tracking-widest mt-1">百夫長集團總裁 / 美國國家旅遊局特聘顧問</p>
           </div>
           <p className="text-xs text-stone-500 leading-relaxed font-light">
-            陳志彬先生擁有逾 25 年的全球國貿與品牌控股實戰底蘊。他首創「500公克綠色環保法則」、定義並發明「胖胖箱」詞彙，更受聘為美國國家旅遊局（Brand USA）台灣處品牌顧問。他以「新政治美學」的清流實踐啟迪政壇，勉勵青年學子緊握方向盤，勇敢掌舵自身命運。
+            陳志彬總裁擁有逾 25 年的跨國貿易、品牌控股與美學整合戰略經驗。他首創「輕資產營運思維」，拒絕重資產束縛，專注品牌美學溢價。他創立的 CENTURION 品牌，引領了全亞洲箱包外觀大变革。受任美國國家旅遊局（Brand USA）兩年期顧問，深耕學術，並以「非典型政治參選」在台灣民主史上留下獨特的「陳志彬模式」清流印記。
           </p>
         </div>
       </section>
 
-      {/* 第二單元：旗下五大控股子公司 (Conglomerate Pillars - 大集團風範) */}
+      {/* 第二單元：控股子公司矩陣 */}
       <section id="pillars" className="bg-[#F7F4EE] py-24 lg:py-32 border-t border-b border-[#EFECE6]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center space-y-4 mb-20">
             <span className="text-[#AF8943] tracking-[0.25em] text-xs font-semibold uppercase">SUBSIDIARY MATRIX</span>
-            <h2 className="text-4xl font-serif text-stone-900 font-light">控股子公司矩陣</h2>
+            <h2 className="text-4xl font-serif text-stone-900 font-light">旗下控股子公司</h2>
             <p className="text-stone-500 text-sm max-w-2xl mx-auto font-light">百夫長集團旗下五大子公司，各自引領行業美學標準，構建多維度的高奢生活生態圈。</p>
           </div>
 
@@ -379,7 +437,7 @@ export default function CenturionPortal() {
                   全球首創主題式旅行箱發行體系，擁有「灣流線條」專利外觀與多項軍規防護技術。深受全球航空空服人員熱愛，被冠以「空姐箱」美譽。
                 </p>
               </div>
-              <a href="https://example-distributor.com" target="_blank" rel="noopener noreferrer" className="text-[11px] text-[#AF8943] hover:text-[#93702F] inline-flex items-center space-x-2 font-bold tracking-widest pt-8 border-t border-[#F5F2EB] mt-8">
+              <a href="https://store.eternal-bc.com/collections/%E7%99%BE%E5%A4%AB%E9%95%B7%E6%97%85%E8%A1%8C%E7%AE%B1" target="_blank" rel="noopener noreferrer" className="text-[11px] text-[#AF8943] hover:text-[#93702F] inline-flex items-center space-x-2 font-bold tracking-widest pt-8 border-t border-[#F5F2EB] mt-8">
                 <span>子公司官網 ➔</span>
               </a>
             </div>
@@ -393,7 +451,7 @@ export default function CenturionPortal() {
                   開啟高奢行旅「第二曲線」。主打極地探索、西非文明祕境、南極豪華游輪等全球高門檻、珍稀探險路線，為菁英提供一生一次的靈魂洗禮。
                 </p>
               </div>
-              <a href="https://example-travel.com" target="_blank" rel="noopener noreferrer" className="text-[11px] text-[#AF8943] hover:text-[#93702F] inline-flex items-center space-x-2 font-bold tracking-widest pt-8 border-t border-[#F5F2EB] mt-8">
+              <a href="https://www.centuriontravel.tw/centurion" target="_blank" rel="noopener noreferrer" className="text-[11px] text-[#AF8943] hover:text-[#93702F] inline-flex items-center space-x-2 font-bold tracking-widest pt-8 border-t border-[#F5F2EB] mt-8">
                 <span>子公司官網 ➔</span>
               </a>
             </div>
@@ -443,26 +501,26 @@ export default function CenturionPortal() {
         </div>
       </section>
 
-      {/* 全新第三單元：品牌 IP 聯名與貼牌孵化實驗室 (Global Co-Branding & OEM Lab - 核心商業招商) */}
-      <section id="co-branding" className="py-24 lg:py-32 max-w-7xl mx-auto px-6 border-b border-[#EFECE6]">
+      {/* 第三單元：【孵化你的百夫長】品牌美學授權計畫 (OEM/IP Incubator) */}
+      <section id="incubator" className="py-24 lg:py-32 max-w-7xl mx-auto px-6 border-b border-[#EFECE6]">
         <div className="grid lg:grid-cols-12 gap-16 items-center">
           
           <div className="lg:col-span-5 space-y-6">
-            <span className="text-[#AF8943] tracking-[0.25em] text-xs font-semibold uppercase inline-flex items-center space-x-2">
+            <span className="text-[#AF8943] tracking-[0.25em] text-xs font-semibold uppercase inline-flex items-center space-x-2 font-mono">
               <Sparkles size={16} />
-              <span>CO-BRANDING & OEM INCUBATOR</span>
+              <span>INCUBATE YOUR CENTURION</span>
             </span>
             <h2 className="text-4xl font-serif text-stone-900 font-light leading-tight">
-              將卓越品質<br />
-              <span className="italic font-normal text-[#AF8943]">點石成金的藝術</span>
+              【孵化你的百夫長】<br />
+              <span className="italic font-normal text-[#AF8943]">立足台灣，走向世界</span>
             </h2>
             <p className="text-xs text-stone-600 leading-relaxed font-light">
-              百夫長（CENTURION）不單是行李箱，更是一張具有無窮溢價力量的美學印章。我們與世界最頂尖的製造工廠與產品供應鏈合作，透過百夫長專利的**「全球頂級 IP 聯動矩陣」**（迪士尼、SOU‧SOU、故宮博物院等），為你的優質產品注入跨界靈魂。
+              你有好產品、好服務，但缺乏國際級品牌知名度與高溢價能力？百夫長提供最完整的**品牌授權與貼牌孵化解決方案**。我們將集團旗下橫跨時尚、民生通路與文化藝術的 IP 聯名權，與你經過嚴格品質審核的產品相結合，實現 3 倍至 5 倍的產品價格拉抬。
             </p>
-            <div className="p-6 bg-[#FAF8F5] border border-[#EFECE6] space-y-2">
-              <h4 className="text-sm font-serif font-bold text-stone-900">為什麼選擇與百夫長貼牌聯名？</h4>
+            <div className="p-6 bg-[#FAF8F5] border border-[#EFECE6] space-y-3">
+              <h4 className="text-sm font-serif font-bold text-stone-900">集團嚴苛品質與服務審核：</h4>
               <p className="text-[11px] text-stone-500 leading-relaxed font-light">
-                我們協助擁有優秀技術但缺乏高溢價故事的產品（包含生活用品、美妝配件、精品食品等），透過百夫長品牌的法式人文定位與獨家 IP 授權資源，使產品零售價格獲得 3 至 5 倍的尊榮提拉。
+                百夫長絕不對品質妥協。所有參與「孵化計畫」的產品，必須經過百夫長品管工程師的壓力、老化、環保與耐用度多重檢測。通過審核者，方可正式冠以百夫長品牌商標，立足台灣，共同進軍東南亞、日本及北美高階市場。
               </p>
             </div>
           </div>
@@ -470,33 +528,33 @@ export default function CenturionPortal() {
           <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="bg-white p-8 border border-[#EFECE6] space-y-4">
               <div className="text-2xl text-[#AF8943] font-mono">01</div>
-              <h3 className="text-base font-serif font-bold text-stone-900">極速拉抬產品價格</h3>
+              <h3 className="text-base font-serif font-bold text-stone-900">品牌高奢化，徹底告別價格戰</h3>
               <p className="text-xs text-stone-500 leading-relaxed font-light">
-                百夫長的高奢定位深植人心。與我們的專利設計與經典品牌聯名，可迅速提升消費者對你產品的價值認同，突破中低端價格惡性競爭。
+                傳統代工與普通品牌只能打價格戰。透過掛牌百夫長（CENTURION）商標，賦予產品奢華故事與名牌地位，產品單價即刻躍升。
               </p>
             </div>
 
             <div className="bg-white p-8 border border-[#EFECE6] space-y-4">
               <div className="text-2xl text-[#AF8943] font-mono">02</div>
-              <h3 className="text-base font-serif font-bold text-stone-900">全球頂級 IP 直接對接</h3>
+              <h3 className="text-base font-serif font-bold text-stone-900">無縫對接全球頂級聯名 IP</h3>
               <p className="text-xs text-stone-500 leading-relaxed font-light">
-                你的產品將能直接與迪士尼、LINE FRIENDS、京都 SOU‧SOU 等世界級 IP 進行聯名包裝，並進入百夫長在全球數十個國家的發行渠道。
+                你的貼牌產品將有資格對接百夫長長期持有的迪士尼、京都 SOU‧SOU、故宮、幾米等一線 IP，開發高回報的限量珍藏款。
               </p>
             </div>
 
             <div className="bg-white p-8 border border-[#EFECE6] space-y-4">
               <div className="text-2xl text-[#AF8943] font-mono">03</div>
-              <h3 className="text-base font-serif font-bold text-stone-900">輕資產營運技術轉移</h3>
+              <h3 className="text-base font-serif font-bold text-stone-900">全面解鎖全球主流分銷通路</h3>
               <p className="text-xs text-stone-500 leading-relaxed font-light">
-                我們提供全套設計美學監製與行銷避險技術。你負責提供穩定卓越的代工品質，百夫長負責品牌化、高奢化包裝，共同分享高額市場分潤。
+                百夫長擁有與 7-ELEVEN、全聯福利中心、蝦皮商城等跨國與大型通路的集點和上架合作通路。你只需提供品質極致的生產，通路我們來打通。
               </p>
             </div>
 
             <div className="bg-white p-8 border border-[#EFECE6] space-y-4">
               <div className="text-2xl text-[#AF8943] font-mono">04</div>
-              <h3 className="text-base font-serif font-bold text-stone-900">B2B 全球大宗禮贈通路</h3>
+              <h3 className="text-base font-serif font-bold text-stone-900">高溢價，利潤共享共榮</h3>
               <p className="text-xs text-stone-500 leading-relaxed font-light">
-                直接打入五星級酒店、高奢跑車 VIP 會員禮物、跨國銀行私人財富論壇之採購名單，實現大宗銷售與尊榮感建立的雙重豐收。
+                「你負責追求品質極致，百夫長負責賦予產品世紀靈魂。」雙方以控股高度進行商業分潤合作，攜手共創長線、健康的第二增長曲線。
               </p>
             </div>
           </div>
@@ -504,7 +562,63 @@ export default function CenturionPortal() {
         </div>
       </section>
 
-      {/* 第四單元：品牌核心 DNA 與專利技術 (Brand DNA) */}
+      {/* 第四單元：高奢獨立產品抬價展廳 (Luxury pricing Showcase - 獨立抬價專區) */}
+      <section id="luxury-exhibition" className="bg-[#FAF8F5] py-24 lg:py-32 border-b border-[#EFECE6]">
+        <div className="max-w-7xl mx-auto px-6">
+          
+          <div className="text-center space-y-4 mb-20">
+            <span className="text-[#AF8943] tracking-[0.25em] text-xs font-semibold uppercase font-mono">CENTURION ARCHIVE</span>
+            <h2 className="text-4xl font-serif text-stone-900 font-light">尊榮產品典藏展廳</h2>
+            <p className="text-stone-500 text-sm max-w-xl mx-auto font-light">
+              經過百夫長品質審核與品牌美學加持的精品，以高溢價實力展現當代工藝與頂奢風範。
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            {luxuryProducts.map((prod) => (
+              <div 
+                key={prod.id} 
+                className="bg-white border border-[#EFECE6] p-8 flex flex-col justify-between transition-all duration-300 hover:shadow-md group"
+              >
+                <div className="space-y-6">
+                  {/* 高奢簡約標示 */}
+                  <div className="flex justify-between items-center text-[10px] text-stone-400 font-mono tracking-widest">
+                    <span>LIMITED EDITION</span>
+                    <span>{prod.price}</span>
+                  </div>
+                  
+                  {/* 奢雅無圖片替代之極簡線框 */}
+                  <div className="aspect-[4/3] bg-[#FAF8F5] border border-[#EFECE6] flex flex-col justify-center items-center p-6 relative">
+                    <span className="text-[#AF8943] font-serif font-bold text-xl">{prod.price}</span>
+                    <span className="text-[9px] text-stone-400 font-mono mt-1 uppercase tracking-widest">{prod.tagline}</span>
+                  </div>
+
+                  <h3 className="text-lg font-serif font-bold text-stone-900 group-hover:text-[#AF8943] transition-colors leading-snug">
+                    {prod.name}
+                  </h3>
+                  <p className="text-xs text-stone-600 leading-relaxed font-light">
+                    {prod.description}
+                  </p>
+                </div>
+                <div className="pt-6 border-t border-[#F5F2EB] mt-8 flex justify-between items-center">
+                  <span className="text-[10px] text-[#AF8943] font-bold tracking-widest font-mono">CENTURION CERTIFIED</span>
+                  <a 
+                    href={prod.image_url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-stone-400 hover:text-[#AF8943] transition-colors"
+                  >
+                    <ExternalLink size={14} />
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </section>
+
+      {/* 第五單元：品牌核心 DNA */}
       <section id="dna" className="py-24 lg:py-32 max-w-7xl mx-auto px-6">
         <div className="text-center space-y-4 mb-20">
           <span className="text-[#AF8943] tracking-[0.25em] text-xs font-semibold uppercase">THE BRAND ESSENCE</span>
@@ -580,7 +694,7 @@ export default function CenturionPortal() {
         </div>
       </section>
 
-      {/* 第五單元：永續承諾與自然保育 */}
+      {/* 第六單元：永續承諾與自然保育 */}
       <section id="esg" className="bg-[#F7F4EE] py-24 lg:py-32 border-t border-b border-[#EFECE6]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center space-y-4 mb-20">
@@ -646,7 +760,7 @@ export default function CenturionPortal() {
         </div>
       </section>
 
-      {/* 第六單元：百夫長新知與媒體觀點 */}
+      {/* 第七單元：百夫長新知與媒體觀點 */}
       <section id="insights" className="py-24 lg:py-32 max-w-7xl mx-auto px-6 border-b border-[#EFECE6]">
         <div className="text-center space-y-4 mb-20">
           <span className="text-[#AF8943] tracking-[0.25em] text-xs font-semibold uppercase">CENTURION INSIGHTS</span>
@@ -756,7 +870,7 @@ export default function CenturionPortal() {
         </div>
       </section>
 
-      {/* 全新第七單元：百夫長 PRESS (CENTURION PRESS) */}
+      {/* 全新第八單元：百夫長 PRESS (CENTURION PRESS) */}
       <section id="press" className="py-24 lg:py-32 max-w-7xl mx-auto px-6 border-b border-[#EFECE6]">
         <div className="grid lg:grid-cols-12 gap-16 items-start">
           
@@ -831,7 +945,7 @@ export default function CenturionPortal() {
         </div>
       </section>
 
-      {/* 第八單元：法式聯名榮譽牆 */}
+      {/* 第九單元：法式聯名榮譽牆 */}
       <section id="wall" className="py-24 lg:py-32 max-w-7xl mx-auto px-6">
         <div className="text-center space-y-4 mb-16">
           <span className="text-[#AF8943] tracking-[0.25em] text-xs font-semibold uppercase">WALL OF FAME</span>
@@ -900,7 +1014,7 @@ export default function CenturionPortal() {
         )}
       </section>
 
-      {/* 新增：CMS 媒體文獻高奢上架與下架管理後台 */}
+      {/* 第十單元：CMS 媒體文獻高奢上架與下架管理後台 */}
       <section id="cms-admin" className="bg-[#FAF8F5] py-20 border-t border-[#EFECE6]">
         <div className="max-w-4xl mx-auto px-6 space-y-12">
           
@@ -1056,14 +1170,14 @@ export default function CenturionPortal() {
         </div>
       </section>
 
-      {/* 第九單元：B2B 合作意向資料收集門戶 */}
+      {/* 第十一單元：B2B 合作意向資料收集門戶 (專屬「孵化你的百夫長」 OEM 招募漏斗) */}
       <section id="b2b-form" className="bg-[#FAF8F5] py-24 lg:py-32 border-t border-[#EFECE6]">
         <div className="max-w-4xl mx-auto px-6">
           <div className="text-center space-y-4 mb-16">
             <span className="text-[#AF8943] tracking-[0.25em] text-xs font-semibold uppercase">PARTNERSHIP ENQUIRY</span>
-            <h2 className="text-4xl font-serif text-stone-900 font-light">開啟您的百夫長合作之門</h2>
+            <h2 className="text-4xl font-serif text-stone-900 font-light">開啟【孵化你的百夫長】提案</h2>
             <p className="text-stone-500 text-sm max-w-xl mx-auto font-light">
-              歡迎品牌聯名、跨國採購與通路合作。請填寫下方意向表格，商務團隊將在兩個工作天內安排資深總監與您親自聯繫。
+              你有好服務、好產品，想掛百夫長品牌？請在此遞交品牌授權與貼牌孵化審核提案。我們將在兩個工作天內由集團商務總監親自對接。
             </p>
           </div>
 
@@ -1126,6 +1240,7 @@ export default function CenturionPortal() {
                   onChange={(e) => setFormData({ ...formData, business_area: e.target.value })}
                   className="w-full bg-[#FAF8F5] border border-[#EFECE6] rounded-none px-4 py-4 text-stone-700 focus:outline-none focus:border-[#AF8943] text-xs tracking-wider transition-colors"
                 >
+                  <option>【孵化你的百夫長】品牌授權計畫 (OEM/IP聯名)</option>
                   <option>百夫長旅行箱 (大宗採購/IP聯名)</option>
                   <option>百夫長生鮮選物 (百選經銷合作)</option>
                   <option>百夫長禮贈精品 (百禮開發/採購)</option>
@@ -1148,14 +1263,14 @@ export default function CenturionPortal() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-stone-500 uppercase tracking-widest mb-3">合作提案與計畫簡述</label>
+              <label className="block text-xs font-bold text-stone-500 uppercase tracking-widest mb-3">產品技術優勢與專利構想簡述</label>
               <textarea 
                 rows={5} 
                 required 
                 value={formData.proposal_summary}
                 onChange={(e) => setFormData({ ...formData, proposal_summary: e.target.value })}
                 className="w-full bg-[#FAF8F5] border border-[#EFECE6] rounded-none px-4 py-4 text-stone-900 focus:outline-none focus:border-[#AF8943] text-xs tracking-wider transition-colors" 
-                placeholder="請填寫具體的合作計畫，包含採購估計量、期望款式，或對接活動的時程規劃..."
+                placeholder="請描述您目前擁有的優質產品、技術、專利，或您期望掛上百夫長品牌進行市場溢價的商業計畫..."
               />
             </div>
 
@@ -1186,7 +1301,7 @@ export default function CenturionPortal() {
                 ) : (
                   <>
                     <Send size={16} />
-                    <span>送出合作提案</span>
+                    <span>送出戰略合作提案</span>
                   </>
                 )}
               </button>
