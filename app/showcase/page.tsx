@@ -38,10 +38,11 @@ export default function ShowcaseSubpage() {
         if (error || !data || data.length === 0) throw new Error('Empty');
         setProducts((data as any) as LuxuryProduct[]);
       } catch (err) {
+        // 離線降級 Fallback 數據
         setProducts([
           { id: 1, name: 'CENTURION 麥迪遜藍 29吋旗艦款旅行箱', price_tag: 'NT$ 12,800', tagline: '裝載最重要一切的移動城堡', description: '經典雙輪避震設計搭配專利灣流抗衝擊箱體，以高密度法式噴塗麥迪遜藍，體現商務長途飛行的優雅品味。', image_url: 'https://store.eternal-bc.com/zh-TW/products/centurion%E7%99%BE%E5%A4%AB%E9%95%B7%E6%8B%89%E9%8D%8A%E6%AC%BE%E8%A1%8E%E6%9D%8E%E7%AE%B1-%E9%BA%A5%E8%BF%CD%E9%81%9C%E8%97%8D-29%E5%90%8B', is_featured: true },
           { id: 2, name: 'CENTURION × Excell 限量聯名登機箱', price_tag: 'NT$ 8,800', tagline: '街頭藝術與工業美學的極致跨界', description: '與工業包材大廠 Excell 共同開發，將大膽的街頭警示膠帶元素，完美融匯進 20 吋精鋼防禦登機箱面。', image_url: 'https://centurion.tw/news_inner_pages-106.html', is_featured: true },
-          { id: 3, name: 'CENTURION Save Earth 自然保育系列旅行箱', price_tag: 'NT$ 10,800', tagline: '行走的地球永續環保宣言', description: '採用高彈性多格布袋、羽量級 PC 複合材質，配置 TSA 國際海關鎖，每一次出行都是對生命的致敬。', image_url: 'https://www.centuriontravel.tw/centurion', is_featured: true }
+          { id: 3, name: 'CENTURION Save Earth 自然保育系列旅行箱', price_tag: 'NT$ 10,800', tagline: '行走的地球永續環保宣言', description: '採用高彈性多格布袋、羽量級 PC 複合材質，配置 TSA 國際海關鎖，每一次出行裝載的是對生命的致敬。', image_url: 'https://www.centuriontravel.tw/centurion', is_featured: true }
         ]);
       } finally {
         setLoading(false);
@@ -59,11 +60,11 @@ export default function ShowcaseSubpage() {
             <span>返回集團總部門戶</span>
           </Link>
           <div className="flex items-center space-x-2">
-            <img 
-              src="https://custom-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_300,w_300,f_auto,q_100/1886487/831598_863023.png" 
-              alt="CENTURION" 
-              className="h-8 w-auto object-contain"
-            />
+          <img 
+  src="/centurionlogo.png" 
+  alt="CENTURION" 
+  className="h-8 w-auto object-contain"
+/>
             <span className="text-[8px] bg-[#AF8943]/10 text-[#AF8943] px-2 py-0.5 rounded-full font-mono font-semibold tracking-widest">SHOWROOM</span>
           </div>
         </div>
@@ -75,10 +76,10 @@ export default function ShowcaseSubpage() {
           <span>CENTURION BRAND AUTHORIZATION</span>
         </span>
         <h1 className="text-4xl lg:text-6xl font-serif text-stone-900 font-light leading-tight">
-          百夫長品牌認證會館 (Showcase)
+          百夫長品牌認證會館
         </h1>
         <p className="text-stone-500 text-sm max-w-xl mx-auto font-light">
-          唯有通過百夫長集團品牌鏈顧問連仲賢與品管團隊嚴苛審核之聯名與認證產品，方可列席於此。
+          唯有通過百夫長集團品牌鏈顧問連仲賢與品管團隊嚴苛審核之貼牌產品與聯名設計，方可列席於此。
         </p>
       </header>
 

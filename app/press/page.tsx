@@ -59,11 +59,11 @@ export default function PressDedicatedPage() {
             <span>返回集團總部門戶</span>
           </Link>
           <div className="flex items-center space-x-2">
-            <img 
-              src="https://custom-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_300,w_300,f_auto,q_100/1886487/831598_863023.png" 
-              alt="CENTURION" 
-              className="h-8 w-auto object-contain"
-            />
+          <img 
+  src="/centurionlogo.png" 
+  alt="CENTURION" 
+  className="h-8 w-auto object-contain"
+/>
             <span className="text-[8px] bg-[#AF8943]/10 text-[#AF8943] px-2 py-0.5 rounded-full font-mono font-semibold tracking-widest">PRESS</span>
           </div>
         </div>

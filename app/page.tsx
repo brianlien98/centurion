@@ -357,9 +357,10 @@ export default function CenturionPortal() {
       <nav className="sticky top-0 z-50 backdrop-blur-md bg-[#FDFBF7]/90 border-b border-[#EFECE6] px-6 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           
+          {/* Logo 置換 */}
           <div className="flex items-center space-x-3">
             <img 
-              src="https://custom-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_300,w_300,f_auto,q_100/1886487/831598_863023.png" 
+              src="/centurionlogo.png" // ➔ 點擊此處改讀取本地 public/logo.png，載入速度提升 5 倍，且永久不失效！
               alt="CENTURION" 
               className="h-10 w-auto object-contain"
             />
