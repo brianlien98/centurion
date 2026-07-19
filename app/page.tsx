@@ -296,6 +296,46 @@ export default function CenturionPortal() {
     }
   };
 
+  // 處理 B2B 表單提交
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitStatus('submitting');
+    try {
+      const { error } = await supabaseCenturion
+        .from('centurion_partnership_leads')
+        .insert([{
+          company_name: formData.company_name,
+          contact_name: formData.contact_name,
+          phone: formData.phone,
+          email: formData.email,
+          business_area: formData.business_area,
+          timeframe: formData.timeframe,
+          proposal_summary: formData.proposal_summary,
+          status: 'pending'
+        }]);
+
+      if (error) throw error;
+      setSubmitStatus('success');
+      setFormData({
+        company_name: '',
+        contact_name: '',
+        phone: '',
+        email: '',
+        business_area: '【百夫長品牌鏈】品牌授權計畫',
+        timeframe: '加入百夫長，立即開始 (1個月內)',
+        proposal_summary: ''
+      });
+    } catch (err) {
+      console.error('Failed to submit B2B lead:', err);
+      setSubmitStatus('error');
+    }
+  };
+
+  // 篩選過濾
+  const filteredItems = filter === 'all' 
+    ? items 
+    : items.filter(item => item.category === filter);
+
   // 前台精選過濾 (5~10品)
   const featuredShowcase = showcaseItems.filter(item => item.is_featured);
 
@@ -504,7 +544,7 @@ export default function CenturionPortal() {
               <span className="italic font-normal text-[#AF8943]">立足台灣，走向世界</span>
             </h2>
             <p className="text-xs text-stone-600 leading-relaxed font-light">
-              你有好服務、好產品，想加入百夫長品牌？請在此遞交品牌授權與審核提案。我們將在兩個工作天內由集團品牌鏈顧問 連仲賢親自對接。
+              你有好服務、好產品，想加入百夫長品牌？請在此遞交品牌授權與審核提案。我們將在兩個工作天內由集團品牌鏈首席顧問連仲賢先生親自對接。
             </p>
             <div className="p-6 bg-[#FAF8F5] border border-[#EFECE6] space-y-3">
               <h4 className="text-sm font-serif font-bold text-stone-900">品牌鏈顧問與品質審核：</h4>
@@ -542,7 +582,7 @@ export default function CenturionPortal() {
             <div className="bg-white p-8 border border-[#EFECE6] space-y-4">
               <div className="text-2xl text-[#AF8943] font-mono">04</div>
               <h3 className="text-base font-serif font-bold text-stone-900">高溢價，利潤共享共榮</h3>
-              <p className="text-xs text-stone-500 leading-relaxed font-light">
+              <p className="text-xs text-stone-600 leading-relaxed font-light">
                 「你負責追求品質極致，百夫長負責賦予產品品牌靈魂。」雙方以品牌鏈高度進行商業分潤合作，攜手共創長線、健康的第二增長曲線。
               </p>
             </div>
@@ -551,7 +591,7 @@ export default function CenturionPortal() {
         </div>
       </section>
 
-      {/* 第四單元：首頁動態精選 5~10 品展廳 (自主選 5~10 品呈現在此) */}
+      {/* 第四單元：首頁動態精選 5~10 品展廳 */}
       <section id="luxury-exhibition" className="bg-[#FAF8F5] py-24 lg:py-32 border-b border-[#EFECE6]">
         <div className="max-w-7xl mx-auto px-6">
           
