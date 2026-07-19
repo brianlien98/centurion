@@ -30,13 +30,6 @@ import {
   Video,
   ExternalLink,
   BookOpen,
-  Lock,
-  Unlock,
-  Plus,
-  Trash2,
-  Database,
-  Layers,
-  TrendingUp,
   Eye
 } from 'lucide-react';
 
@@ -61,7 +54,7 @@ interface LuxuryProduct {
 export default function CenturionPortal() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
-  // 1. 各資料表狀態
+  // 1. 各資料表唯讀展示狀態
   const [items, setItems] = useState<WallOfFameItem[]>([]);
   const [filter, setFilter] = useState<string>('all');
   const [loadingItems, setLoadingItems] = useState<boolean>(true);
@@ -73,41 +66,7 @@ export default function CenturionPortal() {
   const [showcaseItems, setShowcaseItems] = useState<LuxuryProduct[]>([]);
   const [loadingShowcase, setLoadingShowcase] = useState<boolean>(true);
 
-  // 2. CMS 後台解鎖
-  const [adminUnlocked, setAdminUnlocked] = useState<boolean>(false);
-  const [passcode, setPasscode] = useState<string>('');
-  const [passcodeError, setPasscodeError] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<'showcase' | 'press' | 'wall'>('showcase');
-
-  // 3. CMS 新增輸入
-  const [newShowcase, setNewShowcase] = useState({
-    name: '',
-    price_tag: '',
-    tagline: '',
-    description: '',
-    image_url: '',
-    is_featured: true
-  });
-  
-  const [newPress, setNewPress] = useState({
-    title: '',
-    summary: '',
-    news_url: '',
-    image_url: ''
-  });
-
-  const [newWall, setNewWall] = useState({
-    year: '',
-    brand: '',
-    founder: '',
-    category: 'artist-ip' as any,
-    type: '',
-    description: ''
-  });
-
-  const [cmsSubmitStatus, setCmsSubmitStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
-
-  // 4. B2B 表單狀態
+  // 2. B2B 表單狀態 (前台保留)
   const [formData, setFormData] = useState<PartnershipLeadInput>({
     company_name: '',
     contact_name: '',
@@ -119,7 +78,7 @@ export default function CenturionPortal() {
   });
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
-  // 5. 資料庫讀取
+  // 3. 資料庫唯讀讀取
   const fetchShowcaseData = async () => {
     try {
       setLoadingShowcase(true);
@@ -136,7 +95,7 @@ export default function CenturionPortal() {
       setShowcaseItems([
         { id: 1, name: 'CENTURION 麥迪遜藍 29吋旗艦款旅行箱', price_tag: 'NT$ 12,800', tagline: '裝載最重要一切的移動城堡', description: '經典雙輪避震設計搭配專利灣流抗衝擊箱體，以高密度法式噴塗麥迪遜藍，體現商務長途飛行的優雅品味。', image_url: 'https://store.eternal-bc.com/zh-TW/products/centurion%E7%99%BE%E5%A4%AB%E9%95%B7%E6%8B%89%E9%8D%8A%E6%AC%BE%E8%A1%8E%E6%9D%8E%E7%AE%B1-%E9%BA%A5%E8%BF%CD%E9%81%9C%E8%97%8D-29%E5%90%8B', is_featured: true },
         { id: 2, name: 'CENTURION × Excell 限量聯名登機箱', price_tag: 'NT$ 8,800', tagline: '街頭藝術與工業美學的極致跨界', description: '與工業包材大廠 Excell 共同開發，將大膽的街頭警示膠帶元素，完美融匯進 20 吋精鋼防禦登機箱面。', image_url: 'https://centurion.tw/news_inner_pages-106.html', is_featured: true },
-        { id: 3, name: 'CENTURION Save Earth 自然保育系列旅行箱', price_tag: 'NT$ 10,800', tagline: '行走的地球永續環保宣言', description: '採用高彈性多格布袋、羽量級 PC 複合材質，配置 TSA 國際海關鎖，每一次出行都是對生命的致敬。', image_url: 'https://www.centuriontravel.tw/centurion', is_featured: true }
+        { id: 3, name: 'CENTURION Save Earth 自然保育系列旅行箱', price_tag: 'NT$ 10,800', tagline: '行走的地球永續環保宣言', description: '採用高彈性多格布袋、羽量級 PC 複合材質，配置 TSA 國際海關鎖，每一次出行裝載的是對自然的致敬。', image_url: 'https://www.centuriontravel.tw/centurion', is_featured: true }
       ]);
     } finally {
       setLoadingShowcase(false);
@@ -194,113 +153,11 @@ export default function CenturionPortal() {
     fetchWallData();
   }, []);
 
-  const handleUnlockCms = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (passcode === '1978') {
-      setAdminUnlocked(true);
-      setPasscodeError(false);
-    } else {
-      setPasscodeError(true);
-    }
-  };
-
-  // CMS 新增執行
-  const handleAddShowcase = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setCmsSubmitStatus('submitting');
-    try {
-      const { error } = await supabaseCenturion.from('centurion_showcase').insert([newShowcase]);
-      if (error) throw error;
-      setCmsSubmitStatus('success');
-      setNewShowcase({ name: '', price_tag: '', tagline: '', description: '', image_url: '', is_featured: true });
-      await fetchShowcaseData();
-    } catch (err) {
-      setCmsSubmitStatus('error');
-    }
-  };
-
-  const handleAddPress = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setCmsSubmitStatus('submitting');
-    try {
-      const { error } = await supabaseCenturion.from('centurion_press').insert([newPress]);
-      if (error) throw error;
-      setCmsSubmitStatus('success');
-      setNewPress({ title: '', summary: '', news_url: '', image_url: '' });
-      await fetchPressData();
-    } catch (err) {
-      setCmsSubmitStatus('error');
-    }
-  };
-
-  const handleAddWall = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setCmsSubmitStatus('submitting');
-    try {
-      const { error } = await supabaseCenturion.from('centurion_wall_of_fame').insert([newWall]);
-      if (error) throw error;
-      setCmsSubmitStatus('success');
-      setNewWall({ year: '', brand: '', founder: '', category: 'artist-ip', type: '', description: '' });
-      await fetchWallData();
-    } catch (err) {
-      setCmsSubmitStatus('error');
-    }
-  };
-
-  // CMS 刪除執行
-  const handleDeleteShowcase = async (id: number) => {
-    if (!confirm('您確定要永久下架此展示品嗎？')) return;
-    try {
-      const { error } = await supabaseCenturion.from('centurion_showcase').delete().eq('id', id);
-      if (error) throw error;
-      await fetchShowcaseData();
-    } catch (err) {
-      alert('刪除失敗。');
-    }
-  };
-
-  const handleDeletePress = async (id: number) => {
-    if (!confirm('確定下架此報導？')) return;
-    try {
-      const { error } = await supabaseCenturion.from('centurion_press').delete().eq('id', id);
-      if (error) throw error;
-      await fetchPressData();
-    } catch (err) {
-      alert('刪除失敗。');
-    }
-  };
-
-  const handleDeleteWall = async (id: number) => {
-    if (!confirm('確定下架此聯名夥伴？')) return;
-    try {
-      const { error } = await supabaseCenturion.from('centurion_wall_of_fame').delete().eq('id', id);
-      if (error) throw error;
-      await fetchWallData();
-    } catch (err) {
-      alert('刪除失敗。');
-    }
-  };
-
-  // CMS 推薦切換
-  const toggleFeatureShowcase = async (id: number, currentStatus: boolean) => {
-    try {
-      const { error } = await supabaseCenturion
-        .from('centurion_showcase')
-        .update({ is_featured: !currentStatus })
-        .eq('id', id);
-      if (error) throw error;
-      await fetchShowcaseData();
-    } catch (err) {
-      alert('切換失敗。');
-    }
-  };
-
-  // 處理 B2B 表單提交（資料庫寫入 + API 自動發信雙向連動）
+  // 處理 B2B 表單提交
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitStatus('submitting');
     try {
-      // 1. 寫入 Supabase 資料庫
       const { error } = await supabaseCenturion
         .from('centurion_partnership_leads')
         .insert([{
@@ -316,7 +173,6 @@ export default function CenturionPortal() {
 
       if (error) throw error;
 
-      // 2. 雙向對接：調用剛才建立的 Resend 郵件 API 發信給管理團隊
       const mailRes = await fetch('/api/send-partner-lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -358,7 +214,6 @@ export default function CenturionPortal() {
       <nav className="sticky top-0 z-50 backdrop-blur-md bg-[#FDFBF7]/90 border-b border-[#EFECE6] px-6 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           
-          {/* Logo */}
           <div className="flex items-center space-x-3">
             <img 
               src="https://custom-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_300,w_300,f_auto,q_100/1886487/831598_863023.png" 
@@ -388,7 +243,6 @@ export default function CenturionPortal() {
             </a>
           </div>
 
-          {/* 行動端選單 */}
           <button 
             className="md:hidden text-stone-600 hover:text-stone-900 transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -396,19 +250,6 @@ export default function CenturionPortal() {
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
-
-        {mobileMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 w-full bg-[#FDFBF7] border-b border-[#EFECE6] px-6 py-8 flex flex-col space-y-4 text-sm">
-            <a href="#vision" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">創辦理念</a>
-            <a href="#pillars" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">五大版體</a>
-            <a href="#dna" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">核心基因</a>
-            <a href="#esg" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">永續人文</a>
-            <a href="#insights" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">百夫長新知</a>
-            <a href="#press" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">百夫長 PRESS</a>
-            <a href="#wall" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">聯名牆</a>
-            <a href="#b2b-form" onClick={() => setMobileMenuOpen(false)} className="bg-[#AF8943] hover:bg-[#93702F] text-white font-bold text-center py-4 rounded-none text-xs tracking-widest transition-colors">戰略合作</a>
-          </div>
-        )}
       </nav>
 
       {/* 第一畫面 (Hero Section + B2B OEM 招募提案入口) */}
@@ -442,7 +283,6 @@ export default function CenturionPortal() {
             <span>集團品牌掌舵人 Visionary</span>
           </div>
           
-          {/* 總裁雙重高規格照片並排 */}
           <div className="grid grid-cols-2 gap-4">
             <div className="aspect-[3/4] overflow-hidden border border-[#EFECE6] relative group">
               <img 
@@ -470,7 +310,7 @@ export default function CenturionPortal() {
             <p className="text-[10px] text-[#AF8943] uppercase tracking-widest mt-1">百夫長集團總裁 / 美國國家旅遊局特聘顧問</p>
           </div>
           <p className="text-xs text-stone-500 leading-relaxed font-light">
-            陳志彬總裁擁有逾 25 年的跨國貿易、品牌控股與美學整合戰略經驗。他首創「輕資產營運思維」，拒絕重資產束縛，專注品牌美學溢價。他創立的 CENTURION 品牌，引領了全亞洲箱包外觀大变革。受任美國國家旅遊局（Brand USA）兩年期顧問，深耕學術，並以「非典型政治參選」在台灣民主史上留下獨特的「陳志彬模式」清流印記。
+            陳志彬總裁擁有逾 25 年 agency/品牌控股經驗。他首創「輕資產營運思維」，拒絕重資產束縛，專注品牌美學溢價。受任美國國家旅遊局兩年期顧問，深耕學術，並以「非典型政治參選」在台灣民主史上留下獨特的「陳志彬模式」清流印記。
           </p>
         </div>
       </section>
@@ -1050,7 +890,7 @@ export default function CenturionPortal() {
             <p className="text-xs text-stone-400 tracking-widest">正在載入合作典藏紀錄...</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredItems.map((item) => (
               <div 
                 key={item.id} 
@@ -1079,163 +919,7 @@ export default function CenturionPortal() {
         )}
       </section>
 
-      {/* 第十單元：CMS 媒體文獻高奢上架與下架管理後台 */}
-      <section id="cms-admin" className="bg-[#FAF8F5] py-20 border-t border-[#EFECE6]">
-        <div className="max-w-4xl mx-auto px-6 space-y-12">
-          
-          {/* 安全驗證標題 */}
-          <div className="text-center space-y-4">
-            <span className="text-[#AF8943] tracking-[0.25em] text-xs font-semibold uppercase inline-flex items-center space-x-2">
-              {adminUnlocked ? <Unlock size={14} /> : <Lock size={14} />}
-              <span>CENTURION CMS｜品牌文獻管理系統</span>
-            </span>
-            <p className="text-stone-500 text-xs font-light max-w-md mx-auto">
-              此為百夫長集團內部行政管理後台。請輸入安全授權碼以解鎖動態文章上架、刪除與資料庫即時維護權限。
-            </p>
-          </div>
-
-          {!adminUnlocked ? (
-            /* 未解鎖：密碼輸入框 */
-            <form onSubmit={handleUnlockCms} className="max-w-sm mx-auto bg-white p-8 border border-[#EFECE6] space-y-6 text-center">
-              <div className="space-y-2">
-                <label className="block text-[11px] font-bold text-stone-500 uppercase tracking-widest">安全解鎖驗證碼</label>
-                <input 
-                  type="password"
-                  required
-                  value={passcode}
-                  onChange={(e) => setPasscode(e.target.value)}
-                  className="w-full bg-[#FAF8F5] border border-[#EFECE6] text-center rounded-none py-3 text-stone-900 focus:outline-none focus:border-[#AF8943] text-sm tracking-widest transition-colors font-mono"
-                  placeholder="ENTER PASSCODE"
-                />
-              </div>
-              {passcodeError && (
-                <p className="text-xs text-rose-600 font-medium">❌ 授權驗證碼不正確，請重新輸入。</p>
-              )}
-              <button 
-                type="submit"
-                className="bg-[#AF8943] hover:bg-[#93702F] text-white font-bold py-3 px-8 text-xs tracking-widest uppercase transition-colors w-full rounded-none"
-              >
-                驗證安全憑證
-              </button>
-            </form>
-          ) : (
-            /* 已解鎖：動態 CMS 管理界面 */
-            <div className="space-y-12 animate-fadeIn">
-              
-              {/* 1. 新增報導表單 */}
-              <div className="bg-white p-8 border border-[#EFECE6] space-y-6">
-                <div className="flex items-center space-x-2 text-[#AF8943] pb-3 border-b border-[#F5F2EB]">
-                  <Plus size={18} />
-                  <span className="text-xs font-bold tracking-widest uppercase">發佈全新媒體報導文獻</span>
-                </div>
-
-                <form onSubmit={handleAddPress} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-[10px] font-bold text-stone-500 uppercase tracking-widest mb-2">媒體標題與報導類型</label>
-                      <input 
-                        type="text"
-                        required
-                        value={newPress.title}
-                        onChange={(e) => setNewPress({ ...newPress, title: e.target.value })}
-                        className="w-full bg-[#FAF8F5] border border-[#EFECE6] rounded-none px-4 py-4 text-stone-900 focus:outline-none focus:border-[#AF8943] text-xs transition-colors"
-                        placeholder="例：經濟日報專訪：陳志彬品牌觀"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] font-bold text-stone-500 uppercase tracking-widest mb-2">外部新聞原始連結 (URL)</label>
-                      <input 
-                        type="url"
-                        value={newPress.news_url}
-                        onChange={(e) => setNewPress({ ...newPress, news_url: e.target.value })}
-                        className="w-full bg-[#FAF8F5] border border-[#EFECE6] rounded-none px-4 py-4 text-stone-900 focus:outline-none focus:border-[#AF8943] text-xs transition-colors"
-                        placeholder="https://..."
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] font-bold text-stone-500 uppercase tracking-widest mb-2">報導重點摘要 (100 字內)</label>
-                    <textarea 
-                      rows={3}
-                      required
-                      value={newPress.summary}
-                      onChange={(e) => setNewPress({ ...newPress, summary: e.target.value })}
-                      className="w-full bg-[#FAF8F5] border border-[#EFECE6] rounded-none px-4 py-4 text-stone-900 focus:outline-none focus:border-[#AF8943] text-xs transition-colors"
-                      placeholder="請輸入此報導的精簡重點與核心觀點闡述..."
-                    />
-                  </div>
-
-                  {cmsSubmitStatus === 'success' && (
-                    <p className="text-xs text-emerald-600 font-semibold flex items-center space-x-1">
-                      <CheckCircle size={14} />
-                      <span>✨ 文獻發佈成功！已動態寫入 Supabase 資料表，前端已即時更新。</span>
-                    </p>
-                  )}
-
-                  <div className="text-right">
-                    <button 
-                      type="submit"
-                      disabled={cmsSubmitStatus === 'submitting'}
-                      className="bg-[#AF8943] hover:bg-[#93702F] text-white font-bold py-3.5 px-8 text-xs tracking-widest uppercase transition-colors rounded-none inline-flex items-center space-x-2"
-                    >
-                      {cmsSubmitStatus === 'submitting' ? (
-                        <>
-                          <Loader2 className="animate-spin" size={12} />
-                          <span>寫入資料庫中...</span>
-                        </>
-                      ) : (
-                        <span>發佈至資料庫</span>
-                      )}
-                    </button>
-                  </div>
-                </form>
-              </div>
-
-              {/* 2. 現有文獻清單與即時下架 */}
-              <div className="bg-white p-8 border border-[#EFECE6] space-y-6">
-                <div className="flex items-center space-x-2 text-[#AF8943] pb-3 border-b border-[#F5F2EB]">
-                  <Database size={18} />
-                  <span className="text-xs font-bold tracking-widest uppercase">現存文獻列表與即時下架 (實時資料庫)</span>
-                </div>
-
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left border-collapse text-xs">
-                    <thead>
-                      <tr className="border-b border-[#EFECE6] text-stone-400 font-mono tracking-widest">
-                        <th className="py-3 font-semibold">ID</th>
-                        <th className="py-3 font-semibold">標題</th>
-                        <th className="py-3 text-center">操作</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {pressItems.map((p) => (
-                        <tr key={p.id} className="border-b border-[#FAF8F5] hover:bg-[#FAF8F5]/40 transition-colors">
-                          <td className="py-4 font-mono text-[#AF8943]">#{p.id.toString().padStart(3, '0')}</td>
-                          <td className="py-4 font-serif font-bold text-stone-900">{p.title}</td>
-                          <td className="py-4 text-center">
-                            <button 
-                              onClick={() => handleDeletePress(p.id)}
-                              className="text-stone-400 hover:text-rose-600 p-2 transition-colors"
-                              title="永久從資料庫刪除並下架"
-                            >
-                              <Trash2 size={16} />
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-            </div>
-          )}
-
-        </div>
-      </section>
-
-      {/* 第十一單元：B2B 合作意向資料收集門戶 (專屬「加入百夫長品牌鏈」 招募漏斗) */}
+      {/* 第十單元：B2B 合作意向資料收集門戶 (專屬「加入百夫長品牌鏈」 招募漏斗) */}
       <section id="b2b-form" className="bg-[#FAF8F5] py-24 lg:py-32 border-t border-[#EFECE6]">
         <div className="max-w-4xl mx-auto px-6">
           <div className="text-center space-y-4 mb-16">
@@ -1356,7 +1040,7 @@ export default function CenturionPortal() {
               <button 
                 type="submit" 
                 disabled={submitStatus === 'submitting'}
-                className="bg-[#AF8943] hover:bg-[#93702F] disabled:bg-stone-200 disabled:text-stone-400 text-white font-bold px-16 py-4 rounded-none text-xs tracking-[0.2em] uppercase transition-colors w-full md:w-auto inline-flex items-center justify-center space-x-2"
+                className="bg-[#AF8943] hover:bg-[#93702F] text-white font-bold px-16 py-4 rounded-none text-xs tracking-[0.2em] uppercase transition-colors w-full md:w-auto inline-flex items-center justify-center space-x-2"
               >
                 {submitStatus === 'submitting' ? (
                   <>
