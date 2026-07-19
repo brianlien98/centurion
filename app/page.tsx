@@ -82,13 +82,13 @@ export default function CenturionPortal() {
   // 三國語系高奢文獻翻譯字典 (Traditional Chinese, Japanese, English)
   const t = {
     zh: {
-      metaGroup: 'CENTURION 控股集團全球總部',
-      heroTitle: '美學無邊界\n重塑品牌溢價',
-      heroDesc: '你負責追求品質極致，百夫長負責賦予產品品牌靈魂。百夫長與你一起立足台灣，走向世界。加入百夫長全球品牌美學體系，獲得高奢溢價賦能，徹底顛覆傳統價格戰。',
+      metaGroup: 'CENTURION 百夫長集團全球總部',
+      heroTitle: '品牌無邊界\n百夫長✜品牌生態鏈',
+      heroDesc: '你負責追求產品與服務極致，百夫長負責賦予產品品牌靈魂。百夫長與你一起立足台灣，走向世界。加入百夫長全球品牌生態體系，獲得品牌加值賦能。',
       ctaApply: '申請加入百夫長✜品牌鏈 ➔',
       ctaShowcase: '檢視典藏展廳 (Showcase)',
       founderTitle: '集團品牌掌舵人 Visionary',
-      founderQuote: '「你負責追求品質極致，百夫長負責賦予產品品牌靈魂。百夫長與你一起立足台灣，走向世界。」',
+      founderQuote: '「百夫長的核心價值在於文化與生活方式，而非傳統的硬體販售」，『品牌』不只是一個名字，而是一種資產，今天我開放這個資產為你賦能',
       founderDesc: '陳志彬總裁擁有逾 25 年品牌控股經驗。他首創「輕資產營運思維」，拒絕重資產束縛，專注品牌美學溢價。受任美國國家旅遊局（Brand USA）兩年期顧問，深耕學術，並以「非典型政治參選」在台灣民主史上留下獨特的「陳志彬模式」清流印記。',
       subTitle: '旗下控股子公司',
       subDesc: '百夫長集團五大事業，各自引領行業產品與服務標準，構建多維度的高奢生活生態圈。',
