@@ -114,7 +114,7 @@ export default function CenturionPortal() {
     phone: '',
     email: '',
     business_area: '【百夫長品牌鏈】品牌授權計畫',
-    timeframe: '加入百夫長，立即開始 (1個月內)',
+    timeframe: '加入百夫長，立即開始',
     proposal_summary: ''
   });
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
@@ -358,7 +358,7 @@ export default function CenturionPortal() {
           {/* 桌面端選單 */}
           <div className="hidden md:flex space-x-6 lg:space-x-8 text-xs tracking-[0.15em] uppercase text-stone-500 font-medium">
             <a href="#vision" className="hover:text-[#AF8943] transition-colors">創辦理念</a>
-            <a href="#pillars" className="hover:text-[#AF8943] transition-colors">控股子公司</a>
+            <a href="#pillars" className="hover:text-[#AF8943] transition-colors">集團事業</a>
             <a href="#dna" className="hover:text-[#AF8943] transition-colors">核心基因</a>
             <a href="#esg" className="hover:text-[#AF8943] transition-colors">永續人文</a>
             <Link href="/showcase" className="hover:text-[#AF8943] transition-colors">典藏展廳</Link>
@@ -461,13 +461,13 @@ export default function CenturionPortal() {
             <div className="bg-white p-8 rounded-none border border-[#EFECE6] flex flex-col justify-between h-full transition-all duration-300 hover:shadow-md">
               <div className="space-y-6">
                 <div className="text-4xl text-[#AF8943]">🧳</div>
-                <h3 className="text-lg font-serif font-bold text-stone-900">百夫長旅行箱股份</h3>
+                <h3 className="text-lg font-serif font-bold text-stone-900">百夫長旅行箱</h3>
                 <p className="text-xs text-stone-600 leading-relaxed font-light">
                   全球首創主題式旅行箱發行體系，擁有「灣流線條」專利外觀與多項軍規防護技術。深受全球航空空服人員熱愛，被冠以「空姐箱」美譽。
                 </p>
               </div>
               <a href="https://store.eternal-bc.com/collections/%E7%99%BE%E5%A4%AB%E9%95%B7%E6%97%85%E8%A1%8C%E7%AE%B1" target="_blank" rel="noopener noreferrer" className="text-[11px] text-[#AF8943] hover:text-[#93702F] inline-flex items-center space-x-2 font-bold tracking-widest pt-8 border-t border-[#F5F2EB] mt-8">
-                <span>子公司官網 ➔</span>
+                <span>旅行箱官網 ➔</span>
               </a>
             </div>
 
