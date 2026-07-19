@@ -88,8 +88,8 @@ export default function CenturionPortal() {
     contact_name: '',
     phone: '',
     email: '',
-    business_area: '【孵化你的百夫長】品牌授權計畫 (OEM/IP聯名)',
-    timeframe: '立即開始 (1個月內)',
+    business_area: '【百夫長品牌鏈】品牌授權計畫',
+    timeframe: '加入百夫長，立即開始 (1個月內)',
     proposal_summary: ''
   });
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
@@ -278,8 +278,8 @@ export default function CenturionPortal() {
         contact_name: '',
         phone: '',
         email: '',
-        business_area: '【孵化你的百夫長】品牌授權計畫 (OEM/IP聯名)',
-        timeframe: '立即開始 (1個月內)',
+        business_area: '【百夫長品牌鏈】品牌授權計畫'',
+        timeframe: '加入我們，立即開始 (1個月內)',
         proposal_summary: ''
       });
     } catch (err) {
@@ -363,14 +363,14 @@ export default function CenturionPortal() {
           </div>
           <h1 className="text-5xl lg:text-7xl font-serif text-stone-900 leading-[1.15] font-light">
             你有好服務、好產品？<br />
-            <span className="font-normal italic text-[#AF8943]">立即申請【孵化你的百夫長】</span>
+            <span className="font-normal italic text-[#AF8943]">加入【百夫長品牌鏈】品牌授權計畫'</span>
           </h1>
           <p className="text-stone-600 text-base lg:text-lg leading-relaxed max-w-2xl font-light">
             你負責追求品質極致，百夫長負責賦予產品品牌靈魂。百夫長與你一起立足台灣，走向世界。加入百夫長全球品牌美學體系，獲得高奢溢價賦能，徹底顛覆傳統價格戰。
           </p>
           <div className="flex flex-wrap gap-5 pt-4">
             <a href="#b2b-form" className="bg-[#AF8943] hover:bg-[#93702F] text-white font-bold px-8 py-4 rounded-none text-xs tracking-[0.2em] transition-all duration-300">
-              立即申請品牌授權孵化 ➔
+              立即申請加入百夫長品牌鏈 ➔
             </a>
             <a href="#luxury-exhibition" className="border border-stone-300 hover:bg-stone-50 text-stone-700 font-semibold px-8 py-4 rounded-none text-xs tracking-[0.15em] transition-all duration-300">
               探索高奢產品展示
@@ -501,7 +501,7 @@ export default function CenturionPortal() {
         </div>
       </section>
 
-      {/* 第三單元：【孵化你的百夫長】品牌美學授權計畫 (OEM/IP Incubator) */}
+      {/* 第三單元：【百夫長品牌鏈】品牌授權計畫'*/}
       <section id="incubator" className="py-24 lg:py-32 max-w-7xl mx-auto px-6 border-b border-[#EFECE6]">
         <div className="grid lg:grid-cols-12 gap-16 items-center">
           
@@ -511,16 +511,16 @@ export default function CenturionPortal() {
               <span>INCUBATE YOUR CENTURION</span>
             </span>
             <h2 className="text-4xl font-serif text-stone-900 font-light leading-tight">
-              【孵化你的百夫長】<br />
+              加入【百夫長品牌鏈】<br />
               <span className="italic font-normal text-[#AF8943]">立足台灣，走向世界</span>
             </h2>
             <p className="text-xs text-stone-600 leading-relaxed font-light">
-              你有好產品、好服務，但缺乏國際級品牌加值？百夫長提供最完整的**品牌授權孵化解決方案**。我們將集團旗下橫跨時尚、民生通路與文化藝術的 IP 聯名權，與你經過嚴格品質審核的產品相結合，實現 3 倍至 5 倍的產品價格拉抬。
+              你有好產品、好服務，但缺乏國際級品牌加值？百夫長提供最完整的**品牌授權解決方案**。我們將集團旗下橫跨時尚、民生通路與文化藝術的 IP 聯名權，與你經過嚴格品質審核的產品相結合，實現 3 倍至 5 倍的產品價格拉抬。
             </p>
             <div className="p-6 bg-[#FAF8F5] border border-[#EFECE6] space-y-3">
               <h4 className="text-sm font-serif font-bold text-stone-900">集團嚴苛品質與服務審核：</h4>
               <p className="text-[11px] text-stone-500 leading-relaxed font-light">
-                百夫長絕不對品質妥協。所有參與「孵化計畫」的產品，必須經過百夫長孵化長連仲賢顧問的審核，經過國際標準後，方可正式冠以百夫長品牌商標，立足台灣，共同進軍東南亞、日本及北美高階市場。
+                百夫長絕不對品質妥協。所有參與「加入品牌鏈計畫」的產品，必須經過百夫長顧問連仲賢的審核，經過國際標準後，方可正式冠以百夫長品牌商標，立足台灣，共同進軍東南亞、日本及北美高階市場。
               </p>
             </div>
           </div>
@@ -1170,14 +1170,14 @@ export default function CenturionPortal() {
         </div>
       </section>
 
-      {/* 第十一單元：B2B 合作意向資料收集門戶 (專屬「孵化你的百夫長」 OEM 招募漏斗) */}
+      {/* 第十一單元：B2B 合作意向資料收集門戶 (專屬「加入百夫長品牌鏈」 招募漏斗) */}
       <section id="b2b-form" className="bg-[#FAF8F5] py-24 lg:py-32 border-t border-[#EFECE6]">
         <div className="max-w-4xl mx-auto px-6">
           <div className="text-center space-y-4 mb-16">
             <span className="text-[#AF8943] tracking-[0.25em] text-xs font-semibold uppercase">PARTNERSHIP ENQUIRY</span>
-            <h2 className="text-4xl font-serif text-stone-900 font-light">開啟【孵化你的百夫長】提案</h2>
+            <h2 className="text-4xl font-serif text-stone-900 font-light">開啟【加入百夫長品牌鏈】提案</h2>
             <p className="text-stone-500 text-sm max-w-xl mx-auto font-light">
-              你有好服務、好產品，想掛百夫長品牌？請在此遞交品牌授權與貼牌孵化審核提案。我們將在兩個工作天內由集團商務總監親自對接。
+              你有好服務、好產品，想加入百夫長品牌？請在此遞交品牌授權與審核提案。我們將在兩個工作天內由集團品牌鏈顧問 連仲賢親自對接。
             </p>
           </div>
 
@@ -1240,7 +1240,7 @@ export default function CenturionPortal() {
                   onChange={(e) => setFormData({ ...formData, business_area: e.target.value })}
                   className="w-full bg-[#FAF8F5] border border-[#EFECE6] rounded-none px-4 py-4 text-stone-700 focus:outline-none focus:border-[#AF8943] text-xs tracking-wider transition-colors"
                 >
-                  <option>【孵化你的百夫長】品牌授權計畫 (OEM/IP聯名)</option>
+                  <option>【百夫長品牌鏈】品牌授權計畫 </option>
                   <option>百夫長旅行箱 (大宗採購/IP聯名)</option>
                   <option>百夫長生鮮選物 (百選經銷合作)</option>
                   <option>百夫長禮贈精品 (百禮開發/採購)</option>
