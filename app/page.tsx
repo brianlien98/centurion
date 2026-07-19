@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { supabaseCenturion, type WallOfFameItem, type PartnershipLeadInput } from '@/lib/supabase';
 import { 
   Briefcase, 
@@ -49,40 +50,63 @@ interface PressItem {
 interface LuxuryProduct {
   id: number;
   name: string;
-  price: string;
+  price_tag: string;
   tagline: string;
   description: string;
   image_url: string;
+  is_featured: boolean;
 }
 
 export default function CenturionPortal() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
-  // 聯名牆與新知狀態
+  // 1. 各資料表狀態
   const [items, setItems] = useState<WallOfFameItem[]>([]);
   const [filter, setFilter] = useState<string>('all');
   const [loadingItems, setLoadingItems] = useState<boolean>(true);
 
-  // PRESS 影響力文獻狀態
   const [pressItems, setPressItems] = useState<PressItem[]>([]);
   const [loadingPress, setLoadingItemsPress] = useState<boolean>(true);
   const [selectedPress, setSelectedPress] = useState<number | null>(null);
 
-  // CMS 後台管理安全鎖
+  const [showcaseItems, setShowcaseItems] = useState<LuxuryProduct[]>([]);
+  const [loadingShowcase, setLoadingShowcase] = useState<boolean>(true);
+
+  // 2. CMS 後台解鎖
   const [adminUnlocked, setAdminUnlocked] = useState<boolean>(false);
   const [passcode, setPasscode] = useState<string>('');
   const [passcodeError, setPasscodeError] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState<'showcase' | 'press' | 'wall'>('showcase');
 
-  // CMS 新增文章表單狀態
+  // 3. CMS 新增輸入
+  const [newShowcase, setNewShowcase] = useState({
+    name: '',
+    price_tag: '',
+    tagline: '',
+    description: '',
+    image_url: '',
+    is_featured: true
+  });
+  
   const [newPress, setNewPress] = useState({
     title: '',
     summary: '',
     news_url: '',
     image_url: ''
   });
+
+  const [newWall, setNewWall] = useState({
+    year: '',
+    brand: '',
+    founder: '',
+    category: 'artist-ip' as any,
+    type: '',
+    description: ''
+  });
+
   const [cmsSubmitStatus, setCmsSubmitStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
-  // B2B 表單狀態
+  // 4. B2B 表單狀態
   const [formData, setFormData] = useState<PartnershipLeadInput>({
     company_name: '',
     contact_name: '',
@@ -94,35 +118,29 @@ export default function CenturionPortal() {
   });
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
-  // 尊榮產品抬價數據
-  const luxuryProducts: LuxuryProduct[] = [
-    {
-      id: 1,
-      name: 'CENTURION 麥迪遜藍 29吋旗艦款旅行箱',
-      price: 'NT$ 12,800',
-      tagline: '裝載最重要一切的移動城堡',
-      description: '經典雙輪避震設計搭配專利灣流抗衝擊箱體，以高密度法式噴塗麥迪遜藍，體現商務長途飛行的優雅品味。',
-      image_url: 'https://store.eternal-bc.com/zh-TW/products/centurion%E7%99%BE%E5%A4%AB%E9%95%B7%E6%8B%89%E9%8D%8A%E6%AC%BE%E8%A1%8E%E6%9D%8E%E7%AE%B1-%E9%BA%A5%E8%BF%CD%E9%81%9C%E8%97%8D-29%E5%90%8B'
-    },
-    {
-      id: 2,
-      name: 'CENTURION × Excell 限量聯名登機箱',
-      price: 'NT$ 8,800',
-      tagline: '街頭藝術與工業美學的極致跨界',
-      description: '與工業包材大廠 Excell 共同開發，將大膽的街頭警示膠帶元素，完美融匯進 20 吋精鋼防禦登機箱面。',
-      image_url: 'https://centurion.tw/news_inner_pages-106.html'
-    },
-    {
-      id: 3,
-      name: 'CENTURION Save Earth 自然保育系列旅行箱',
-      price: 'NT$ 10,800',
-      tagline: '行走的地球永續環保宣言',
-      description: '採用高彈性多格布袋、羽量級可回收 PC 複合材質，配置 TSA 國際海關鎖，每一次出行都是對生命的致敬。',
-      image_url: 'https://www.centuriontravel.tw/centurion'
-    }
-  ];
+  // 5. 資料庫讀取
+  const fetchShowcaseData = async () => {
+    try {
+      setLoadingShowcase(true);
+      const { data, error } = await supabaseCenturion
+        .from('centurion_showcase')
+        .select('*')
+        .eq('is_active', true)
+        .order('id', { ascending: false });
 
-  // 重新封裝載入 PRESS 資料的函式
+      if (error || !data || data.length === 0) throw new Error('Showcase empty');
+      setShowcaseItems((data as any) as LuxuryProduct[]);
+    } catch (err) {
+      setShowcaseItems([
+        { id: 1, name: 'CENTURION 麥迪遜藍 29吋旗艦款旅行箱', price_tag: 'NT$ 12,800', tagline: '裝載最重要一切的移動城堡', description: '經典雙輪避震設計搭配專利灣流抗衝擊箱體，以高密度法式噴塗麥迪遜藍，體現商務長途飛行的優雅品味。', image_url: 'https://store.eternal-bc.com/zh-TW/products/centurion%E7%99%BE%E5%A4%AB%E9%95%B7%E6%8B%89%E9%8D%8A%E6%AC%BE%E8%A1%8E%E6%9D%8E%E7%AE%B1-%E9%BA%A5%E8%BF%CD%E9%81%9C%E8%97%8D-29%E5%90%8B', is_featured: true },
+        { id: 2, name: 'CENTURION × Excell 限量聯名登機箱', price_tag: 'NT$ 8,800', tagline: '街頭藝術與工業美學的極致跨界', description: '與工業包材大廠 Excell 共同開發，將大膽的街頭警示膠帶元素，完美融匯進 20 吋精鋼防禦登機箱面。', image_url: 'https://centurion.tw/news_inner_pages-106.html', is_featured: true },
+        { id: 3, name: 'CENTURION Save Earth 自然保育系列旅行箱', price_tag: 'NT$ 10,800', tagline: '行走的地球永續環保宣言', description: '採用高彈性多格布袋、羽量級 PC 複合材質，配置 TSA 國際海關鎖，每一次出行都是對生命的致敬。', image_url: 'https://www.centuriontravel.tw/centurion', is_featured: true }
+      ]);
+    } finally {
+      setLoadingShowcase(false);
+    }
+  };
+
   const fetchPressData = async () => {
     try {
       setLoadingItemsPress(true);
@@ -132,75 +150,47 @@ export default function CenturionPortal() {
         .eq('is_active', true)
         .order('id', { ascending: false });
 
-      if (error || !data || data.length === 0) {
-        throw new Error('Database empty or connection blocked.');
-      }
-      
-      const safeData = (data as any) as PressItem[];
-      setPressItems(safeData);
+      if (error || !data || data.length === 0) throw new Error('Press empty');
+      setPressItems((data as any) as PressItem[]);
     } catch (err) {
-      const mockPress: PressItem[] = [
+      setPressItems([
         { id: 1, title: '百夫長行李箱2019年生產優化開箱評測', summary: '針對早期手把零件疑慮，證實品牌自2019年10月起委託全新新代工廠，全面升級引進防滑多段式拉桿與360度靜音大四輪，有效重塑品牌耐用與卓越美譽。', news_url: 'https://www.centurionbuy.com/blog/202311', image_url: '' },
         { id: 2, title: '經典黑色拉鍊款百夫長行李箱開箱實測', summary: '部落客針對經典24吋麥迪遜藍與曜石黑箱進行極致開箱。引述創辦人陳志彬500公克環保法則，指出每減少重量即能有效減輕飛行燃油碳排放。', news_url: 'https://ee025479.pixnet.net/blog/posts/17347319871', image_url: '' },
-        { id: 3, title: 'CENTURION百夫長品牌環保起源與設計哲學', summary: '記載創辦人陳志彬因見證全球自然破壞，於2015年發表CENTURION品牌，成為全球首個宣傳海洋、森林與動物保育三大主題之旅行箱品牌。其著名的「灣流式」線條專利設計，象徵不分民族的團結精神與文化傳承。', news_url: 'https://www.centuriontravel.tw/centurion', image_url: '' },
-        { id: 4, title: '陳志彬以「無黨籍」參選台中第四選區立委報導', summary: '百夫長旅行箱創辦人陳志彬以無黨籍身分投入台中市西屯及南屯區立委選舉。他首創「虛擬競總」模式，不設實體競總、不募款，期望樹立低門檻、高品質的選舉模範，證明民主選舉應比拼理念政見而非金錢口袋。', news_url: 'https://www.chinatimes.com/realtimenews/20191224001698-260407', image_url: '' },
-        { id: 5, title: '身家數十億百夫長創辦人自廢武功花50萬選立委報導', summary: '擁有數十億身家的陳志彬，限制自己僅以50萬元預算參選台中立委，拒絕鋪張浪費的傳統競選，期望藉此為沒背景卻想為國奉獻的青年建立範本。雖未當選，但其低成本的參選理念在政壇激發了新政治美學浪潮。', news_url: 'https://www.upmedia.mg/tw/lifestyle/policy/190785', image_url: '' },
-        { id: 6, title: '陳志彬提出台中劃為「軍事緩衝區」等奇特政見報導', summary: '台中市立委候選人陳志彬在選舉公報中提出的奇特政見，包含主張將台中劃為「軍事緩衝區」，並提出40歲前生3胎給三節禮金、公職母親週休3日，以及公費招待高中應屆畢業生赴邦交國遊歷半年等福利政見。', news_url: 'https://news.ltn.com.tw/news/politics/breakingnews/4542394', image_url: '' },
-        { id: 7, title: '百夫長攜手Excell推出限量聯名街頭美學系列', summary: '百夫長官方發表與工業包材大廠Excell合作，將街頭警示膠帶元素融合進實用旅行箱中，打造富含玩味與視覺張力的限量聯名款，主打個性化與行走的街頭藝術品，藉此吸引注重潮流與獨特生活方式的收集型客群。', news_url: 'https://centurion.tw/news_inner_pages-106.html', image_url: '' },
-        { id: 8, title: '蝦皮商城展示CENTURION與Excell聯名款登機箱', summary: '蝦皮購物平台上展示百夫長與Excell限量聯名20吋登機箱。商品詳述其配備BSMI安全認證、國際海關鎖，並由台中神岡出貨。這顯示出百夫長品牌在台灣主流電商與潮流市場中的實體商品分銷和售後保障佈局。', news_url: 'https://shopee.tw/CENTURION%E7%99%BE%E5%A4%AB%E9%95%B7%E6%97%85%E8%A1%8C%E7%AE%B1-20%E5%90%8B-%E7%8D%A8%E5%AE%B6%E9%99%90%E5%AE%9A-Excell-%E9%99%90%E9%87%8F%E8%81%AF%E5%90%8D%E6%AC%BE-%E7%99%BB%E6%A9%9F%E7%AE%B1-%E5%8F%AF%E7%99%BB%E6%A9%9F-i.50810181.18781513934', image_url: '' },
-        { id: 9, title: '百夫長集團創辦人陳志彬獲聘美國國家旅遊局品牌顧問', summary: '經濟日報報導百夫長創辦人陳志彬獲聘美國國家旅遊局品牌顧問。蔡璧如代表親自特聘陳志彬，期盼藉由其品牌長才與國際行銷視野，推廣美國觀光。報導亦提及多家航司積極運營台美直飛航線。', news_url: 'https://money.udn.com/money/story/5612/8929993', image_url: '' },
-        { id: 10, title: '美國國家旅遊局聘任百夫長創辦人推廣赴美旅遊', summary: '美國國家旅遊局台灣處宣布延攬美國品牌CENTURION旅行箱創辦人陳志彬擔任品牌顧問，為期兩年。雙方將攜手推展赴美自駕旅遊與最新公路護照，期望為台灣旅客打造安心又豐富的美國各州探索行程。', news_url: 'https://travel.setn.com/News/1698667', image_url: '' },
-        { id: 11, title: '美國國家旅遊局邀陳志彬擔任品牌顧問助攻旅遊熱潮', summary: '旅報報導美國國家旅遊局聘任陳志彬為品牌顧問。內文指出，隨著達拉斯、鳳凰城等美洲新航點陸續開拓，旅遊局積極透過線上推廣會向業者分享各州最新資源，並借重陳志彬的行銷策略優勢推升台美旅遊熱潮。', news_url: 'https://www.ttnmedia.com/?p=123927', image_url: '' },
-        { id: 12, title: '藥師吉米推薦：百夫長Centurion行李箱極高CP值實測', summary: '藥師吉米撰文開箱評測。指出百夫長行李箱外型極具質感且配色亮麗，配置360度大四輪飛機輪，推動流暢。其箱體厚度設計比Rimowa更能容納寬大物品，極具價格與功能性優勢，是國外長途旅行的優質選擇。', news_url: 'https://drugs.pixnet.net/blog/posts/3045803419', image_url: '' },
-        { id: 13, title: '百夫長品牌持有人陳志彬完成商標全類別註冊', summary: '百夫長創辦人陳志彬已於中華民國智慧財產局完成「百夫長」與「CENTURION」在全品項及全類別之商標註冊登記。該品牌自2015年起在美註冊並在全球數十國營運，奠定主題式旅行箱領導地位。', news_url: 'https://www.ctee.com.tw/news/20250810700657-430503', image_url: '' },
-        { id: 14, title: '僑光科大專題演講：國貿背景企業家陳志彬分享掌舵思維', summary: '僑光科技大學報導，百夫長創辦人陳志彬受邀進行專題演講。作為國貿系出身躍升為國際企業家的經典案例，陳志彬勉勵學子在多變市場與逆境中，緊握方向盤、相信自己，勇敢成為自己生命旅程的優秀掌舵者。', news_url: 'https://www.ocu.edu.tw/p/406-1000-72058,r535.php?Lang=zh-tw', image_url: '' },
-        { id: 15, title: '「空姐箱」封號百夫長創辦人陳志彬跨界政壇', summary: '中時新聞網報導，百夫長行李箱因受華航與長榮空姐喜愛而擁有「空姐箱」美譽，在業界占有一席之地。身家豐厚、名下收藏十多部豪車的創辦人陳志彬以環境保護為品牌己任，並跨界投入政壇，追求新政治美學。', news_url: 'https://www.chinatimes.com/newspapers/20240107000180-260209', image_url: '' }
-      ];
-      setPressItems(mockPress);
+        { id: 3, title: 'CENTURION百夫長品牌環保起源與設計哲學', summary: '記載創辦人陳志彬因見證全球自然破壞，於2015年發表CENTURION品牌，成為全球首個宣傳海洋、森林與動物保育三大主題之旅行箱品牌。其著名的「灣流式」線條專利設計，象徵不分民族的團結精神與文化傳承。', news_url: 'https://www.centuriontravel.tw/centurion', image_url: '' }
+      ]);
     } finally {
       setLoadingItemsPress(false);
     }
   };
 
-  // 取得聯名牆與 PRESS 文獻資料
-  useEffect(() => {
-    async function fetchWallData() {
-      try {
-        setLoadingItems(true);
-        const { data, error } = await supabaseCenturion
-          .from('centurion_wall_of_fame')
-          .select('*')
-          .eq('is_active', true)
-          .order('year', { ascending: false });
+  const fetchWallData = async () => {
+    try {
+      setLoadingItems(true);
+      const { data, error } = await supabaseCenturion
+        .from('centurion_wall_of_fame')
+        .select('*')
+        .eq('is_active', true)
+        .order('year', { ascending: false });
 
-        if (error || !data || data.length === 0) {
-          throw new Error('Database empty or connection blocked.');
-        }
-        
-        const safeData = (data as any) as WallOfFameItem[];
-        setItems(safeData || []);
-      } catch (err) {
-        const mockData: WallOfFameItem[] = [
-          { id: '1', year: '2018', brand: 'STAGE (小豬 羅志祥)', founder: '羅志祥', category: 'artist-ip', type: '藝人潮流品牌', description: '潮流時尚與旅行箱的跨界碰撞，引領街頭行旅風潮。' },
-          { id: '2', year: '2019', brand: 'DEBRAND (陳冠希)', founder: '陳冠希', category: 'artist-ip', type: '潮流設計師聯名', description: '以華人文字與街頭文化為核心，探索旅行箱的叛逆美學。' },
-          { id: '3', year: '2019', brand: 'Andox & Box', founder: '劉德華活動合作', category: 'artist-ip', type: '角色 IP', description: '劉德華設計的經典牛公仔，注入可愛與玩味的潮流旅行體驗。' },
-          { id: '4', year: '2021', brand: '九澤 CP (陳零九 / 邱鋒澤)', founder: '五堅情主導', category: 'artist-ip', type: '新生代偶像', description: '結合音樂與年輕世代的社群影響力，打造限量聯動企劃。' },
-          { id: '5', year: '2020', brand: 'KAKAO FRIENDS', founder: null, category: 'artist-ip', type: '角色 IP', description: '韓系經典人氣角色官方授權，將超萌暖意帶入旅途。' },
-          { id: '6', year: '2020', brand: 'LINE FRIENDS', founder: null, category: 'artist-ip', type: '角色 IP', description: '全球知名通訊角色官方聯名，創造療癒滿分的出行伴侶。' },
-          { id: '7', year: '2021', brand: 'Disney 迪士尼', founder: null, category: 'artist-ip', type: '夢幻經典 IP', description: '全球夢幻迪士尼角色系列聯名，重現童話般的行旅記憶。' },
-          { id: '8', year: '2016', brand: '天氣女孩 (Weather Girls)', founder: '女子偶像團體', category: 'artist-ip', type: '女子偶像團體', description: '聯名合作案例第 Q14WW 號，展現專屬設計與限量美學。' }
-        ];
-        setItems(mockData);
-      } finally {
-        setLoadingItems(false);
-      }
+      if (error || !data || data.length === 0) throw new Error('Wall empty');
+      setItems((data as any) as WallOfFameItem[]);
+    } catch (err) {
+      setItems([
+        { id: '1', year: '2018', brand: 'STAGE (小豬 羅志祥)', founder: '羅志祥', category: 'artist-ip', type: '藝人潮流品牌', description: '潮流時尚與旅行箱的跨界碰撞，引領街頭行旅風潮。' },
+        { id: '2', year: '2019', brand: 'DEBRAND (陳冠希)', founder: '陳冠希', category: 'artist-ip', type: '潮流設計師聯名', description: '以華人文字與街頭文化為核心，探索旅行箱的叛逆美學。' },
+        { id: '3', year: '2019', brand: 'Andox & Box', founder: '劉德華活動合作', category: 'artist-ip', type: '角色 IP', description: '劉德華設計的經典牛公仔，注入可愛與玩味的潮流旅行體驗。' }
+      ]);
+    } finally {
+      setLoadingItems(false);
     }
+  };
 
-    fetchWallData();
+  useEffect(() => {
+    fetchShowcaseData();
     fetchPressData();
+    fetchWallData();
   }, []);
 
-  // 驗證安全管理密碼
   const handleUnlockCms = (e: React.FormEvent) => {
     e.preventDefault();
     if (passcode === '1978') {
@@ -211,87 +201,99 @@ export default function CenturionPortal() {
     }
   };
 
-  // 後台：執行新增文章
+  // CMS 新增執行
+  const handleAddShowcase = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCmsSubmitStatus('submitting');
+    try {
+      const { error } = await supabaseCenturion.from('centurion_showcase').insert([newShowcase]);
+      if (error) throw error;
+      setCmsSubmitStatus('success');
+      setNewShowcase({ name: '', price_tag: '', tagline: '', description: '', image_url: '', is_featured: true });
+      await fetchShowcaseData();
+    } catch (err) {
+      setCmsSubmitStatus('error');
+    }
+  };
+
   const handleAddPress = async (e: React.FormEvent) => {
     e.preventDefault();
     setCmsSubmitStatus('submitting');
     try {
-      const { error } = await supabaseCenturion
-        .from('centurion_press')
-        .insert([{
-          title: newPress.title,
-          summary: newPress.summary,
-          news_url: newPress.news_url || null,
-          image_url: newPress.image_url || null,
-          is_active: true
-        }]);
-
+      const { error } = await supabaseCenturion.from('centurion_press').insert([newPress]);
       if (error) throw error;
       setCmsSubmitStatus('success');
       setNewPress({ title: '', summary: '', news_url: '', image_url: '' });
       await fetchPressData();
     } catch (err) {
-      console.error('Failed to publish new press:', err);
       setCmsSubmitStatus('error');
     }
   };
 
-  // 後台：一鍵下架/刪除文獻
-  const handleDeletePress = async (id: number) => {
-    if (!confirm('您確定要從資料庫中將此筆報導永久下架嗎？')) return;
+  const handleAddWall = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCmsSubmitStatus('submitting');
     try {
-      const { error } = await supabaseCenturion
-        .from('centurion_press')
-        .delete()
-        .eq('id', id);
+      const { error } = await supabaseCenturion.from('centurion_wall_of_fame').insert([newWall]);
+      if (error) throw error;
+      setCmsSubmitStatus('success');
+      setNewWall({ year: '', brand: '', founder: '', category: 'artist-ip', type: '', description: '' });
+      await fetchWallData();
+    } catch (err) {
+      setCmsSubmitStatus('error');
+    }
+  };
 
+  // CMS 刪除執行
+  const handleDeleteShowcase = async (id: number) => {
+    if (!confirm('您確定要永久下架此展示品嗎？')) return;
+    try {
+      const { error } = await supabaseCenturion.from('centurion_showcase').delete().eq('id', id);
+      if (error) throw error;
+      await fetchShowcaseData();
+    } catch (err) {
+      alert('刪除失敗。');
+    }
+  };
+
+  const handleDeletePress = async (id: number) => {
+    if (!confirm('確定下架此報導？')) return;
+    try {
+      const { error } = await supabaseCenturion.from('centurion_press').delete().eq('id', id);
       if (error) throw error;
       await fetchPressData();
     } catch (err) {
-      console.error('Failed to delete press entry:', err);
-      alert('下架失敗，請檢查資料庫 RLS。');
+      alert('刪除失敗。');
     }
   };
 
-  // 處理 B2B 表單提交
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitStatus('submitting');
+  const handleDeleteWall = async (id: number) => {
+    if (!confirm('確定下架此聯名夥伴？')) return;
+    try {
+      const { error } = await supabaseCenturion.from('centurion_wall_of_fame').delete().eq('id', id);
+      if (error) throw error;
+      await fetchWallData();
+    } catch (err) {
+      alert('刪除失敗。');
+    }
+  };
+
+  // CMS 推薦切換
+  const toggleFeatureShowcase = async (id: number, currentStatus: boolean) => {
     try {
       const { error } = await supabaseCenturion
-        .from('centurion_partnership_leads')
-        .insert([{
-          company_name: formData.company_name,
-          contact_name: formData.contact_name,
-          phone: formData.phone,
-          email: formData.email,
-          business_area: formData.business_area,
-          timeframe: formData.timeframe,
-          proposal_summary: formData.proposal_summary,
-          status: 'pending'
-        }]);
-
+        .from('centurion_showcase')
+        .update({ is_featured: !currentStatus })
+        .eq('id', id);
       if (error) throw error;
-      setSubmitStatus('success');
-      setFormData({
-        company_name: '',
-        contact_name: '',
-        phone: '',
-        email: '',
-        business_area: '【百夫長品牌鏈】品牌授權計畫'',
-        timeframe: '加入我們，立即開始 (1個月內)',
-        proposal_summary: ''
-      });
+      await fetchShowcaseData();
     } catch (err) {
-      console.error('Failed to submit B2B lead:', err);
-      setSubmitStatus('error');
+      alert('切換失敗。');
     }
   };
 
-  // 篩選過濾
-  const filteredItems = filter === 'all' 
-    ? items 
-    : items.filter(item => item.category === filter);
+  // 前台精選過濾 (5~10品)
+  const featuredShowcase = showcaseItems.filter(item => item.is_featured);
 
   return (
     <div className="min-h-screen bg-[#FDFBF7] text-stone-900 font-sans selection:bg-[#AF8943] selection:text-white">
@@ -300,7 +302,6 @@ export default function CenturionPortal() {
       <nav className="sticky top-0 z-50 backdrop-blur-md bg-[#FDFBF7]/90 border-b border-[#EFECE6] px-6 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           
-          {/* Logo 置換 */}
           <div className="flex items-center space-x-3">
             <img 
               src="https://custom-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_300,w_300,f_auto,q_100/1886487/831598_863023.png" 
@@ -310,14 +311,13 @@ export default function CenturionPortal() {
             <span className="text-[9px] bg-[#AF8943]/10 text-[#AF8943] px-2.5 py-0.5 rounded-full font-mono font-semibold tracking-widest">PORTAL</span>
           </div>
           
-          {/* 桌面端選單 */}
           <div className="hidden md:flex space-x-6 lg:space-x-8 text-xs tracking-[0.15em] uppercase text-stone-500 font-medium">
             <a href="#vision" className="hover:text-[#AF8943] transition-colors">創辦理念</a>
-            <a href="#pillars" className="hover:text-[#AF8943] transition-colors">百夫長事業群</a>
+            <a href="#pillars" className="hover:text-[#AF8943] transition-colors">控股子公司</a>
             <a href="#dna" className="hover:text-[#AF8943] transition-colors">核心基因</a>
             <a href="#esg" className="hover:text-[#AF8943] transition-colors">永續人文</a>
-            <a href="#insights" className="hover:text-[#AF8943] transition-colors">百夫長新知</a>
-            <a href="#press" className="hover:text-[#AF8943] transition-colors">百夫長 PRESS</a>
+            <Link href="/showcase" className="hover:text-[#AF8943] transition-colors">典藏展廳</Link>
+            <Link href="/press" className="hover:text-[#AF8943] transition-colors">百夫長新知</Link>
             <a href="#wall" className="hover:text-[#AF8943] transition-colors">聯名牆</a>
           </div>
 
@@ -330,7 +330,6 @@ export default function CenturionPortal() {
             </a>
           </div>
 
-          {/* 行動端選單按鈕 */}
           <button 
             className="md:hidden text-stone-600 hover:text-stone-900 transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -338,20 +337,6 @@ export default function CenturionPortal() {
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
-
-        {/* 行動端下拉選單 */}
-        {mobileMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 w-full bg-[#FDFBF7] border-b border-[#EFECE6] px-6 py-8 flex flex-col space-y-4 text-sm">
-            <a href="#vision" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">創辦理念</a>
-            <a href="#pillars" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">五大版體</a>
-            <a href="#dna" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">核心基因</a>
-            <a href="#esg" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">永續人文</a>
-            <a href="#insights" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">百夫長新知</a>
-            <a href="#press" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">百夫長 PRESS</a>
-            <a href="#wall" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">聯名牆</a>
-            <a href="#b2b-form" onClick={() => setMobileMenuOpen(false)} className="bg-[#AF8943] hover:bg-[#93702F] text-white font-bold text-center py-4 rounded-none text-xs tracking-widest transition-colors">戰略合作</a>
-          </div>
-        )}
       </nav>
 
       {/* 第一畫面 (Hero Section + B2B OEM 招募提案入口) */}
@@ -363,18 +348,18 @@ export default function CenturionPortal() {
           </div>
           <h1 className="text-5xl lg:text-7xl font-serif text-stone-900 leading-[1.15] font-light">
             你有好服務、好產品？<br />
-            <span className="font-normal italic text-[#AF8943]">加入【百夫長品牌鏈】品牌授權計畫'</span>
+            <span className="font-normal italic text-[#AF8943]">加入【百夫長品牌鏈】品牌授權計畫</span>
           </h1>
           <p className="text-stone-600 text-base lg:text-lg leading-relaxed max-w-2xl font-light">
             你負責追求品質極致，百夫長負責賦予產品品牌靈魂。百夫長與你一起立足台灣，走向世界。加入百夫長全球品牌美學體系，獲得高奢溢價賦能，徹底顛覆傳統價格戰。
           </p>
           <div className="flex flex-wrap gap-5 pt-4">
             <a href="#b2b-form" className="bg-[#AF8943] hover:bg-[#93702F] text-white font-bold px-8 py-4 rounded-none text-xs tracking-[0.2em] transition-all duration-300">
-              立即申請加入百夫長品牌鏈 ➔
+              申請加入百夫長品牌鏈 ➔
             </a>
-            <a href="#luxury-exhibition" className="border border-stone-300 hover:bg-stone-50 text-stone-700 font-semibold px-8 py-4 rounded-none text-xs tracking-[0.15em] transition-all duration-300">
-              探索高奢產品展示
-            </a>
+            <Link href="/showcase" className="border border-stone-300 hover:bg-stone-50 text-stone-700 font-semibold px-8 py-4 rounded-none text-xs tracking-[0.15em] transition-all duration-300">
+              檢視典藏展廳 (Showcase)
+            </Link>
           </div>
         </div>
 
@@ -382,10 +367,9 @@ export default function CenturionPortal() {
         <div className="lg:col-span-5 bg-white p-10 rounded-none border border-[#EFECE6] shadow-sm space-y-8">
           <div className="inline-flex items-center space-x-2 text-[#AF8943] text-[10px] tracking-widest uppercase font-bold font-mono">
             <UserCheck size={14} />
-            <span>集團品牌掌舵人 Visionary</span>
+            <span>世紀品牌掌舵人 Visionary</span>
           </div>
           
-          {/* 總裁雙重高規格照片並排 */}
           <div className="grid grid-cols-2 gap-4">
             <div className="aspect-[3/4] overflow-hidden border border-[#EFECE6] relative group">
               <img 
@@ -413,7 +397,7 @@ export default function CenturionPortal() {
             <p className="text-[10px] text-[#AF8943] uppercase tracking-widest mt-1">百夫長集團總裁 / 美國國家旅遊局特聘顧問</p>
           </div>
           <p className="text-xs text-stone-500 leading-relaxed font-light">
-            陳志彬總裁擁有逾 25 年的跨國貿易、品牌控股與美學整合戰略經驗。他首創「輕資產營運思維」，拒絕重資產束縛，專注品牌美學溢價。他創立的 CENTURION 品牌，引領了全亞洲箱包外觀大变革。受任美國國家旅遊局（Brand USA）兩年期顧問，深耕學術，並以「非典型政治參選」在台灣民主史上留下獨特的「陳志彬模式」清流印記。
+            陳志彬總裁擁有逾 25 年的跨國貿易、品牌控股與美學整合戰略經驗。他首創「輕資產營運思維」，拒絕重資產束縛，專注品牌美學溢價。受任美國國家旅遊局（Brand USA）兩年期顧問，深耕學術，並以「非典型政治參選」在台灣民主史上留下獨特的「陳志彬模式」清流印記。
           </p>
         </div>
       </section>
@@ -423,26 +407,24 @@ export default function CenturionPortal() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center space-y-4 mb-20">
             <span className="text-[#AF8943] tracking-[0.25em] text-xs font-semibold uppercase">SUBSIDIARY MATRIX</span>
-            <h2 className="text-4xl font-serif text-stone-900 font-light">百夫長事業群</h2>
-            <p className="text-stone-500 text-sm max-w-2xl mx-auto font-light">百夫長集團五大事業，各自引領行業產品與服務標準，構建多維度的高奢生活生態圈。</p>
+            <h2 className="text-4xl font-serif text-stone-900 font-light">旗下控股子公司</h2>
+            <p className="text-stone-500 text-sm max-w-2xl mx-auto font-light">百夫長集團旗下五大子公司，各自引領行業美學標準，構建多維度的高奢生活生態圈。</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-            {/* Pillar 1 */}
             <div className="bg-white p-8 rounded-none border border-[#EFECE6] flex flex-col justify-between h-full transition-all duration-300 hover:shadow-md">
               <div className="space-y-6">
                 <div className="text-4xl text-[#AF8943]">🧳</div>
-                <h3 className="text-lg font-serif font-bold text-stone-900">百夫長旅行箱</h3>
+                <h3 className="text-lg font-serif font-bold text-stone-900">百夫長旅行箱股份</h3>
                 <p className="text-xs text-stone-600 leading-relaxed font-light">
                   全球首創主題式旅行箱發行體系，擁有「灣流線條」專利外觀與多項軍規防護技術。深受全球航空空服人員熱愛，被冠以「空姐箱」美譽。
                 </p>
               </div>
               <a href="https://store.eternal-bc.com/collections/%E7%99%BE%E5%A4%AB%E9%95%B7%E6%97%85%E8%A1%8C%E7%AE%B1" target="_blank" rel="noopener noreferrer" className="text-[11px] text-[#AF8943] hover:text-[#93702F] inline-flex items-center space-x-2 font-bold tracking-widest pt-8 border-t border-[#F5F2EB] mt-8">
-                <span>旅行箱官網 ➔</span>
+                <span>子公司官網 ➔</span>
               </a>
             </div>
 
-            {/* Pillar 2 */}
             <div className="bg-white p-8 rounded-none border border-[#EFECE6] flex flex-col justify-between h-full transition-all duration-300 hover:shadow-md">
               <div className="space-y-6">
                 <div className="text-4xl text-[#AF8943]">✈️</div>
@@ -452,39 +434,36 @@ export default function CenturionPortal() {
                 </p>
               </div>
               <a href="https://www.centuriontravel.tw/centurion" target="_blank" rel="noopener noreferrer" className="text-[11px] text-[#AF8943] hover:text-[#93702F] inline-flex items-center space-x-2 font-bold tracking-widest pt-8 border-t border-[#F5F2EB] mt-8">
-                <span>旅行社官網 ➔</span>
+                <span>子公司官網 ➔</span>
               </a>
             </div>
 
-            {/* Pillar 3 */}
             <div className="bg-white p-8 rounded-none border border-[#EFECE6] flex flex-col justify-between h-full transition-all duration-300 hover:shadow-md">
               <div className="space-y-6">
                 <div className="text-4xl text-[#AF8943]">🍷</div>
-                <h3 className="text-lg font-serif font-bold text-stone-900">百夫長頂級會所</h3>
+                <h3 className="text-lg font-serif font-bold text-stone-900">百夫長頂奢俱樂部</h3>
                 <p className="text-xs text-stone-600 leading-relaxed font-light">
-                  高端名流會所。提供政商領袖、藝術大師、學術巨擘深度對談與社交密閉場所，融匯當代高尚美食品鑑與私人管家尊榮服務。
+                  頂奢隱密交際會所。提供政商領袖、藝術大師、學術巨擘深度對談與社交密閉場所，融匯當代高尚美食品鑑與私人管家尊榮服務。
                 </p>
               </div>
-              <span className="text-[10px] text-stone-400 font-bold tracking-widest uppercase pt-8 border-t border-[#F5F2EB] mt-8 block">
-                INVITATION ONLY
-              </span>
+              <a href="https://centurionclub.tw/" target="_blank" rel="noopener noreferrer" className="text-[11px] text-[#AF8943] hover:text-[#93702F] inline-flex items-center space-x-2 font-bold tracking-widest pt-8 border-t border-[#F5F2EB] mt-8">
+                <span>俱樂部官網 ➔</span>
+              </a>
             </div>
 
-            {/* Pillar 4 */}
             <div className="bg-white p-8 rounded-none border border-[#EFECE6] flex flex-col justify-between h-full transition-all duration-300 hover:shadow-md">
               <div className="space-y-6">
                 <div className="text-4xl text-[#AF8943]">🥩</div>
-                <h3 className="text-lg font-serif font-bold text-stone-900">百夫長百選生鮮</h3>
+                <h3 className="text-lg font-serif font-bold text-stone-900">百選生鮮食品 (百選)</h3>
                 <p className="text-xs text-stone-600 leading-relaxed font-light">
-                  極致美味探尋。全球直飛產地採購，引進 A5 頂級和牛、極地野生海鮮等珍稀食材，專為高奢品味群體打造的高級美食品鑑矩陣。
+                  極致美味探尋。全球直飛產地採購，引進 A5 頂級和牛、極地野生海鮮等珍稀食材，專為高奢品味群體打造的高級美食矩陣。
                 </p>
               </div>
-              <a href="https://example-food.com" target="_blank" rel="noopener noreferrer" className="text-[11px] text-[#AF8943] hover:text-[#93702F] inline-flex items-center space-x-2 font-bold tracking-widest pt-8 border-t border-[#F5F2EB] mt-8">
+              <a href="https://www.baixuanmaoyi.com.tw/" target="_blank" rel="noopener noreferrer" className="text-[11px] text-[#AF8943] hover:text-[#93702F] inline-flex items-center space-x-2 font-bold tracking-widest pt-8 border-t border-[#F5F2EB] mt-8">
                 <span>百選官網 ➔</span>
               </a>
             </div>
 
-            {/* Pillar 5 */}
             <div className="bg-white p-8 rounded-none border border-[#EFECE6] flex flex-col justify-between h-full transition-all duration-300 hover:shadow-md">
               <div className="space-y-6">
                 <div className="text-4xl text-[#AF8943]">🎁</div>
@@ -501,7 +480,7 @@ export default function CenturionPortal() {
         </div>
       </section>
 
-      {/* 第三單元：【百夫長品牌鏈】品牌授權計畫'*/}
+      {/* 第三單元：【百夫長品牌鏈】品牌授權計畫 */}
       <section id="incubator" className="py-24 lg:py-32 max-w-7xl mx-auto px-6 border-b border-[#EFECE6]">
         <div className="grid lg:grid-cols-12 gap-16 items-center">
           
@@ -511,16 +490,16 @@ export default function CenturionPortal() {
               <span>INCUBATE YOUR CENTURION</span>
             </span>
             <h2 className="text-4xl font-serif text-stone-900 font-light leading-tight">
-              加入【百夫長品牌鏈】<br />
+              【百夫長品牌鏈】<br />
               <span className="italic font-normal text-[#AF8943]">立足台灣，走向世界</span>
             </h2>
             <p className="text-xs text-stone-600 leading-relaxed font-light">
-              你有好產品、好服務，但缺乏國際級品牌加值？百夫長提供最完整的**品牌授權解決方案**。我們將集團旗下橫跨時尚、民生通路與文化藝術的 IP 聯名權，與你經過嚴格品質審核的產品相結合，實現 3 倍至 5 倍的產品價格拉抬。
+              你有好服務、好產品，想加入百夫長品牌？請在此遞交品牌授權與審核提案。我們將在兩個工作天內由集團品牌鏈首席顧問連仲賢與品管團隊親自對接。
             </p>
             <div className="p-6 bg-[#FAF8F5] border border-[#EFECE6] space-y-3">
-              <h4 className="text-sm font-serif font-bold text-stone-900">集團嚴苛品質與服務審核：</h4>
+              <h4 className="text-sm font-serif font-bold text-stone-900">品牌鏈顧問與品質審核：</h4>
               <p className="text-[11px] text-stone-500 leading-relaxed font-light">
-                百夫長絕不對品質妥協。所有參與「加入品牌鏈計畫」的產品，必須經過百夫長顧問連仲賢的審核，經過國際標準後，方可正式冠以百夫長品牌商標，立足台灣，共同進軍東南亞、日本及北美高階市場。
+                百夫長絕不對品質妥協。所有參與「品牌鏈計畫」的產品，必須經過百夫長品牌鏈首席顧問連仲賢先生與品管工程師的壓力、老化、環保與耐用度多重檢測。通過審核者，方可正式冠以百夫長品牌商標，立足台灣，共同進軍東南亞、日本及北美高階市場。
               </p>
             </div>
           </div>
@@ -530,7 +509,7 @@ export default function CenturionPortal() {
               <div className="text-2xl text-[#AF8943] font-mono">01</div>
               <h3 className="text-base font-serif font-bold text-stone-900">品牌高奢化，徹底告別價格戰</h3>
               <p className="text-xs text-stone-500 leading-relaxed font-light">
-                傳統代工與普通品牌只能打價格戰。透過掛牌百夫長（CENTURION）商標，賦予產品奢華故事與名牌地位，產品單價即刻躍升。
+                傳統代工與普通品牌只能打價格戰。透過掛牌百夫長（CENTURION）商標，賦予產品品牌故事與名牌地位，產品單價即刻躍升。
               </p>
             </div>
 
@@ -554,7 +533,7 @@ export default function CenturionPortal() {
               <div className="text-2xl text-[#AF8943] font-mono">04</div>
               <h3 className="text-base font-serif font-bold text-stone-900">高溢價，利潤共享共榮</h3>
               <p className="text-xs text-stone-500 leading-relaxed font-light">
-                「你負責追求品質極致，百夫長負責賦予產品世紀靈魂。」雙方以控股高度進行商業分潤合作，攜手共創長線、健康的第二增長曲線。
+                「你負責追求品質極致，百夫長負責賦予產品品牌靈魂。」雙方以品牌鏈高度進行商業分潤合作，攜手共創長線、健康的第二增長曲線。
               </p>
             </div>
           </div>
@@ -562,57 +541,65 @@ export default function CenturionPortal() {
         </div>
       </section>
 
-      {/* 第四單元：高奢獨立產品抬價展廳 (Luxury pricing Showcase - 獨立抬價專區) */}
+      {/* 第四單元：首頁動態精選 5~10 品展廳 (自主選 5~10 品呈現在此) */}
       <section id="luxury-exhibition" className="bg-[#FAF8F5] py-24 lg:py-32 border-b border-[#EFECE6]">
         <div className="max-w-7xl mx-auto px-6">
           
           <div className="text-center space-y-4 mb-20">
-            <span className="text-[#AF8943] tracking-[0.25em] text-xs font-semibold uppercase font-mono">CENTURION ARCHIVE</span>
-            <h2 className="text-4xl font-serif text-stone-900 font-light">尊榮產品典藏展廳</h2>
+            <span className="text-[#AF8943] tracking-[0.25em] text-xs font-semibold uppercase font-mono">HOME FEATURED SELECTIONS</span>
+            <h2 className="text-4xl font-serif text-stone-900 font-light">首頁精選典藏</h2>
             <p className="text-stone-500 text-sm max-w-xl mx-auto font-light">
-              經過百夫長品質審核與品牌美學加持的精品，以高溢價實力展現當代工藝與頂奢風範。
+              此處為後台管理員自主挑選與精選（is_featured）之 5~10 品頂規認證產品，代表集團對品質的最高背書。
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            {luxuryProducts.map((prod) => (
-              <div 
-                key={prod.id} 
-                className="bg-white border border-[#EFECE6] p-8 flex flex-col justify-between transition-all duration-300 hover:shadow-md group"
-              >
-                <div className="space-y-6">
-                  {/* 高奢簡約標示 */}
-                  <div className="flex justify-between items-center text-[10px] text-stone-400 font-mono tracking-widest">
-                    <span>LIMITED EDITION</span>
-                    <span>{prod.price}</span>
-                  </div>
-                  
-                  {/* 奢雅無圖片替代之極簡線框 */}
-                  <div className="aspect-[4/3] bg-[#FAF8F5] border border-[#EFECE6] flex flex-col justify-center items-center p-6 relative">
-                    <span className="text-[#AF8943] font-serif font-bold text-xl">{prod.price}</span>
-                    <span className="text-[9px] text-stone-400 font-mono mt-1 uppercase tracking-widest">{prod.tagline}</span>
-                  </div>
+          {loadingShowcase ? (
+            <div className="flex justify-center items-center py-20">
+              <Loader2 className="animate-spin text-[#AF8943]" size={32} />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+              {featuredShowcase.map((prod) => (
+                <div 
+                  key={prod.id} 
+                  className="bg-white border border-[#EFECE6] p-8 flex flex-col justify-between transition-all duration-300 hover:shadow-md group"
+                >
+                  <div className="space-y-6">
+                    <div className="flex justify-between items-center text-[10px] text-stone-400 font-mono tracking-widest">
+                      <span>PREMIUM CERTIFIED</span>
+                      <span className="text-[#AF8943] font-bold">{prod.price_tag}</span>
+                    </div>
+                    
+                    <div className="aspect-[4/3] bg-[#FAF8F5] border border-[#EFECE6] flex flex-col justify-center items-center p-6 relative overflow-hidden">
+                      <span className="text-[#AF8943] font-serif font-bold text-xl">{prod.price_tag}</span>
+                      <span className="text-[9px] text-stone-400 font-mono mt-1 uppercase tracking-widest">{prod.tagline}</span>
+                    </div>
 
-                  <h3 className="text-lg font-serif font-bold text-stone-900 group-hover:text-[#AF8943] transition-colors leading-snug">
-                    {prod.name}
-                  </h3>
-                  <p className="text-xs text-stone-600 leading-relaxed font-light">
-                    {prod.description}
-                  </p>
+                    <h3 className="text-lg font-serif font-bold text-stone-900 group-hover:text-[#AF8943] transition-colors leading-snug">
+                      {prod.name}
+                    </h3>
+                    <p className="text-xs text-stone-600 leading-relaxed font-light">
+                      {prod.description}
+                    </p>
+                  </div>
+                  <div className="pt-6 border-t border-[#F5F2EB] mt-8 flex justify-between items-center">
+                    <span className="text-[10px] text-[#AF8943] font-bold tracking-widest font-mono">CENTURION APPROVED</span>
+                    <Link href="/showcase" className="text-stone-400 hover:text-[#AF8943] transition-colors">
+                      <Eye size={14} />
+                    </Link>
+                  </div>
                 </div>
-                <div className="pt-6 border-t border-[#F5F2EB] mt-8 flex justify-between items-center">
-                  <span className="text-[10px] text-[#AF8943] font-bold tracking-widest font-mono">CENTURION CERTIFIED</span>
-                  <a 
-                    href={prod.image_url} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-stone-400 hover:text-[#AF8943] transition-colors"
-                  >
-                    <ExternalLink size={14} />
-                  </a>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
+          )}
+
+          <div className="text-center mt-12">
+            <Link 
+              href="/showcase" 
+              className="bg-[#AF8943] hover:bg-[#93702F] text-white font-bold px-8 py-4 rounded-none text-xs tracking-[0.2em] transition-all duration-300 inline-block"
+            >
+              進入獨立會館 檢視完整高奢品線 ➔
+            </Link>
           </div>
 
         </div>
@@ -903,7 +890,7 @@ export default function CenturionPortal() {
                   className="flex justify-between items-center cursor-pointer"
                   onClick={() => setSelectedPress(selectedPress === p.id ? null : p.id)}
                 >
-                  <h4 className="text-sm font-serif font-bold text-stone-900 pr-4 hover:text-[#AF8943] transition-colors">
+                  <h4 className="text-sm font-serif font-bold text-stone-900 pr-4 hover:text-[#AF8943] transition-colors leading-snug">
                     {p.title}
                   </h4>
                   <ChevronRight 
@@ -1033,7 +1020,7 @@ export default function CenturionPortal() {
             /* 未解鎖：密碼輸入框 */
             <form onSubmit={handleUnlockCms} className="max-w-sm mx-auto bg-white p-8 border border-[#EFECE6] space-y-6 text-center">
               <div className="space-y-2">
-                <label className="block text-[11px] font-bold text-stone-500 uppercase tracking-widest">安全解鎖驗證碼</label>
+                <label className="block text-[11px] font-bold text-stone-500 uppercase tracking-widest font-mono">安全解鎖驗證碼</label>
                 <input 
                   type="password"
                   required
@@ -1140,7 +1127,7 @@ export default function CenturionPortal() {
                       <tr className="border-b border-[#EFECE6] text-stone-400 font-mono tracking-widest">
                         <th className="py-3 font-semibold">ID</th>
                         <th className="py-3 font-semibold">標題</th>
-                        <th className="py-3 font-semibold text-center">操作</th>
+                        <th className="py-3 text-center">操作</th>
                       </tr>
                     </thead>
                     <tbody>
