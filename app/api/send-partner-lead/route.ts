@@ -9,11 +9,11 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { company_name, contact_name, phone, email, business_area, timeframe, proposal_summary } = body;
 
-    // 寄信設定：一律寄給 brian@sienxt.com.tw
+    // ➔ 網域驗證成功後，正式啟用 sinext.com.tw 官方寄件人
     const { data, error } = await resend.emails.send({
-      from: 'onboarding@resend.dev', // ➔ 測試沙盒專用寄件人
-      to: ['brian@sienxt.com.tw'],   // ➔ 接收提案的一律鎖定信箱
-      subject: `🔔 《百夫長》合作提案：【${company_name}】申請加入百夫長品牌鏈`,
+      from: '百夫長品牌鏈總部 <centurion@sinext.com.tw>', // ➔ 這裡可以自由填寫任何 @sinext.com.tw 的前綴
+      to: ['brian@sinext.com.tw'],                    // 一律寄給 Brian
+      subject: `🔔 貼牌合作提案：【${company_name}】申請加入百夫長品牌鏈`,
       html: `
         <div style="font-family: 'Georgia', 'serif'; max-width: 600px; margin: auto; padding: 40px; border: 1px solid #EFECE6; background-color: #FDFBF7; color: #292524;">
           <h2 style="font-weight: 300; border-bottom: 1px solid #AF8943; padding-bottom: 20px; color: #1C1917;">【百夫長品牌鏈】全新授權與貼牌提案</h2>
