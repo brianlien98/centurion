@@ -36,7 +36,8 @@ import {
   Trash2,
   Database,
   Layers,
-  TrendingUp
+  TrendingUp,
+  Eye
 } from 'lucide-react';
 
 interface PressItem {
@@ -129,7 +130,8 @@ export default function CenturionPortal() {
         .order('id', { ascending: false });
 
       if (error || !data || data.length === 0) throw new Error('Showcase empty');
-      setShowcaseItems((data as any) as LuxuryProduct[]);
+      const safeData = (data as any) as LuxuryProduct[];
+      setShowcaseItems(safeData);
     } catch (err) {
       setShowcaseItems([
         { id: 1, name: 'CENTURION 麥迪遜藍 29吋旗艦款旅行箱', price_tag: 'NT$ 12,800', tagline: '裝載最重要一切的移動城堡', description: '經典雙輪避震設計搭配專利灣流抗衝擊箱體，以高密度法式噴塗麥迪遜藍，體現商務長途飛行的優雅品味。', image_url: 'https://store.eternal-bc.com/zh-TW/products/centurion%E7%99%BE%E5%A4%AB%E9%95%B7%E6%8B%89%E9%8D%8A%E6%AC%BE%E8%A1%8E%E6%9D%8E%E7%AE%B1-%E9%BA%A5%E8%BF%CD%E9%81%9C%E8%97%8D-29%E5%90%8B', is_featured: true },
@@ -151,7 +153,8 @@ export default function CenturionPortal() {
         .order('id', { ascending: false });
 
       if (error || !data || data.length === 0) throw new Error('Press empty');
-      setPressItems((data as any) as PressItem[]);
+      const safeData = (data as any) as PressItem[];
+      setPressItems(safeData);
     } catch (err) {
       setPressItems([
         { id: 1, title: '百夫長行李箱2019年生產優化開箱評測', summary: '針對早期手把零件疑慮，證實品牌自2019年10月起委託全新新代工廠，全面升級引進防滑多段式拉桿與360度靜音大四輪，有效重塑品牌耐用與卓越美譽。', news_url: 'https://www.centurionbuy.com/blog/202311', image_url: '' },
@@ -173,7 +176,8 @@ export default function CenturionPortal() {
         .order('year', { ascending: false });
 
       if (error || !data || data.length === 0) throw new Error('Wall empty');
-      setItems((data as any) as WallOfFameItem[]);
+      const safeData = (data as any) as WallOfFameItem[];
+      setItems(safeData || []);
     } catch (err) {
       setItems([
         { id: '1', year: '2018', brand: 'STAGE (小豬 羅志祥)', founder: '羅志祥', category: 'artist-ip', type: '藝人潮流品牌', description: '潮流時尚與旅行箱的跨界碰撞，引領街頭行旅風潮。' },
@@ -311,6 +315,7 @@ export default function CenturionPortal() {
             <span className="text-[9px] bg-[#AF8943]/10 text-[#AF8943] px-2.5 py-0.5 rounded-full font-mono font-semibold tracking-widest">PORTAL</span>
           </div>
           
+          {/* 桌面端選單 */}
           <div className="hidden md:flex space-x-6 lg:space-x-8 text-xs tracking-[0.15em] uppercase text-stone-500 font-medium">
             <a href="#vision" className="hover:text-[#AF8943] transition-colors">創辦理念</a>
             <a href="#pillars" className="hover:text-[#AF8943] transition-colors">控股子公司</a>
@@ -367,7 +372,7 @@ export default function CenturionPortal() {
         <div className="lg:col-span-5 bg-white p-10 rounded-none border border-[#EFECE6] shadow-sm space-y-8">
           <div className="inline-flex items-center space-x-2 text-[#AF8943] text-[10px] tracking-widest uppercase font-bold font-mono">
             <UserCheck size={14} />
-            <span>世紀品牌掌舵人 Visionary</span>
+            <span>集團品牌掌舵人 Visionary</span>
           </div>
           
           <div className="grid grid-cols-2 gap-4">
@@ -397,7 +402,7 @@ export default function CenturionPortal() {
             <p className="text-[10px] text-[#AF8943] uppercase tracking-widest mt-1">百夫長集團總裁 / 美國國家旅遊局特聘顧問</p>
           </div>
           <p className="text-xs text-stone-500 leading-relaxed font-light">
-            陳志彬總裁擁有逾 25 年的跨國貿易、品牌控股與美學整合戰略經驗。他首創「輕資產營運思維」，拒絕重資產束縛，專注品牌美學溢價。受任美國國家旅遊局（Brand USA）兩年期顧問，深耕學術，並以「非典型政治參選」在台灣民主史上留下獨特的「陳志彬模式」清流印記。
+            陳志彬總裁擁有逾 25 年的跨國貿易、品牌控股與美學整合戰略經驗。他首創「輕資產營運思維」，拒絕重資產束縛，專注品牌美學溢價。他創立的 CENTURION 品牌，引領了全亞洲箱包外觀大变革。受任美國國家旅遊局（Brand USA）兩年期顧問，深耕學術，並以「非典型政治參選」在台灣民主史上留下獨特的「陳志彬模式」清流印記。
           </p>
         </div>
       </section>
@@ -408,10 +413,11 @@ export default function CenturionPortal() {
           <div className="text-center space-y-4 mb-20">
             <span className="text-[#AF8943] tracking-[0.25em] text-xs font-semibold uppercase">SUBSIDIARY MATRIX</span>
             <h2 className="text-4xl font-serif text-stone-900 font-light">旗下控股子公司</h2>
-            <p className="text-stone-500 text-sm max-w-2xl mx-auto font-light">百夫長集團旗下五大子公司，各自引領行業美學標準，構建多維度的高奢生活生態圈。</p>
+            <p className="text-stone-500 text-sm max-w-2xl mx-auto font-light">百夫長集團五大事業，各自引領行業產品與服務標準，構建多維度的高奢生活生態圈。</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+            {/* Pillar 1 */}
             <div className="bg-white p-8 rounded-none border border-[#EFECE6] flex flex-col justify-between h-full transition-all duration-300 hover:shadow-md">
               <div className="space-y-6">
                 <div className="text-4xl text-[#AF8943]">🧳</div>
@@ -425,6 +431,7 @@ export default function CenturionPortal() {
               </a>
             </div>
 
+            {/* Pillar 2 */}
             <div className="bg-white p-8 rounded-none border border-[#EFECE6] flex flex-col justify-between h-full transition-all duration-300 hover:shadow-md">
               <div className="space-y-6">
                 <div className="text-4xl text-[#AF8943]">✈️</div>
@@ -434,10 +441,11 @@ export default function CenturionPortal() {
                 </p>
               </div>
               <a href="https://www.centuriontravel.tw/centurion" target="_blank" rel="noopener noreferrer" className="text-[11px] text-[#AF8943] hover:text-[#93702F] inline-flex items-center space-x-2 font-bold tracking-widest pt-8 border-t border-[#F5F2EB] mt-8">
-                <span>子公司官網 ➔</span>
+                <span>旅行社官網 ➔</span>
               </a>
             </div>
 
+            {/* Pillar 3 */}
             <div className="bg-white p-8 rounded-none border border-[#EFECE6] flex flex-col justify-between h-full transition-all duration-300 hover:shadow-md">
               <div className="space-y-6">
                 <div className="text-4xl text-[#AF8943]">🍷</div>
@@ -451,6 +459,7 @@ export default function CenturionPortal() {
               </a>
             </div>
 
+            {/* Pillar 4 */}
             <div className="bg-white p-8 rounded-none border border-[#EFECE6] flex flex-col justify-between h-full transition-all duration-300 hover:shadow-md">
               <div className="space-y-6">
                 <div className="text-4xl text-[#AF8943]">🥩</div>
@@ -464,6 +473,7 @@ export default function CenturionPortal() {
               </a>
             </div>
 
+            {/* Pillar 5 */}
             <div className="bg-white p-8 rounded-none border border-[#EFECE6] flex flex-col justify-between h-full transition-all duration-300 hover:shadow-md">
               <div className="space-y-6">
                 <div className="text-4xl text-[#AF8943]">🎁</div>
@@ -490,11 +500,11 @@ export default function CenturionPortal() {
               <span>INCUBATE YOUR CENTURION</span>
             </span>
             <h2 className="text-4xl font-serif text-stone-900 font-light leading-tight">
-              【百夫長品牌鏈】<br />
+              加入【百夫長品牌鏈】<br />
               <span className="italic font-normal text-[#AF8943]">立足台灣，走向世界</span>
             </h2>
             <p className="text-xs text-stone-600 leading-relaxed font-light">
-              你有好服務、好產品，想加入百夫長品牌？請在此遞交品牌授權與審核提案。我們將在兩個工作天內由集團品牌鏈首席顧問連仲賢與品管團隊親自對接。
+              你有好服務、好產品，想加入百夫長品牌？請在此遞交品牌授權與審核提案。我們將在兩個工作天內由集團品牌鏈顧問 連仲賢親自對接。
             </p>
             <div className="p-6 bg-[#FAF8F5] border border-[#EFECE6] space-y-3">
               <h4 className="text-sm font-serif font-bold text-stone-900">品牌鏈顧問與品質審核：</h4>
@@ -1020,7 +1030,7 @@ export default function CenturionPortal() {
             /* 未解鎖：密碼輸入框 */
             <form onSubmit={handleUnlockCms} className="max-w-sm mx-auto bg-white p-8 border border-[#EFECE6] space-y-6 text-center">
               <div className="space-y-2">
-                <label className="block text-[11px] font-bold text-stone-500 uppercase tracking-widest font-mono">安全解鎖驗證碼</label>
+                <label className="block text-[11px] font-bold text-stone-500 uppercase tracking-widest">安全解鎖驗證碼</label>
                 <input 
                   type="password"
                   required
