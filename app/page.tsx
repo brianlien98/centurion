@@ -114,7 +114,7 @@ export default function CenturionPortal() {
     phone: '',
     email: '',
     business_area: '【百夫長品牌鏈】品牌授權計畫',
-    timeframe: '加入百夫長，立即開始',
+    timeframe: '加入百夫長，立即開始 (1個月內)',
     proposal_summary: ''
   });
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
@@ -176,8 +176,7 @@ export default function CenturionPortal() {
         .order('year', { ascending: false });
 
       if (error || !data || data.length === 0) throw new Error('Wall empty');
-      const safeData = (data as any) as WallOfFameItem[];
-      setItems(safeData || []);
+      setItems((data as any) as WallOfFameItem[]);
     } catch (err) {
       setItems([
         { id: '1', year: '2018', brand: 'STAGE (小豬 羅志祥)', founder: '羅志祥', category: 'artist-ip', type: '藝人潮流品牌', description: '潮流時尚與旅行箱的跨界碰撞，引領街頭行旅風潮。' },
@@ -296,11 +295,12 @@ export default function CenturionPortal() {
     }
   };
 
-  // 處理 B2B 表單提交
+  // 處理 B2B 表單提交（資料庫寫入 + API 自動發信雙向連動）
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitStatus('submitting');
     try {
+      // 1. 寫入 Supabase 資料庫
       const { error } = await supabaseCenturion
         .from('centurion_partnership_leads')
         .insert([{
@@ -315,6 +315,18 @@ export default function CenturionPortal() {
         }]);
 
       if (error) throw error;
+
+      // 2. 雙向對接：調用剛才建立的 Resend 郵件 API 發信給管理團隊
+      const mailRes = await fetch('/api/send-partner-lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      
+      if (!mailRes.ok) {
+        console.warn('自動郵件通知發送失敗，但提案資料已成功備份寫入資料庫。');
+      }
+
       setSubmitStatus('success');
       setFormData({
         company_name: '',
@@ -331,13 +343,13 @@ export default function CenturionPortal() {
     }
   };
 
-  // 篩選過濾
+  // 前台精選過濾 (5~10品)
+  const featuredShowcase = showcaseItems.filter(item => item.is_featured);
+
+  // 篩選過濾聯名牆
   const filteredItems = filter === 'all' 
     ? items 
     : items.filter(item => item.category === filter);
-
-  // 前台精選過濾 (5~10品)
-  const featuredShowcase = showcaseItems.filter(item => item.is_featured);
 
   return (
     <div className="min-h-screen bg-[#FDFBF7] text-stone-900 font-sans selection:bg-[#AF8943] selection:text-white">
@@ -346,6 +358,7 @@ export default function CenturionPortal() {
       <nav className="sticky top-0 z-50 backdrop-blur-md bg-[#FDFBF7]/90 border-b border-[#EFECE6] px-6 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           
+          {/* Logo */}
           <div className="flex items-center space-x-3">
             <img 
               src="https://custom-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_300,w_300,f_auto,q_100/1886487/831598_863023.png" 
@@ -358,7 +371,7 @@ export default function CenturionPortal() {
           {/* 桌面端選單 */}
           <div className="hidden md:flex space-x-6 lg:space-x-8 text-xs tracking-[0.15em] uppercase text-stone-500 font-medium">
             <a href="#vision" className="hover:text-[#AF8943] transition-colors">創辦理念</a>
-            <a href="#pillars" className="hover:text-[#AF8943] transition-colors">集團事業</a>
+            <a href="#pillars" className="hover:text-[#AF8943] transition-colors">控股子公司</a>
             <a href="#dna" className="hover:text-[#AF8943] transition-colors">核心基因</a>
             <a href="#esg" className="hover:text-[#AF8943] transition-colors">永續人文</a>
             <Link href="/showcase" className="hover:text-[#AF8943] transition-colors">典藏展廳</Link>
@@ -375,6 +388,7 @@ export default function CenturionPortal() {
             </a>
           </div>
 
+          {/* 行動端選單 */}
           <button 
             className="md:hidden text-stone-600 hover:text-stone-900 transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -382,6 +396,19 @@ export default function CenturionPortal() {
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
+
+        {mobileMenuOpen && (
+          <div className="md:hidden absolute top-full left-0 w-full bg-[#FDFBF7] border-b border-[#EFECE6] px-6 py-8 flex flex-col space-y-4 text-sm">
+            <a href="#vision" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">創辦理念</a>
+            <a href="#pillars" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">五大版體</a>
+            <a href="#dna" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">核心基因</a>
+            <a href="#esg" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">永續人文</a>
+            <a href="#insights" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">百夫長新知</a>
+            <a href="#press" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">百夫長 PRESS</a>
+            <a href="#wall" onClick={() => setMobileMenuOpen(false)} className="text-stone-600 hover:text-[#AF8943] py-1 transition-colors tracking-widest">聯名牆</a>
+            <a href="#b2b-form" onClick={() => setMobileMenuOpen(false)} className="bg-[#AF8943] hover:bg-[#93702F] text-white font-bold text-center py-4 rounded-none text-xs tracking-widest transition-colors">戰略合作</a>
+          </div>
+        )}
       </nav>
 
       {/* 第一畫面 (Hero Section + B2B OEM 招募提案入口) */}
@@ -415,6 +442,7 @@ export default function CenturionPortal() {
             <span>集團品牌掌舵人 Visionary</span>
           </div>
           
+          {/* 總裁雙重高規格照片並排 */}
           <div className="grid grid-cols-2 gap-4">
             <div className="aspect-[3/4] overflow-hidden border border-[#EFECE6] relative group">
               <img 
@@ -461,13 +489,13 @@ export default function CenturionPortal() {
             <div className="bg-white p-8 rounded-none border border-[#EFECE6] flex flex-col justify-between h-full transition-all duration-300 hover:shadow-md">
               <div className="space-y-6">
                 <div className="text-4xl text-[#AF8943]">🧳</div>
-                <h3 className="text-lg font-serif font-bold text-stone-900">百夫長旅行箱</h3>
+                <h3 className="text-lg font-serif font-bold text-stone-900">百夫長旅行箱股份</h3>
                 <p className="text-xs text-stone-600 leading-relaxed font-light">
                   全球首創主題式旅行箱發行體系，擁有「灣流線條」專利外觀與多項軍規防護技術。深受全球航空空服人員熱愛，被冠以「空姐箱」美譽。
                 </p>
               </div>
               <a href="https://store.eternal-bc.com/collections/%E7%99%BE%E5%A4%AB%E9%95%B7%E6%97%85%E8%A1%8C%E7%AE%B1" target="_blank" rel="noopener noreferrer" className="text-[11px] text-[#AF8943] hover:text-[#93702F] inline-flex items-center space-x-2 font-bold tracking-widest pt-8 border-t border-[#F5F2EB] mt-8">
-                <span>旅行箱官網 ➔</span>
+                <span>子公司官網 ➔</span>
               </a>
             </div>
 
@@ -544,7 +572,7 @@ export default function CenturionPortal() {
               <span className="italic font-normal text-[#AF8943]">立足台灣，走向世界</span>
             </h2>
             <p className="text-xs text-stone-600 leading-relaxed font-light">
-              你有好服務、好產品，想加入百夫長品牌？請在此遞交品牌授權與審核提案。我們將在兩個工作天內由集團品牌鏈首席顧問連仲賢先生親自對接。
+              你有好服務、好產品，想加入百夫長品牌？請在此遞交品牌授權與審核提案。我們將在兩個工作天內由集團品牌鏈顧問 連仲賢親自對接。
             </p>
             <div className="p-6 bg-[#FAF8F5] border border-[#EFECE6] space-y-3">
               <h4 className="text-sm font-serif font-bold text-stone-900">品牌鏈顧問與品質審核：</h4>
@@ -582,7 +610,7 @@ export default function CenturionPortal() {
             <div className="bg-white p-8 border border-[#EFECE6] space-y-4">
               <div className="text-2xl text-[#AF8943] font-mono">04</div>
               <h3 className="text-base font-serif font-bold text-stone-900">高溢價，利潤共享共榮</h3>
-              <p className="text-xs text-stone-600 leading-relaxed font-light">
+              <p className="text-xs text-stone-500 leading-relaxed font-light">
                 「你負責追求品質極致，百夫長負責賦予產品品牌靈魂。」雙方以品牌鏈高度進行商業分潤合作，攜手共創長線、健康的第二增長曲線。
               </p>
             </div>
