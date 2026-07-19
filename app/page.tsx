@@ -313,7 +313,7 @@ export default function CenturionPortal() {
           {/* 桌面端選單 */}
           <div className="hidden md:flex space-x-6 lg:space-x-8 text-xs tracking-[0.15em] uppercase text-stone-500 font-medium">
             <a href="#vision" className="hover:text-[#AF8943] transition-colors">創辦理念</a>
-            <a href="#pillars" className="hover:text-[#AF8943] transition-colors">控股子公司</a>
+            <a href="#pillars" className="hover:text-[#AF8943] transition-colors">百夫長事業群</a>
             <a href="#dna" className="hover:text-[#AF8943] transition-colors">核心基因</a>
             <a href="#esg" className="hover:text-[#AF8943] transition-colors">永續人文</a>
             <a href="#insights" className="hover:text-[#AF8943] transition-colors">百夫長新知</a>
@@ -366,14 +366,14 @@ export default function CenturionPortal() {
             <span className="font-normal italic text-[#AF8943]">立即申請【孵化你的百夫長】</span>
           </h1>
           <p className="text-stone-600 text-base lg:text-lg leading-relaxed max-w-2xl font-light">
-            你負責追求品質極致，百夫長負責賦予產品世紀靈魂。百夫長與你一起立足台灣，走向世界。加入百夫長全球品牌美學控股體系，獲得高奢溢價賦能，徹底顛覆傳統價格戰。
+            你負責追求品質極致，百夫長負責賦予產品品牌靈魂。百夫長與你一起立足台灣，走向世界。加入百夫長全球品牌美學體系，獲得高奢溢價賦能，徹底顛覆傳統價格戰。
           </p>
           <div className="flex flex-wrap gap-5 pt-4">
             <a href="#b2b-form" className="bg-[#AF8943] hover:bg-[#93702F] text-white font-bold px-8 py-4 rounded-none text-xs tracking-[0.2em] transition-all duration-300">
               立即申請品牌授權孵化 ➔
             </a>
             <a href="#luxury-exhibition" className="border border-stone-300 hover:bg-stone-50 text-stone-700 font-semibold px-8 py-4 rounded-none text-xs tracking-[0.15em] transition-all duration-300">
-              探索高奢產品抬價展示
+              探索高奢產品展示
             </a>
           </div>
         </div>
@@ -382,7 +382,7 @@ export default function CenturionPortal() {
         <div className="lg:col-span-5 bg-white p-10 rounded-none border border-[#EFECE6] shadow-sm space-y-8">
           <div className="inline-flex items-center space-x-2 text-[#AF8943] text-[10px] tracking-widest uppercase font-bold font-mono">
             <UserCheck size={14} />
-            <span>世紀品牌掌舵人 Visionary</span>
+            <span>集團品牌掌舵人 Visionary</span>
           </div>
           
           {/* 總裁雙重高規格照片並排 */}
@@ -406,7 +406,7 @@ export default function CenturionPortal() {
           </div>
 
           <p className="text-xl italic font-serif text-stone-800 leading-relaxed font-light">
-            「你負責追求品質極致，百夫長負責賦予產品世紀靈魂。百夫長與你一起立足台灣，走向世界。」
+            「你負責追求品質極致，百夫長負責賦予產品品牌靈魂。百夫長與你一起立足台灣，走向世界。」
           </p>
           <div className="border-t border-[#EFECE6] pt-6">
             <h4 className="text-lg font-serif font-bold text-stone-900 tracking-wider">陳志彬 Chih-Pin Chen</h4>
@@ -423,8 +423,8 @@ export default function CenturionPortal() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center space-y-4 mb-20">
             <span className="text-[#AF8943] tracking-[0.25em] text-xs font-semibold uppercase">SUBSIDIARY MATRIX</span>
-            <h2 className="text-4xl font-serif text-stone-900 font-light">旗下控股子公司</h2>
-            <p className="text-stone-500 text-sm max-w-2xl mx-auto font-light">百夫長集團旗下五大子公司，各自引領行業美學標準，構建多維度的高奢生活生態圈。</p>
+            <h2 className="text-4xl font-serif text-stone-900 font-light">百夫長事業群</h2>
+            <p className="text-stone-500 text-sm max-w-2xl mx-auto font-light">百夫長集團五大事業，各自引領行業產品與服務標準，構建多維度的高奢生活生態圈。</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
@@ -432,13 +432,13 @@ export default function CenturionPortal() {
             <div className="bg-white p-8 rounded-none border border-[#EFECE6] flex flex-col justify-between h-full transition-all duration-300 hover:shadow-md">
               <div className="space-y-6">
                 <div className="text-4xl text-[#AF8943]">🧳</div>
-                <h3 className="text-lg font-serif font-bold text-stone-900">百夫長旅行箱股份</h3>
+                <h3 className="text-lg font-serif font-bold text-stone-900">百夫長旅行箱</h3>
                 <p className="text-xs text-stone-600 leading-relaxed font-light">
                   全球首創主題式旅行箱發行體系，擁有「灣流線條」專利外觀與多項軍規防護技術。深受全球航空空服人員熱愛，被冠以「空姐箱」美譽。
                 </p>
               </div>
               <a href="https://store.eternal-bc.com/collections/%E7%99%BE%E5%A4%AB%E9%95%B7%E6%97%85%E8%A1%8C%E7%AE%B1" target="_blank" rel="noopener noreferrer" className="text-[11px] text-[#AF8943] hover:text-[#93702F] inline-flex items-center space-x-2 font-bold tracking-widest pt-8 border-t border-[#F5F2EB] mt-8">
-                <span>子公司官網 ➔</span>
+                <span>旅行箱官網 ➔</span>
               </a>
             </div>
 
@@ -452,7 +452,7 @@ export default function CenturionPortal() {
                 </p>
               </div>
               <a href="https://www.centuriontravel.tw/centurion" target="_blank" rel="noopener noreferrer" className="text-[11px] text-[#AF8943] hover:text-[#93702F] inline-flex items-center space-x-2 font-bold tracking-widest pt-8 border-t border-[#F5F2EB] mt-8">
-                <span>子公司官網 ➔</span>
+                <span>旅行社官網 ➔</span>
               </a>
             </div>
 
@@ -460,7 +460,7 @@ export default function CenturionPortal() {
             <div className="bg-white p-8 rounded-none border border-[#EFECE6] flex flex-col justify-between h-full transition-all duration-300 hover:shadow-md">
               <div className="space-y-6">
                 <div className="text-4xl text-[#AF8943]">🍷</div>
-                <h3 className="text-lg font-serif font-bold text-stone-900">百夫長會所空間</h3>
+                <h3 className="text-lg font-serif font-bold text-stone-900">百夫長頂級會所</h3>
                 <p className="text-xs text-stone-600 leading-relaxed font-light">
                   高端名流會所。提供政商領袖、藝術大師、學術巨擘深度對談與社交密閉場所，融匯當代高尚美食品鑑與私人管家尊榮服務。
                 </p>
@@ -480,7 +480,7 @@ export default function CenturionPortal() {
                 </p>
               </div>
               <a href="https://example-food.com" target="_blank" rel="noopener noreferrer" className="text-[11px] text-[#AF8943] hover:text-[#93702F] inline-flex items-center space-x-2 font-bold tracking-widest pt-8 border-t border-[#F5F2EB] mt-8">
-                <span>子公司官網 ➔</span>
+                <span>百選官網 ➔</span>
               </a>
             </div>
 
@@ -515,12 +515,12 @@ export default function CenturionPortal() {
               <span className="italic font-normal text-[#AF8943]">立足台灣，走向世界</span>
             </h2>
             <p className="text-xs text-stone-600 leading-relaxed font-light">
-              你有好產品、好服務，但缺乏國際級品牌知名度與高溢價能力？百夫長提供最完整的**品牌授權與貼牌孵化解決方案**。我們將集團旗下橫跨時尚、民生通路與文化藝術的 IP 聯名權，與你經過嚴格品質審核的產品相結合，實現 3 倍至 5 倍的產品價格拉抬。
+              你有好產品、好服務，但缺乏國際級品牌加值？百夫長提供最完整的**品牌授權孵化解決方案**。我們將集團旗下橫跨時尚、民生通路與文化藝術的 IP 聯名權，與你經過嚴格品質審核的產品相結合，實現 3 倍至 5 倍的產品價格拉抬。
             </p>
             <div className="p-6 bg-[#FAF8F5] border border-[#EFECE6] space-y-3">
               <h4 className="text-sm font-serif font-bold text-stone-900">集團嚴苛品質與服務審核：</h4>
               <p className="text-[11px] text-stone-500 leading-relaxed font-light">
-                百夫長絕不對品質妥協。所有參與「孵化計畫」的產品，必須經過百夫長品管工程師的壓力、老化、環保與耐用度多重檢測。通過審核者，方可正式冠以百夫長品牌商標，立足台灣，共同進軍東南亞、日本及北美高階市場。
+                百夫長絕不對品質妥協。所有參與「孵化計畫」的產品，必須經過百夫長孵化長連仲賢顧問的審核，經過國際標準後，方可正式冠以百夫長品牌商標，立足台灣，共同進軍東南亞、日本及北美高階市場。
               </p>
             </div>
           </div>
